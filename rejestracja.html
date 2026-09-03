@@ -1,171 +1,97 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Rejestracja — ShadowTale</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 
 <body>
 
 <canvas id="stars"></canvas>
 
+<nav class="navbar">
+    <a href="index.html" class="logo">
+        Shadow<span>Tale</span>
+    </a>
 
-<header class="navbar">
-
-    <div class="logo">
-        SHADOW<span>TALE</span>
+    <div class="nav-links">
+        <a href="minecraft.html">Minecraft</a>
+        <a href="undertale.html">Undertale</a>
+        <a href="login.html">Logowanie</a>
     </div>
+</nav>
 
-    <nav>
+<main class="container">
 
-        <a href="index.html">
-            Strona główna
-        </a>
+    <section class="category-hero">
+        <h1>Utwórz konto</h1>
+        <p>Załóż konto ShadowTale, aby móc korzystać z zakupów i swojego profilu.</p>
+    </section>
 
-        <a href="minecraft.html">
-            Minecraft
-        </a>
+    <section class="auth-box">
 
-        <a href="undertale.html">
-            Undertale
-        </a>
+        <form id="register-form">
 
-    </nav>
+            <input
+                type="text"
+                id="register-username"
+                placeholder="Nazwa użytkownika"
+                minlength="3"
+                maxlength="20"
+                required
+            >
 
-</header>
+            <input
+                type="email"
+                id="register-email"
+                placeholder="Adres e-mail"
+                required
+            >
 
+            <input
+                type="password"
+                id="register-password"
+                placeholder="Hasło"
+                minlength="8"
+                required
+            >
 
-<main>
+            <input
+                type="password"
+                id="register-password-confirm"
+                placeholder="Powtórz hasło"
+                minlength="8"
+                required
+            >
 
-<section class="hero category-hero">
+            <button type="submit" class="button primary">
+                📝 Załóż konto
+            </button>
 
-    <div class="hero-content">
+        </form>
 
-        <div class="small-title">
-            ✦ SHADOWTALE • KONTO ✦
-        </div>
+        <p id="auth-message" class="auth-message"></p>
 
-        <h1>
-            Rejestracja
-        </h1>
-
-        <p>
-            Utwórz konto ShadowTale.
+        <p class="auth-switch">
+            Masz już konto?
+            <a href="login.html">Zaloguj się</a>
         </p>
 
-
-        <div class="auth-box">
-
-            <form id="register-form">
-
-
-                <input
-                    id="register-username"
-                    type="text"
-                    placeholder="Nazwa użytkownika"
-                    minlength="3"
-                    maxlength="20"
-                    autocomplete="username"
-                    required
-                >
-
-
-                <input
-                    id="register-email"
-                    type="email"
-                    placeholder="Adres e-mail"
-                    autocomplete="email"
-                    required
-                >
-
-
-                <input
-                    id="register-password"
-                    type="password"
-                    placeholder="Hasło"
-                    minlength="8"
-                    autocomplete="new-password"
-                    required
-                >
-
-
-                <input
-                    id="register-password-confirm"
-                    type="password"
-                    placeholder="Powtórz hasło"
-                    minlength="8"
-                    autocomplete="new-password"
-                    required
-                >
-
-
-                <button
-                    type="submit"
-                    class="button primary"
-                >
-                    Załóż konto
-                </button>
-
-            </form>
-
-
-            <div
-                id="auth-message"
-                class="auth-message"
-            ></div>
-
-
-            <p class="auth-switch">
-
-                Masz już konto?
-
-                <a href="login.html">
-                    Zaloguj się
-                </a>
-
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
+    </section>
 
 </main>
 
-
 <footer>
-
-    <div class="logo">
-        SHADOW<span>TALE</span>
-    </div>
-
-    <p>
-        © 2026 ShadowTale
-    </p>
-
+    <p>© 2026 ShadowTale</p>
 </footer>
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="scripts.js"></script>
 
 </body>
-
 </html>
