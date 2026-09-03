@@ -1,3 +1,8 @@
+/* =========================================================
+   SHADOWTALE
+   GŁÓWNY STYL STRONY
+   ========================================================= */
+
 * {
     box-sizing: border-box;
 }
@@ -11,7 +16,6 @@ body {
     min-height: 100vh;
 
     background: #050816;
-
     color: white;
 
     font-family: Arial, sans-serif;
@@ -20,9 +24,9 @@ body {
 }
 
 
-/* =========================
+/* =========================================================
    GWIAZDY
-   ========================= */
+   ========================================================= */
 
 canvas {
     position: fixed;
@@ -39,22 +43,21 @@ canvas {
 }
 
 
-/* =========================
-   CAŁA STRONA NAD GWIAZDAMI
-   ========================= */
+/* =========================================================
+   ZAWARTOŚĆ NAD GWIAZDAMI
+   ========================================================= */
 
 .navbar,
 main,
 footer {
     position: relative;
-
     z-index: 1;
 }
 
 
-/* =========================
+/* =========================================================
    MENU
-   ========================= */
+   ========================================================= */
 
 .navbar {
     position: fixed;
@@ -71,7 +74,7 @@ footer {
     align-items: center;
     justify-content: space-between;
 
-    background: rgba(5, 8, 22, 0.75);
+    background: rgba(5, 8, 22, 0.78);
 
     backdrop-filter: blur(12px);
 
@@ -91,7 +94,7 @@ footer {
 }
 
 .logo span {
-    opacity: 0.55;
+    opacity: 0.5;
 }
 
 nav {
@@ -117,9 +120,9 @@ nav a:hover {
 }
 
 
-/* =========================
+/* =========================================================
    HERO
-   ========================= */
+   ========================================================= */
 
 .hero {
     min-height: 760px;
@@ -180,9 +183,9 @@ nav a:hover {
 }
 
 
-/* =========================
+/* =========================================================
    PRZYCISKI
-   ========================= */
+   ========================================================= */
 
 .buttons {
     display: flex;
@@ -245,12 +248,11 @@ nav a:hover {
 }
 
 
-/* =========================
+/* =========================================================
    SEKCJE
-   ========================= */
+   ========================================================= */
 
-.projects,
-.shop {
+.projects {
     width: min(1100px, 90%);
 
     margin: 0 auto;
@@ -281,91 +283,217 @@ nav a:hover {
 }
 
 
-/* =========================
-   KARTY
-   ========================= */
+/* =========================================================
+   GŁÓWNE KATEGORIE
+   MINECRAFT / UNDERTALE
+   ========================================================= */
 
-.cards {
-    display: grid;
+.main-categories {
+    display: flex;
 
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex-direction: column;
 
-    gap: 25px;
+    width: 100%;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.card {
-    min-height: 280px;
 
-    padding: 35px;
+/* Pojedyncza kategoria */
 
-    border-radius: 22px;
+.main-category {
+    display: flex;
 
-    background: rgba(10, 15, 38, 0.75);
+    align-items: center;
 
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 25px;
 
-    backdrop-filter: blur(10px);
+    width: 100%;
+
+    padding: 30px 10px;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 
     transition: 0.3s;
 }
 
-.card:hover {
-    transform: translateY(-6px);
+.main-category:hover {
+    padding-left: 20px;
 
-    border-color: rgba(156, 168, 255, 0.5);
+    background: rgba(255, 255, 255, 0.025);
 }
 
-.card-icon {
-    font-size: 38px;
 
-    margin-bottom: 20px;
+/* Ikona */
+
+.main-category-icon {
+    width: 65px;
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    font-size: 30px;
 }
 
-.card h3 {
-    margin: 0 0 15px;
+
+/* Tekst */
+
+.main-category-content {
+    flex: 1;
+}
+
+.main-category-content h3 {
+    margin: 0 0 7px;
 
     font-size: 28px;
 }
 
-.card p {
+.main-category-content p {
     margin: 0;
 
-    color: #aab3c5;
+    color: #8f98ad;
 
-    line-height: 1.7;
+    line-height: 1.6;
 }
 
-.card a {
-    display: inline-block;
 
-    margin-top: 20px;
+/* Strzałka */
+
+.main-category-arrow {
+    font-size: 30px;
 
     color: #9ca8ff;
 
+    transition: 0.3s;
+}
+
+.main-category:hover .main-category-arrow {
+    transform: translateX(8px);
+}
+
+
+/* =========================================================
+   PODKATEGORIE
+   PŁATNE / DARMOWE
+   ========================================================= */
+
+.subcategory-list {
+    display: flex;
+
+    flex-direction: column;
+
+    width: 100%;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+
+/* Pojedyncza podkategoria */
+
+.subcategory {
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+
+    width: 100%;
+
+    padding: 28px 10px;
+
+    color: white;
+
     text-decoration: none;
 
-    font-weight: 700;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+    transition: 0.3s;
+}
+
+.subcategory:hover {
+    padding-left: 20px;
+
+    background: rgba(255, 255, 255, 0.025);
 }
 
 
-/* =========================
-   SKLEP
-   ========================= */
+/* Ikona */
 
-.shop {
-    text-align: center;
+.subcategory-icon {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    font-size: 25px;
 }
 
-.shop > p {
-    color: #aab3c5;
 
-    font-size: 18px;
+/* Tekst */
+
+.subcategory-content {
+    flex: 1;
+}
+
+.subcategory-content h3 {
+    margin: 0 0 6px;
+
+    font-size: 23px;
+}
+
+.subcategory-content p {
+    margin: 0;
+
+    color: #8f98ad;
+
+    line-height: 1.5;
 }
 
 
-/* =========================
+/* Strzałka */
+
+.subcategory-arrow {
+    color: #9ca8ff;
+
+    font-size: 27px;
+
+    transition: 0.3s;
+}
+
+.subcategory:hover .subcategory-arrow {
+    transform: translateX(8px);
+}
+
+
+/* =========================================================
    DISCORD
-   ========================= */
+   ========================================================= */
 
 .discord {
     width: min(1100px, 90%);
@@ -386,40 +514,223 @@ nav a:hover {
 }
 
 .discord h2 {
-    margin: 0 
+    margin: 0 0 15px;
 
-/* =========================
-   PODKATEGORIE
-   ========================= */
+    font-size: 38px;
+}
 
-.category-links {
+.discord p {
+    margin-bottom: 30px;
+
+    color: #aab3c5;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   STOPKA
+   ========================================================= */
+
+footer {
+    padding: 40px 6%;
+
     display: flex;
-    gap: 12px;
-    margin-top: 25px;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    background: rgba(5, 8, 22, 0.85);
 }
 
-.category-links a {
-    flex: 1;
-    padding: 13px 10px;
+footer p {
+    margin: 0;
 
-    text-align: center;
+    color: #687087;
 
-    color: white;
-    text-decoration: none;
-
-    background: rgba(255, 255, 255, 0.06);
-
-    border: 1px solid rgba(255, 255, 255, 0.12);
-
-    border-radius: 10px;
-
-    font-weight: 700;
-
-    transition: 0.25s;
+    font-size: 13px;
 }
 
-.category-links a:hover {
-    background: rgba(156, 168, 255, 0.15);
-    border-color: rgba(156, 168, 255, 0.5);
-    transform: translateY(-2px);
+
+/* =========================================================
+   ANIMACJA
+   ========================================================= */
+
+@keyframes appear {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   STRONY KATEGORII
+   ========================================================= */
+
+.category-hero {
+    min-height: 520px;
+
+    padding-top: 130px;
+}
+
+
+/* =========================================================
+   TELEFON
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        height: 65px;
+
+        padding: 0 18px;
+    }
+
+    .logo {
+        font-size: 18px;
+
+        letter-spacing: 2px;
+    }
+
+    nav {
+        gap: 12px;
+    }
+
+    nav a {
+        font-size: 12px;
+    }
+
+
+    .hero {
+        min-height: 700px;
+
+        padding: 120px 20px 80px;
+    }
+
+    .hero h1 {
+        font-size: 58px;
+
+        letter-spacing: -3px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+
+    .buttons {
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+    .button {
+        width: 100%;
+
+        max-width: 280px;
+    }
+
+
+    .projects {
+        padding: 70px 0;
+    }
+
+
+    .section-title h2 {
+        font-size: 30px;
+    }
+
+
+    /* Kategorie główne */
+
+    .main-category {
+        gap: 15px;
+
+        padding: 25px 5px;
+    }
+
+    .main-category-icon {
+        width: 55px;
+        height: 55px;
+
+        font-size: 25px;
+    }
+
+    .main-category-content h3 {
+        font-size: 23px;
+    }
+
+    .main-category-content p {
+        font-size: 14px;
+    }
+
+    .main-category-arrow {
+        font-size: 24px;
+    }
+
+
+    /* Podkategorie */
+
+    .subcategory {
+        gap: 15px;
+
+        padding: 23px 5px;
+    }
+
+    .subcategory-icon {
+        width: 50px;
+        height: 50px;
+
+        font-size: 22px;
+    }
+
+    .subcategory-content h3 {
+        font-size: 20px;
+    }
+
+    .subcategory-content p {
+        font-size: 14px;
+    }
+
+    .subcategory-arrow {
+        font-size: 23px;
+    }
+
+
+    /* Discord */
+
+    .discord {
+        padding: 55px 20px;
+
+        margin-bottom: 70px;
+    }
+
+    .discord h2 {
+        font-size: 30px;
+    }
+
+
+    /* Stopka */
+
+    footer {
+        flex-direction: column;
+
+        gap: 15px;
+
+        text-align: center;
+    }
+
 }
