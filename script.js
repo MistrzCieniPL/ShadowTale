@@ -1,6 +1,6 @@
 // ============================================================
 //                     SHADOWTALE
-//                 SYSTEM KONT + GWIAZDY
+//              SYSTEM KONT + GWIAZDY
 // ============================================================
 
 
@@ -40,7 +40,6 @@ if (canvas) {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
-
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -49,7 +48,6 @@ if (canvas) {
     window.addEventListener("resize", resizeCanvas);
 
     resizeCanvas();
-
 
     for (let i = 0; i < 180; i++) {
 
@@ -62,14 +60,12 @@ if (canvas) {
 
     }
 
-
     document.addEventListener("mousemove", (event) => {
 
         mouseX = event.clientX;
         mouseY = event.clientY;
 
     });
-
 
     document.addEventListener(
         "touchmove",
@@ -86,7 +82,6 @@ if (canvas) {
         { passive: true }
     );
 
-
     function animate() {
 
         ctx.clearRect(
@@ -96,18 +91,15 @@ if (canvas) {
             canvas.height
         );
 
-
         for (const star of stars) {
 
             const distanceX = mouseX - star.x;
             const distanceY = mouseY - star.y;
 
-
             star.x += distanceX * 0.00015;
             star.y += distanceY * 0.00015;
 
             star.y += star.speed;
-
 
             if (star.y > canvas.height) {
 
@@ -115,7 +107,6 @@ if (canvas) {
                 star.x = Math.random() * canvas.width;
 
             }
-
 
             ctx.beginPath();
 
@@ -133,19 +124,16 @@ if (canvas) {
 
         }
 
-
         requestAnimationFrame(animate);
 
     }
 
-
     animate();
-
 }
 
 
 // ============================================================
-//                 POMOCNICZA FUNKCJA
+//                  WIADOMOŚCI AUTH
 // ============================================================
 
 function showAuthMessage(message, success = false) {
@@ -155,13 +143,58 @@ function showAuthMessage(message, success = false) {
 
     if (!element) return;
 
-
     element.textContent = message;
 
     element.classList.toggle(
         "success",
         success
     );
+}
+
+
+// ============================================================
+//             AKTUALIZACJA PRZYCISKU KONTA
+// ============================================================
+
+async function updateAccountButton() {
+
+    const accountLinks =
+        document.querySelectorAll(
+            "[data-account-link]"
+        );
+
+    if (!accountLinks.length) return;
+
+    let user = null;
+
+    if (supabaseClient) {
+
+        const {
+            data
+        } =
+            await supabaseClient.auth.getUser();
+
+        user = data?.user || null;
+
+    }
+
+    accountLinks.forEach((link) => {
+
+        if (user) {
+
+            link.textContent = "👤 Konto";
+
+            link.href = "konto.html";
+
+        } else {
+
+            link.textContent = "🔐 Zaloguj się";
+
+            link.href = "login.html";
+
+        }
+
+    });
 
 }
 
@@ -171,8 +204,9 @@ function showAuthMessage(message, success = false) {
 // ============================================================
 
 const registerForm =
-    document.getElementById("register-form");
-
+    document.getElementById(
+        "register-form"
+    );
 
 if (registerForm) {
 
@@ -181,7 +215,6 @@ if (registerForm) {
         async (event) => {
 
             event.preventDefault();
-
 
             if (!supabaseClient) {
 
@@ -193,26 +226,28 @@ if (registerForm) {
 
             }
 
-
             const username =
                 document
-                    .getElementById("register-username")
+                    .getElementById(
+                        "register-username"
+                    )
                     .value
                     .trim();
-
 
             const email =
                 document
-                    .getElementById("register-email")
+                    .getElementById(
+                        "register-email"
+                    )
                     .value
                     .trim();
 
-
             const password =
                 document
-                    .getElementById("register-password")
+                    .getElementById(
+                        "register-password"
+                    )
                     .value;
-
 
             const passwordConfirm =
                 document
@@ -221,10 +256,6 @@ if (registerForm) {
                     )
                     .value;
 
-
-            // ------------------------------------------------
-            // WALIDACJA
-            // ------------------------------------------------
 
             if (
                 username.length < 3 ||
@@ -268,30 +299,27 @@ if (registerForm) {
             );
 
 
-            // ------------------------------------------------
-            // SUPABASE REJESTRACJA
-            // ------------------------------------------------
-
             const {
                 data,
                 error
-            } = await supabaseClient.auth.signUp({
+            } =
+                await supabaseClient.auth.signUp({
 
-                email: email,
+                    email: email,
 
-                password: password,
+                    password: password,
 
-                options: {
+                    options: {
 
-                    data: {
+                        data: {
 
-                        username: username
+                            username: username
+
+                        }
 
                     }
 
-                }
-
-            });
+                });
 
 
             if (error) {
@@ -309,19 +337,23 @@ if (registerForm) {
             // PROFIL
             // ------------------------------------------------
 
-            if (data.user && data.session) {
+            if (
+                data.user &&
+                data.session
+            ) {
 
                 const {
                     error: profileError
-                } = await supabaseClient
-                    .from("profiles")
-                    .insert({
+                } =
+                    await supabaseClient
+                        .from("profiles")
+                        .insert({
 
-                        id: data.user.id,
+                            id: data.user.id,
 
-                        username: username
+                            username: username
 
-                    });
+                        });
 
 
                 if (
@@ -343,7 +375,7 @@ if (registerForm) {
 
 
                 showAuthMessage(
-                    "Konto utworzone! Za chwilę przejdziesz do konta.",
+                    "Konto utworzone! Przechodzenie do konta...",
                     true
                 );
 
@@ -353,13 +385,13 @@ if (registerForm) {
                     window.location.href =
                         "konto.html";
 
-                }, 1200);
+                }, 1000);
 
 
             } else {
 
                 showAuthMessage(
-                    "Konto utworzone! Sprawdź swoją skrzynkę e-mail i potwierdź adres.",
+                    "Konto utworzone! Sprawdź e-mail i potwierdź adres.",
                     true
                 );
 
@@ -376,8 +408,9 @@ if (registerForm) {
 // ============================================================
 
 const loginForm =
-    document.getElementById("login-form");
-
+    document.getElementById(
+        "login-form"
+    );
 
 if (loginForm) {
 
@@ -386,7 +419,6 @@ if (loginForm) {
         async (event) => {
 
             event.preventDefault();
-
 
             if (!supabaseClient) {
 
@@ -401,14 +433,17 @@ if (loginForm) {
 
             const email =
                 document
-                    .getElementById("login-email")
+                    .getElementById(
+                        "login-email"
+                    )
                     .value
                     .trim();
 
-
             const password =
                 document
-                    .getElementById("login-password")
+                    .getElementById(
+                        "login-password"
+                    )
                     .value;
 
 
@@ -457,7 +492,7 @@ if (loginForm) {
 
 
             showAuthMessage(
-                "Zalogowano! Przechodzenie do konta...",
+                "Zalogowano!",
                 true
             );
 
@@ -466,7 +501,6 @@ if (loginForm) {
                 new URLSearchParams(
                     window.location.search
                 );
-
 
             const redirect =
                 params.get("redirect");
@@ -537,7 +571,6 @@ async function loadAccount() {
             "account-username"
         );
 
-
     const emailElement =
         document.getElementById(
             "account-email"
@@ -556,10 +589,6 @@ async function loadAccount() {
         user.user_metadata?.username ||
         "Użytkownik";
 
-
-    // ------------------------------------------------
-    // POBIERANIE PROFILU
-    // ------------------------------------------------
 
     const {
         data: profile
@@ -593,7 +622,7 @@ async function loadAccount() {
 
 
 // ============================================================
-//                       WYLOGOWANIE
+//                     WYLOGOWANIE
 // ============================================================
 
 const logoutButton =
@@ -601,25 +630,17 @@ const logoutButton =
         "logout-button"
     );
 
-
 if (logoutButton) {
 
     logoutButton.addEventListener(
         "click",
         async () => {
 
-            if (!supabaseClient) {
+            if (supabaseClient) {
 
-                window.location.href =
-                    "login.html";
-
-                return;
+                await supabaseClient.auth.signOut();
 
             }
-
-
-            await supabaseClient.auth.signOut();
-
 
             window.location.href =
                 "index.html";
@@ -631,7 +652,7 @@ if (logoutButton) {
 
 
 // ============================================================
-//                AUTOMATYCZNE ŁADOWANIE KONTA
+//               AUTOMATYCZNE KONTO
 // ============================================================
 
 if (
@@ -658,9 +679,7 @@ document.addEventListener(
                 "[data-buy]"
             );
 
-
         if (!buyButton) return;
-
 
         event.preventDefault();
 
@@ -698,8 +717,38 @@ document.addEventListener(
 
 
         alert(
-            "Jesteś zalogowany. System płatności dodamy w następnym etapie."
+            "Jesteś zalogowany. System płatności dodamy później."
         );
 
     }
 );
+
+
+// ============================================================
+//              START — SPRAWDZENIE KONTA
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        updateAccountButton();
+
+    }
+);
+
+
+// Supabase może odświeżyć sesję chwilę po załadowaniu strony.
+// Dlatego aktualizujemy przycisk również po zmianie stanu logowania.
+
+if (supabaseClient) {
+
+    supabaseClient.auth.onAuthStateChange(
+        () => {
+
+            updateAccountButton();
+
+        }
+    );
+
+}
