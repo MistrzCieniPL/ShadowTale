@@ -1244,3 +1244,25 @@ footer p {
     }
 
 }
+/* =========================================================
+   MAŁE PRZYCISKI LOGOWANIA W NAWIGACJI
+   ========================================================= */
+
+.nav-links .button {
+    padding: 9px 16px;
+    font-size: 14px;
+    border-radius: 10px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.nav-links .button.primary {
+    padding: 9px 16px;
+}
+
+@media (max-width: 700px) {
+    .nav-links .button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
