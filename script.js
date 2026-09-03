@@ -1,38 +1,33 @@
-/* =========================================================
-   SHADOWTALE
-   SYSTEM STRONY + SUPABASE AUTH
-   ========================================================= */
+// ============================================================
+//                     SHADOWTALE
+//                 SYSTEM KONT + GWIAZDY
+// ============================================================
 
 
-/* =========================================================
-   SUPABASE
-   ========================================================= */
+// ============================================================
+//                 SUPABASE — KONFIGURACJA
+// ============================================================
 
-const SUPABASE_URL = "https://vbxyshxmnsfnlwuihzse.supabase.co";
-
+const SUPABASE_URL = "https://vbxyshxmnsfnlwuihzse.supabase.com";
 const SUPABASE_KEY = "sb_publishable_HlY8a9dT5hk9P_vC5TMshA_G96IRkyQ";
-
 
 let supabaseClient = null;
 
-
 if (
     typeof window.supabase !== "undefined" &&
-    SUPABASE_URL !== "https://vbxyshxmnsfnlwuihzse.supabase.co" &&
+    SUPABASE_URL !== "https://vbxyshxmnsfnlwuihzse.supabase.com" &&
     SUPABASE_KEY !== "sb_publishable_HlY8a9dT5hk9P_vC5TMshA_G96IRkyQ"
 ) {
-
     supabaseClient = window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
-
 }
 
 
-/* =========================================================
-   GWIAZDY
-   ========================================================= */
+// ============================================================
+//                     GWIAZDY
+// ============================================================
 
 const canvas = document.getElementById("stars");
 
@@ -47,18 +42,11 @@ if (canvas) {
 
 
     function resizeCanvas() {
-
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
     }
 
-
-    window.addEventListener(
-        "resize",
-        resizeCanvas
-    );
-
+    window.addEventListener("resize", resizeCanvas);
 
     resizeCanvas();
 
@@ -66,30 +54,21 @@ if (canvas) {
     for (let i = 0; i < 180; i++) {
 
         stars.push({
-
             x: Math.random() * canvas.width,
-
             y: Math.random() * canvas.height,
-
             size: Math.random() * 2 + 0.5,
-
             speed: Math.random() * 0.4 + 0.1
-
         });
 
     }
 
 
-    document.addEventListener(
-        "mousemove",
-        (event) => {
+    document.addEventListener("mousemove", (event) => {
 
-            mouseX = event.clientX;
+        mouseX = event.clientX;
+        mouseY = event.clientY;
 
-            mouseY = event.clientY;
-
-        }
-    );
+    });
 
 
     document.addEventListener(
@@ -99,15 +78,12 @@ if (canvas) {
             if (event.touches.length > 0) {
 
                 mouseX = event.touches[0].clientX;
-
                 mouseY = event.touches[0].clientY;
 
             }
 
         },
-        {
-            passive: true
-        }
+        { passive: true }
     );
 
 
@@ -123,20 +99,12 @@ if (canvas) {
 
         for (const star of stars) {
 
-            const distanceX =
-                mouseX - star.x;
-
-            const distanceY =
-                mouseY - star.y;
+            const distanceX = mouseX - star.x;
+            const distanceY = mouseY - star.y;
 
 
-            star.x +=
-                distanceX * 0.00015;
-
-
-            star.y +=
-                distanceY * 0.00015;
-
+            star.x += distanceX * 0.00015;
+            star.y += distanceY * 0.00015;
 
             star.y += star.speed;
 
@@ -144,16 +112,12 @@ if (canvas) {
             if (star.y > canvas.height) {
 
                 star.y = 0;
-
-                star.x =
-                    Math.random() *
-                    canvas.width;
+                star.x = Math.random() * canvas.width;
 
             }
 
 
             ctx.beginPath();
-
 
             ctx.arc(
                 star.x,
@@ -162,7 +126,6 @@ if (canvas) {
                 0,
                 Math.PI * 2
             );
-
 
             ctx.fillStyle = "white";
 
@@ -181,23 +144,19 @@ if (canvas) {
 }
 
 
-/* =========================================================
-   POMOCNICZE
-   ========================================================= */
+// ============================================================
+//                 POMOCNICZA FUNKCJA
+// ============================================================
 
-function showMessage(
-    element,
-    message,
-    success = false
-) {
+function showAuthMessage(message, success = false) {
 
-    if (!element) {
-        return;
-    }
+    const element =
+        document.getElementById("auth-message");
+
+    if (!element) return;
 
 
     element.textContent = message;
-
 
     element.classList.toggle(
         "success",
@@ -207,18 +166,15 @@ function showMessage(
 }
 
 
-/* =========================================================
-   REJESTRACJA
-   ========================================================= */
+// ============================================================
+//                     REJESTRACJA
+// ============================================================
 
 const registerForm =
     document.getElementById("register-form");
 
 
-if (
-    registerForm &&
-    supabaseClient
-) {
+if (registerForm) {
 
     registerForm.addEventListener(
         "submit",
@@ -227,29 +183,34 @@ if (
             event.preventDefault();
 
 
+            if (!supabaseClient) {
+
+                showAuthMessage(
+                    "Błąd połączenia z Supabase."
+                );
+
+                return;
+
+            }
+
+
             const username =
                 document
-                    .getElementById(
-                        "register-username"
-                    )
+                    .getElementById("register-username")
                     .value
                     .trim();
 
 
             const email =
                 document
-                    .getElementById(
-                        "register-email"
-                    )
+                    .getElementById("register-email")
                     .value
                     .trim();
 
 
             const password =
                 document
-                    .getElementById(
-                        "register-password"
-                    )
+                    .getElementById("register-password")
                     .value;
 
 
@@ -261,32 +222,17 @@ if (
                     .value;
 
 
-            const message =
-                document.getElementById(
-                    "auth-message"
-                );
-
+            // ------------------------------------------------
+            // WALIDACJA
+            // ------------------------------------------------
 
             if (
                 username.length < 3 ||
                 username.length > 20
             ) {
 
-                showMessage(
-                    message,
-                    "Nazwa użytkownika musi mieć 3–20 znaków."
-                );
-
-                return;
-
-            }
-
-
-            if (password !== passwordConfirm) {
-
-                showMessage(
-                    message,
-                    "Hasła nie są takie same."
+                showAuthMessage(
+                    "Nazwa użytkownika musi mieć od 3 do 20 znaków."
                 );
 
                 return;
@@ -296,9 +242,8 @@ if (
 
             if (password.length < 8) {
 
-                showMessage(
-                    message,
-                    "Hasło musi mieć co najmniej 8 znaków."
+                showAuthMessage(
+                    "Hasło musi mieć minimum 8 znaków."
                 );
 
                 return;
@@ -306,11 +251,26 @@ if (
             }
 
 
-            showMessage(
-                message,
-                "Tworzenie konta..."
+            if (password !== passwordConfirm) {
+
+                showAuthMessage(
+                    "Hasła nie są takie same."
+                );
+
+                return;
+
+            }
+
+
+            showAuthMessage(
+                "Tworzenie konta...",
+                true
             );
 
+
+            // ------------------------------------------------
+            // SUPABASE REJESTRACJA
+            // ------------------------------------------------
 
             const {
                 data,
@@ -324,7 +284,9 @@ if (
                 options: {
 
                     data: {
+
                         username: username
+
                     }
 
                 }
@@ -334,8 +296,7 @@ if (
 
             if (error) {
 
-                showMessage(
-                    message,
+                showAuthMessage(
                     error.message
                 );
 
@@ -344,59 +305,65 @@ if (
             }
 
 
-            if (!data.user) {
+            // ------------------------------------------------
+            // PROFIL
+            // ------------------------------------------------
 
-                showMessage(
-                    message,
-                    "Nie udało się utworzyć konta."
-                );
+            if (data.user && data.session) {
 
-                return;
+                const {
+                    error: profileError
+                } = await supabaseClient
+                    .from("profiles")
+                    .insert({
 
-            }
+                        id: data.user.id,
+
+                        username: username
+
+                    });
 
 
-            if (!data.session) {
+                if (
+                    profileError &&
+                    profileError.code !== "23505"
+                ) {
 
-                showMessage(
-                    message,
-                    "Konto utworzone! Sprawdź e-mail i potwierdź adres.",
+                    console.error(
+                        profileError
+                    );
+
+                    showAuthMessage(
+                        "Konto utworzone, ale wystąpił problem z profilem."
+                    );
+
+                    return;
+
+                }
+
+
+                showAuthMessage(
+                    "Konto utworzone! Za chwilę przejdziesz do konta.",
                     true
                 );
 
-                return;
 
-            }
+                setTimeout(() => {
 
+                    window.location.href =
+                        "konto.html";
 
-            const {
-                error: profileError
-            } = await supabaseClient
-                .from("profiles")
-                .insert({
-
-                    id: data.user.id,
-
-                    username: username
-
-                });
+                }, 1200);
 
 
-            if (profileError) {
+            } else {
 
-                showMessage(
-                    message,
-                    "Konto utworzone, ale nie udało się utworzyć profilu: " +
-                    profileError.message
+                showAuthMessage(
+                    "Konto utworzone! Sprawdź swoją skrzynkę e-mail i potwierdź adres.",
+                    true
                 );
 
-                return;
-
             }
-
-
-            window.location.href =
-                "konto.html";
 
         }
     );
@@ -404,18 +371,15 @@ if (
 }
 
 
-/* =========================================================
-   LOGOWANIE
-   ========================================================= */
+// ============================================================
+//                       LOGOWANIE
+// ============================================================
 
 const loginForm =
     document.getElementById("login-form");
 
 
-if (
-    loginForm &&
-    supabaseClient
-) {
+if (loginForm) {
 
     loginForm.addEventListener(
         "submit",
@@ -424,32 +388,33 @@ if (
             event.preventDefault();
 
 
+            if (!supabaseClient) {
+
+                showAuthMessage(
+                    "Błąd połączenia z Supabase."
+                );
+
+                return;
+
+            }
+
+
             const email =
                 document
-                    .getElementById(
-                        "login-email"
-                    )
+                    .getElementById("login-email")
                     .value
                     .trim();
 
 
             const password =
                 document
-                    .getElementById(
-                        "login-password"
-                    )
+                    .getElementById("login-password")
                     .value;
 
 
-            const message =
-                document.getElementById(
-                    "auth-message"
-                );
-
-
-            showMessage(
-                message,
-                "Logowanie..."
+            showAuthMessage(
+                "Logowanie...",
+                true
             );
 
 
@@ -469,9 +434,21 @@ if (
 
             if (error) {
 
-                showMessage(
-                    message,
-                    "Nie udało się zalogować. Sprawdź e-mail i hasło."
+                showAuthMessage(
+                    "Nieprawidłowy e-mail lub hasło."
+                );
+
+                console.error(error);
+
+                return;
+
+            }
+
+
+            if (!data.user) {
+
+                showAuthMessage(
+                    "Nie udało się zalogować."
                 );
 
                 return;
@@ -479,20 +456,37 @@ if (
             }
 
 
-            if (!data.session) {
+            showAuthMessage(
+                "Zalogowano! Przechodzenie do konta...",
+                true
+            );
 
-                showMessage(
-                    message,
-                    "Nie udało się utworzyć sesji."
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
                 );
 
-                return;
 
-            }
+            const redirect =
+                params.get("redirect");
 
 
-            window.location.href =
-                "konto.html";
+            setTimeout(() => {
+
+                if (redirect) {
+
+                    window.location.href =
+                        redirect;
+
+                } else {
+
+                    window.location.href =
+                        "konto.html";
+
+                }
+
+            }, 700);
 
         }
     );
@@ -500,91 +494,107 @@ if (
 }
 
 
-/* =========================================================
-   KONTO
-   ========================================================= */
+// ============================================================
+//                       KONTO
+// ============================================================
 
-const accountUsername =
-    document.getElementById(
-        "account-username"
-    );
+async function loadAccount() {
 
+    if (!supabaseClient) {
 
-const accountEmail =
-    document.getElementById(
-        "account-email"
-    );
+        window.location.href =
+            "login.html";
 
-
-if (
-    accountUsername &&
-    accountEmail &&
-    supabaseClient
-) {
-
-    async function loadAccount() {
-
-        const {
-            data: {
-                user
-            },
-            error
-        } =
-            await supabaseClient.auth
-                .getUser();
-
-
-        if (
-            error ||
-            !user
-        ) {
-
-            window.location.href =
-                "login.html";
-
-            return;
-
-        }
-
-
-        accountEmail.textContent =
-            user.email || "";
-
-
-        const {
-            data: profile
-        } =
-            await supabaseClient
-                .from("profiles")
-                .select("username")
-                .eq("id", user.id)
-                .maybeSingle();
-
-
-        if (profile) {
-
-            accountUsername.textContent =
-                profile.username;
-
-        } else {
-
-            accountUsername.textContent =
-                user.user_metadata?.username ||
-                "Użytkownik";
-
-        }
+        return;
 
     }
 
 
-    loadAccount();
+    const {
+        data: {
+            user
+        },
+        error
+    } =
+        await supabaseClient.auth.getUser();
+
+
+    if (
+        error ||
+        !user
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const usernameElement =
+        document.getElementById(
+            "account-username"
+        );
+
+
+    const emailElement =
+        document.getElementById(
+            "account-email"
+        );
+
+
+    if (emailElement) {
+
+        emailElement.textContent =
+            user.email || "";
+
+    }
+
+
+    let username =
+        user.user_metadata?.username ||
+        "Użytkownik";
+
+
+    // ------------------------------------------------
+    // POBIERANIE PROFILU
+    // ------------------------------------------------
+
+    const {
+        data: profile
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("username")
+            .eq("id", user.id)
+            .maybeSingle();
+
+
+    if (
+        profile &&
+        profile.username
+    ) {
+
+        username =
+            profile.username;
+
+    }
+
+
+    if (usernameElement) {
+
+        usernameElement.textContent =
+            username;
+
+    }
 
 }
 
 
-/* =========================================================
-   WYLOGOWANIE
-   ========================================================= */
+// ============================================================
+//                       WYLOGOWANIE
+// ============================================================
 
 const logoutButton =
     document.getElementById(
@@ -592,38 +602,23 @@ const logoutButton =
     );
 
 
-if (
-    logoutButton &&
-    supabaseClient
-) {
+if (logoutButton) {
 
     logoutButton.addEventListener(
         "click",
         async () => {
 
-            const {
-                error
-            } =
-                await supabaseClient.auth
-                    .signOut();
+            if (!supabaseClient) {
 
-
-            if (error) {
-
-                const message =
-                    document.getElementById(
-                        "account-message"
-                    );
-
-
-                showMessage(
-                    message,
-                    "Nie udało się wylogować."
-                );
+                window.location.href =
+                    "login.html";
 
                 return;
 
             }
+
+
+            await supabaseClient.auth.signOut();
 
 
             window.location.href =
@@ -635,9 +630,24 @@ if (
 }
 
 
-/* =========================================================
-   ZABEZPIECZENIE KUPNA
-   ========================================================= */
+// ============================================================
+//                AUTOMATYCZNE ŁADOWANIE KONTA
+// ============================================================
+
+if (
+    document.getElementById(
+        "account-username"
+    )
+) {
+
+    loadAccount();
+
+}
+
+
+// ============================================================
+//             OCHRONA PRZYCISKÓW „KUP”
+// ============================================================
 
 document.addEventListener(
     "click",
@@ -649,9 +659,7 @@ document.addEventListener(
             );
 
 
-        if (!buyButton) {
-            return;
-        }
+        if (!buyButton) return;
 
 
         event.preventDefault();
@@ -687,12 +695,6 @@ document.addEventListener(
             return;
 
         }
-
-
-        /*
-           Tutaj później podłączymy
-           prawdziwy system zakupów.
-        */
 
 
         alert(
