@@ -8,9 +8,9 @@
    SUPABASE
    ========================================================= */
 
-const SUPABASE_URL = "TUTAJ_WKLEJ_PROJECT_URL";
+const SUPABASE_URL = "https://vbxyshxmnsfnlwuihzse.supabase.co";
 
-const SUPABASE_KEY = "TUTAJ_WKLEJ_PUBLISHABLE_KEY";
+const SUPABASE_KEY = "sb_publishable_HlY8a9dT5hk9P_vC5TMshA_G96IRkyQ";
 
 
 let supabaseClient = null;
@@ -18,8 +18,8 @@ let supabaseClient = null;
 
 if (
     typeof window.supabase !== "undefined" &&
-    SUPABASE_URL !== "TUTAJ_WKLEJ_PROJECT_URL" &&
-    SUPABASE_KEY !== "TUTAJ_WKLEJ_PUBLISHABLE_KEY"
+    SUPABASE_URL !== "https://vbxyshxmnsfnlwuihzse.supabase.co" &&
+    SUPABASE_KEY !== "sb_publishable_HlY8a9dT5hk9P_vC5TMshA_G96IRkyQ"
 ) {
 
     supabaseClient = window.supabase.createClient(
