@@ -1001,3 +1001,246 @@ footer p {
     }
 
                  }
+/* =========================================================
+   SYSTEM KONTA
+   ========================================================= */
+
+.auth-box,
+.account-box {
+    width: min(440px, 100%);
+
+    margin: 40px auto 0;
+
+    padding: 35px;
+
+    border-radius: 24px;
+
+    background:
+        rgba(255, 255, 255, 0.045);
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.10);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0, 0, 0, 0.30);
+
+    backdrop-filter: blur(15px);
+}
+
+
+.auth-box form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+.auth-box input {
+    width: 100%;
+
+    padding: 15px 17px;
+
+    border-radius: 12px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.10);
+
+    outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.055);
+
+    color: white;
+
+    font-size: 15px;
+
+    transition: 0.25s;
+}
+
+
+.auth-box input::placeholder {
+    color: #788198;
+}
+
+
+.auth-box input:focus {
+    border-color:
+        rgba(156, 168, 255, 0.55);
+
+    background:
+        rgba(255, 255, 255, 0.075);
+
+    box-shadow:
+        0 0 25px
+        rgba(88, 101, 242, 0.10);
+}
+
+
+.auth-box button {
+    width: 100%;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 15px;
+}
+
+
+.auth-switch {
+    margin: 22px 0 0;
+
+    color: #858fa5;
+
+    font-size: 14px;
+}
+
+
+.auth-switch a {
+    color: #aeb7ff;
+
+    text-decoration: none;
+
+    font-weight: 700;
+}
+
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+
+.auth-message {
+    min-height: 22px;
+
+    margin-top: 18px;
+
+    color: #ff9c9c;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+.auth-message.success {
+    color: #8ff0b0;
+}
+
+
+/* =========================================================
+   KONTO
+   ========================================================= */
+
+.account-avatar {
+    width: 90px;
+    height: 90px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(156, 168, 255, 0.10);
+
+    border: 1px solid
+        rgba(156, 168, 255, 0.20);
+
+    font-size: 42px;
+}
+
+
+.account-box h2 {
+    margin: 0;
+
+    font-size: 28px;
+}
+
+
+.account-box > p {
+    margin: 10px 0 0;
+
+    color: #858fa5;
+
+    font-size: 14px;
+
+    word-break: break-word;
+}
+
+
+.account-actions {
+    display: flex;
+
+    gap: 12px;
+
+    justify-content: center;
+
+    margin-top: 28px;
+
+    flex-wrap: wrap;
+}
+
+
+.account-actions button {
+    border: none;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 14px;
+}
+
+
+.empty-products {
+    width: 100%;
+
+    padding: 45px 25px;
+
+    text-align: center;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+
+.empty-products p {
+    margin: 0 0 25px;
+
+    color: #9da6ba;
+}
+
+
+@media (max-width: 700px) {
+
+    .auth-box,
+    .account-box {
+        padding: 25px 18px;
+
+        border-radius: 19px;
+    }
+
+    .account-actions {
+        flex-direction: column;
+    }
+
+    .account-actions .button {
+        width: 100%;
+    }
+
+}
