@@ -1,1 +1,273 @@
+<!DOCTYPE html><html lang="pl"><head>
+    <meta charset="UTF-8"><meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
+<title>Regulaminy — ShadowTale</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head><body><canvas id="stars"></canvas>
+
+
+<!-- =====================================================
+                     NAWIGACJA
+====================================================== -->
+
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+        <img
+            src="assets/logo.png"
+            alt="ShadowTale"
+        >
+    </a>
+
+
+    <div class="nav-links">
+
+        <a href="minecraft.html">
+            Minecraft
+        </a>
+
+        <a href="undertale.html">
+            Undertale
+        </a>
+
+        <a
+            href="https://discord.gg/SGdrMKAaSG"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            💬 Discord
+        </a>
+
+
+        <!-- KONTO -->
+
+        <div class="account-menu">
+
+            <button
+                class="account-button"
+                id="account-button"
+                type="button"
+            >
+                👤 Konto
+            </button>
+
+
+            <div
+                class="account-dropdown"
+                id="account-dropdown"
+            >
+
+                <div class="account-dropdown-title">
+                    Konto
+                </div>
+
+                <a href="rejestracja.html">
+                    📝 Utwórz konto
+                </a>
+
+                <a href="login.html">
+                    🔐 Zaloguj się
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+                     REGULAMINY
+====================================================== -->
+
+<main>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="hero-label">
+                ShadowTale
+            </p>
+
+            <h1>
+                Regulaminy
+            </h1>
+
+            <p class="hero-description">
+                Wybierz regulamin, który chcesz przeczytać.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="projects">
+
+        <h2 class="section-title">
+            Wybierz regulamin
+        </h2>
+
+
+        <div class="main-categories">
+
+
+            <!-- MINECRAFT -->
+
+            <article class="main-category">
+
+                <div class="category-icon">
+                    ⛏️
+                </div>
+
+                <h3>
+                    Regulamin Minecraft
+                </h3>
+
+                <p>
+                    Zasady dotyczące serwera,
+                    rozgrywki i społeczności Minecraft.
+                </p>
+
+                <a
+                    href="regulamin-minecraft.html"
+                    class="category-link"
+                >
+                    Czytaj regulamin →
+                </a>
+
+            </article>
+
+
+            <!-- UNDERTALE -->
+
+            <article class="main-category">
+
+                <div class="category-icon">
+                    ❤️
+                </div>
+
+                <h3>
+                    Regulamin Undertale
+                </h3>
+
+                <p>
+                    Zasady dotyczące materiałów,
+                    projektów i społeczności Undertale.
+                </p>
+
+                <a
+                    href="regulamin-undertale.html"
+                    class="category-link"
+                >
+                    Czytaj regulamin →
+                </a>
+
+            </article>
+
+
+            <!-- OGÓLNY -->
+
+            <article class="main-category">
+
+                <div class="category-icon">
+                    📋
+                </div>
+
+                <h3>
+                    Regulamin ogólny
+                </h3>
+
+                <p>
+                    Podstawowe zasady obowiązujące
+                    użytkowników ShadowTale.
+                </p>
+
+                <a
+                    href="regulamin-ogolny.html"
+                    class="category-link"
+                >
+                    Czytaj regulamin →
+                </a>
+
+            </article>
+
+
+            <!-- DISCORD -->
+
+            <article class="main-category">
+
+                <div class="category-icon">
+                    💬
+                </div>
+
+                <h3>
+                    Regulamin Discord
+                </h3>
+
+                <p>
+                    Zasady korzystania z serwera
+                    Discord ShadowTale.
+                </p>
+
+                <a
+                    href="regulamin-discord.html"
+                    class="category-link"
+                >
+                    Czytaj regulamin →
+                </a>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- POWRÓT -->
+
+    <section class="discord">
+
+        <a
+            href="index.html"
+            class="button primary"
+        >
+            ← Wróć na stronę główną
+        </a>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+                        STOPKA
+====================================================== -->
+
+<footer>
+
+    <p>
+        © 2026 ShadowTale
+    </p>
+
+    <p>
+        Minecraft • Undertale • Community
+    </p>
+
+</footer>
+
+
+<script src="scripts.js"></script>
+
+</body></html>
