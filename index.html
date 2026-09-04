@@ -1,189 +1,266 @@
-<!DOCTYPE html>
-<html lang="pl">
+<!DOCTYPE html><html lang="pl"><head>
+    <meta charset="UTF-8"><meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<head>
-    <meta charset="UTF-8">
+<title>ShadowTale</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<link rel="stylesheet" href="style.css">
 
-    <title>ShadowTale</title>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
+</head><body><canvas id="stars"></canvas>
 
 
-<body>
+<!-- =====================================================
+                     NAWIGACJA
+====================================================== -->
 
-    <canvas id="stars"></canvas>
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+        <img
+            src="assets/logo.png"
+            alt="ShadowTale"
+        >
+    </a>
 
 
-    <!-- =====================================================
-                         NAWIGACJA
-    ====================================================== -->
+    <div class="nav-links">
 
-    <nav class="navbar">
+        <a href="minecraft.html">
+            Minecraft
+        </a>
 
-        <a href="index.html" class="logo">
-            <img
-                src="assets/logo.png"
-                alt="ShadowTale"
-            >
+        <a href="undertale.html">
+            Undertale
+        </a>
+
+        <a
+            href="https://discord.gg/SGdrMKAaSG"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            💬 Discord
         </a>
 
 
-        <div class="nav-links">
+        <!-- KONTO -->
 
-            <a href="minecraft.html">
-                Minecraft
-            </a>
+        <div class="account-menu">
 
-            <a href="undertale.html">
-                Undertale
-            </a>
-
-            <a
-                href="https://discord.gg/SGdrMKAaSG"
-                target="_blank"
-                rel="noopener noreferrer"
+            <button
+                class="account-button"
+                id="account-button"
+                type="button"
             >
-                💬 Discord
-            </a>
+                👤 Konto
+            </button>
 
 
-            <!-- KONTO -->
+            <div
+                class="account-dropdown"
+                id="account-dropdown"
+            >
 
-            <div class="account-menu">
-
-                <button
-                    class="account-button"
-                    id="account-button"
-                    type="button"
-                >
-                    👤 Konto
-                </button>
-
-
-                <div
-                    class="account-dropdown"
-                    id="account-dropdown"
-                >
-
-                    <div class="account-dropdown-title">
-                        Konto
-                    </div>
-
-                    <a href="rejestracja.html">
-                        📝 Utwórz konto
-                    </a>
-
-                    <a href="login.html">
-                        🔐 Zaloguj się
-                    </a>
-
+                <div class="account-dropdown-title">
+                    Konto
                 </div>
+
+                <a href="rejestracja.html">
+                    📝 Utwórz konto
+                </a>
+
+                <a href="login.html">
+                    🔐 Zaloguj się
+                </a>
 
             </div>
 
         </div>
 
-    </nav>
+    </div>
+
+</nav>
 
 
-    <!-- =====================================================
-                           HERO
-    ====================================================== -->
+<!-- =====================================================
+                       HERO
+====================================================== -->
 
-    <main>
+<main>
 
-        <section class="hero">
+    <section class="hero">
 
-            <div class="hero-content">
+        <div class="hero-content">
 
-                <p class="hero-label">
-                    Witaj w
+            <p class="hero-label">
+                Witaj w
+            </p>
+
+            <h1>
+                ShadowTale
+            </h1>
+
+            <p class="hero-description">
+                Twoje centrum dodatków, projektów
+                i materiałów związanych z Minecraft
+                oraz Undertale.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+                     KATEGORIE
+    ================================================== -->
+
+    <section class="projects">
+
+        <h2 class="section-title">
+            Kategorie
+        </h2>
+
+
+        <div class="main-categories">
+
+
+            <!-- MINECRAFT -->
+
+            <article class="main-category">
+
+                <div class="category-icon">
+                    ⛏️
+                </div>
+
+                <h3>
+                    Minecraft
+                </h3>
+
+                <p>
+                    Skrypty, schematy, konfiguracje,
+                    tekstury, mapy oraz inne dodatki
+                    do Minecraft.
                 </p>
 
-                <h1>
-                    ShadowTale
-                </h1>
+                <a
+                    href="minecraft.html"
+                    class="category-link"
+                >
+                    Przejdź do Minecraft →
+                </a>
 
-                <p class="hero-description">
-                    Twoje centrum dodatków, projektów
-                    i materiałów związanych z Minecraft
-                    oraz Undertale.
+            </article>
+
+
+            <!-- UNDERTALE -->
+
+            <article class="main-category">
+
+                <div class="category-icon">
+                    ❤️
+                </div>
+
+                <h3>
+                    Undertale
+                </h3>
+
+                <p>
+                    Zapisy gry, grafiki oraz inne
+                    materiały związane z Undertale.
                 </p>
 
-            </div>
+                <a
+                    href="undertale.html"
+                    class="category-link"
+                >
+                    Przejdź do Undertale →
+                </a>
 
-        </section>
+            </article>
 
+        </div>
 
-        <!-- =================================================
-                         KATEGORIE
-        ================================================== -->
-
-        <section class="projects">
-
-            <h2 class="section-title">
-                Kategorie
-            </h2>
+    </section>
 
 
-            <div class="main-categories">
+    <!-- =================================================
+                       DISCORD
+    ================================================== -->
+
+    <section class="discord">
+
+        <h2>
+            Dołącz do społeczności
+        </h2>
+
+        <p>
+            Masz pytanie, pomysł albo potrzebujesz pomocy?
+            Znajdziesz nas na Discordzie.
+        </p>
+
+        <a
+            href="https://discord.gg/SGdrMKAaSG"
+            class="button primary"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            💬 Dołącz na Discord
+        </a>
+
+    </section>
 
 
-                <!-- MINECRAFT -->
+    <!-- =================================================
+                INFORMACJE POTRZEBNE
+    ================================================== -->
 
-                <article class="main-category">
+    <section class="discord-info">
 
-                    <div class="category-icon">
-                        ⛏️
-                    </div>
+        <h2>
+            Informacje potrzebne
+        </h2>
 
-                    <h3>
-                        Minecraft
-                    </h3>
+        <p>
+            Najważniejsze informacje i zasady dotyczące
+            społeczności ShadowTale.
+        </p>
 
-                    <p>
-                        Skrypty, schematy, konfiguracje,
-                        tekstury, mapy oraz inne dodatki
-                        do Minecraft.
-                    </p>
+        <a
+            href="regulamin.html"
+            class="button primary"
+        >
+            📜 Regulaminy
+        </a>
 
-                    <a
-                        href="minecraft.html"
-                        class="category-link"
-                    >
-                        Przejdź do Minecraft →
-                    </a>
+    </section>
 
-                </article>
+</main>
 
 
-                <!-- UNDERTALE -->
+<!-- =====================================================
+                        STOPKA
+====================================================== -->
 
-                <article class="main-category">
+<footer>
 
-                    <div class="category-icon">
-                        ❤️
-                    </div>
+    <p>
+        © 2026 ShadowTale
+    </p>
 
-                    <h3>
-                        Undertale
-                    </h3>
+    <p>
+        Minecraft • Undertale • Community
+    </p>
 
-                    <p>
-                        Zapisy gry, grafiki oraz inne
-                        materiały związane z Undertale.
-                    </p>
+</footer>
 
-                    <a
-                        href="undertale.html"
-                        class="category-link"
-                   
+
+<script src="scripts.js"></script>
+
+</body>
+
+</html>
