@@ -752,3 +752,26 @@ if (supabaseClient) {
     );
 
 }
+const accountButton =
+    document.getElementById("account-button");
+
+const accountDropdown =
+    document.getElementById("account-dropdown");
+
+if (accountButton && accountDropdown) {
+
+    accountButton.addEventListener("click", (event) => {
+
+        event.stopPropagation();
+
+        accountDropdown.classList.toggle("open");
+
+    });
+
+    document.addEventListener("click", () => {
+
+        accountDropdown.classList.remove("open");
+
+    });
+
+}
