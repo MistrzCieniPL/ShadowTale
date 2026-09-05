@@ -1531,3 +1531,430 @@ footer p {
         font-size: 12px !important;
     }
 }
+/* ==========================================================
+   SHADOWTALE — POPRAWKI REGULAMINÓW I KONTA
+   Wklej NA SAM KONIEC style.css
+   ========================================================== */
+
+/* ---------- WSPÓLNE ---------- */
+
+.nav-active {
+    color: #ffffff !important;
+    background: rgba(156, 168, 255, 0.08) !important;
+    border-color: rgba(156, 168, 255, 0.18) !important;
+}
+
+.hero-label,
+.hero-label,
+.account-label {
+    color: #9ca8ff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.rules-hero {
+    min-height: 510px;
+    padding-bottom: 70px;
+}
+
+.rules-section {
+    padding-top: 70px;
+}
+
+/* ---------- REGULAMINY ---------- */
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.rule-card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    min-height: 235px;
+    padding: 30px;
+    overflow: hidden;
+    border-radius: 24px;
+    background:
+        linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.018));
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: 0 18px 55px rgba(0,0,0,.24);
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+
+.rule-card::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    right: -90px;
+    top: -90px;
+    border-radius: 50%;
+    background: rgba(156,168,255,.10);
+    filter: blur(30px);
+    pointer-events: none;
+}
+
+.rule-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(156,168,255,.32);
+    box-shadow: 0 25px 70px rgba(0,0,0,.34), 0 0 35px rgba(88,101,242,.08);
+}
+
+.rule-icon {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 70px;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 19px;
+    background: rgba(156,168,255,.09);
+    border: 1px solid rgba(156,168,255,.17);
+    font-size: 32px;
+    box-shadow: inset 0 1px rgba(255,255,255,.06);
+}
+
+.rule-card-content {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+}
+
+.rule-number {
+    display: block;
+    margin-bottom: 7px;
+    color: #69738b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.rule-card h3 {
+    margin: 0 0 10px;
+    font-size: 25px;
+    line-height: 1.2;
+}
+
+.rule-card p {
+    margin: 0 0 18px;
+    color: #9aa4b8;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.rule-card .category-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    color: #b8c0ff;
+}
+
+.rule-card .category-link span {
+    transition: transform .2s ease;
+}
+
+.rule-card:hover .category-link span {
+    transform: translateX(4px);
+}
+
+.rules-bottom {
+    margin-top: 20px;
+}
+
+.rules-bottom h2 {
+    margin: 0 0 10px;
+}
+
+.rules-bottom p {
+    margin-bottom: 25px;
+}
+
+/* ---------- KONTO ---------- */
+
+.account-hero {
+    min-height: auto;
+    padding: 135px 20px 85px;
+    align-items: flex-start;
+}
+
+.account-page-content {
+    max-width: 1000px;
+}
+
+.account-dashboard {
+    width: 100%;
+    margin: 45px auto 0;
+}
+
+.account-profile-card {
+    position: relative;
+    width: 100%;
+    padding: 34px;
+    text-align: left;
+    border-radius: 26px;
+    background:
+        radial-gradient(circle at 10% 0%, rgba(88,101,242,.16), transparent 35%),
+        linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+    border: 1px solid rgba(156,168,255,.18);
+    box-shadow: 0 25px 80px rgba(0,0,0,.32), 0 0 45px rgba(88,101,242,.07);
+    backdrop-filter: blur(18px);
+}
+
+.account-profile-top {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.account-avatar-large {
+    flex: 0 0 92px;
+    width: 92px;
+    height: 92px;
+    margin: 0;
+    font-size: 40px;
+    background: rgba(156,168,255,.12);
+    border: 1px solid rgba(156,168,255,.24);
+    box-shadow: 0 0 35px rgba(88,101,242,.12);
+}
+
+.account-identity {
+    min-width: 0;
+}
+
+.account-identity .account-label {
+    display: block;
+    margin-bottom: 7px;
+}
+
+.account-identity h2 {
+    margin: 0;
+    font-size: clamp(27px, 4vw, 38px);
+    line-height: 1.1;
+    word-break: break-word;
+}
+
+.account-identity p {
+    margin: 9px 0 0;
+    color: #9ba5b9;
+    font-size: 15px;
+    word-break: break-word;
+}
+
+.account-divider {
+    height: 1px;
+    margin: 28px 0 18px;
+    background: rgba(255,255,255,.08);
+}
+
+.account-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #9ca8b9;
+    font-size: 13px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: #78e6a0;
+    box-shadow: 0 0 12px rgba(120,230,160,.65);
+}
+
+.account-actions-wide {
+    justify-content: flex-start;
+    margin-top: 24px;
+}
+
+.account-actions-wide .button {
+    min-width: 170px;
+}
+
+.account-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.account-info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+    padding: 24px;
+    text-align: left;
+    border-radius: 20px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.account-info-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: rgba(156,168,255,.08);
+    border: 1px solid rgba(156,168,255,.13);
+    font-size: 22px;
+}
+
+.account-info-card .account-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #727d96;
+    font-size: 10px;
+}
+
+.account-info-card strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 17px;
+}
+
+.account-info-card p {
+    margin: 0;
+    color: #858fa5;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.account-products-section {
+    padding-top: 70px;
+}
+
+.account-empty-products {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 55px 30px;
+    background:
+        linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
+}
+
+.empty-products-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: rgba(156,168,255,.08);
+    border: 1px solid rgba(156,168,255,.13);
+    font-size: 28px;
+}
+
+.account-empty-products h3 {
+    margin: 0 0 8px;
+    font-size: 23px;
+}
+
+.account-empty-products p {
+    max-width: 520px;
+    margin: 0 auto 25px;
+}
+
+/* ---------- RESPONSYWNOŚĆ ---------- */
+
+@media (max-width: 800px) {
+    .rules-grid,
+    .account-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rule-card {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .rules-hero {
+        min-height: 430px;
+    }
+
+    .rules-grid {
+        gap: 14px;
+    }
+
+    .rule-card {
+        gap: 16px;
+        padding: 21px;
+        border-radius: 19px;
+    }
+
+    .rule-icon {
+        flex-basis: 56px;
+        width: 56px;
+        height: 56px;
+        border-radius: 15px;
+        font-size: 25px;
+    }
+
+    .rule-card h3 {
+        font-size: 20px;
+    }
+
+    .rule-card p {
+        font-size: 13px;
+    }
+
+    .account-hero {
+        padding: 115px 16px 60px;
+    }
+
+    .account-dashboard {
+        margin-top: 30px;
+    }
+
+    .account-profile-card {
+        padding: 23px 18px;
+        border-radius: 20px;
+    }
+
+    .account-profile-top {
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .account-avatar-large {
+        flex-basis: 65px;
+        width: 65px;
+        height: 65px;
+        font-size: 29px;
+    }
+
+    .account-identity h2 {
+        font-size: 24px;
+    }
+
+    .account-identity p {
+        font-size: 13px;
+    }
+
+    .account-actions-wide {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .account-actions-wide .button {
+        width: 100%;
+        max-width: none;
+    }
+
+    .account-info-card {
+        padding: 19px;
+    }
+}
