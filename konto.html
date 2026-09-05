@@ -1,175 +1,113 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moje konto — ShadowTale</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
-
 <canvas id="stars"></canvas>
 
-
 <header class="navbar">
+    <a href="index.html" class="logo">
+        <img src="assets/logo.png" alt="ShadowTale">
+    </a>
 
-    <div class="logo">
-        SHADOW<span>TALE</span>
-    </div>
-
-    <nav>
-
-        <a href="index.html">
-            Strona główna
-        </a>
-
-        <a href="minecraft.html">
-            Minecraft
-        </a>
-
-        <a href="undertale.html">
-            Undertale
-        </a>
-
-        <a href="konto.html">
-            Konto
-        </a>
-
+    <nav class="nav-links">
+        <a href="index.html">Strona główna</a>
+        <a href="minecraft.html">Minecraft</a>
+        <a href="undertale.html">Undertale</a>
+        <a href="regulamin.html">Regulaminy</a>
+        <a href="konto.html" class="nav-active">👤 Konto</a>
     </nav>
-
 </header>
 
-
 <main>
+    <section class="hero account-hero">
+        <div class="hero-content account-page-content">
 
-<section class="hero category-hero">
+            <p class="hero-label">SHADOWTALE • KONTO</p>
+            <h1>Moje konto</h1>
+            <p class="hero-description">Zarządzaj swoim kontem i sprawdź swoje zakupy.</p>
 
-    <div class="hero-content">
+            <div class="account-dashboard">
 
-        <div class="small-title">
-            ✦ SHADOWTALE • KONTO ✦
+                <div class="account-profile-card">
+                    <div class="account-profile-top">
+                        <div class="account-avatar account-avatar-large">👤</div>
+
+                        <div class="account-identity">
+                            <span class="account-label">ZALOGOWANY UŻYTKOWNIK</span>
+                            <h2 id="account-username">Ładowanie...</h2>
+                            <p id="account-email">Ładowanie...</p>
+                        </div>
+                    </div>
+
+                    <div class="account-divider"></div>
+
+                    <div class="account-status">
+                        <span class="status-dot"></span>
+                        <span>Sesja konta aktywna</span>
+                    </div>
+
+                    <div class="account-actions account-actions-wide">
+                        <a href="index.html" class="button secondary">← Strona główna</a>
+                        <button id="logout-button" class="button primary" type="button">Wyloguj się</button>
+                    </div>
+
+                    <div id="account-message" class="auth-message"></div>
+                </div>
+
+                <div class="account-info-grid">
+                    <div class="account-info-card">
+                        <span class="account-info-icon">🛒</span>
+                        <div>
+                            <span class="account-label">ZAKUPY</span>
+                            <strong>Moje produkty</strong>
+                            <p>Twoje zakupione produkty pojawią się tutaj.</p>
+                        </div>
+                    </div>
+
+                    <div class="account-info-card">
+                        <span class="account-info-icon">🔐</span>
+                        <div>
+                            <span class="account-label">BEZPIECZEŃSTWO</span>
+                            <strong>Twoje konto</strong>
+                            <p>Nie udostępniaj danych logowania innym osobom.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="projects account-products-section">
+        <div class="section-title">
+            <span>SHADOWTALE • SKLEP</span>
+            <h2>Moje zakupy</h2>
         </div>
 
-        <h1>
-            Moje konto
-        </h1>
-
-
-        <div class="account-box">
-
-            <div class="account-avatar">
-                👤
-            </div>
-
-
-            <h2 id="account-username">
-                Ładowanie...
-            </h2>
-
-
-            <p id="account-email">
-                Ładowanie...
-            </p>
-
-
-            <div class="account-actions">
-
-                <a
-                    href="index.html"
-                    class="button secondary"
-                >
-                    Strona główna
-                </a>
-
-
-                <button
-                    id="logout-button"
-                    class="button primary"
-                >
-                    Wyloguj się
-                </button>
-
-            </div>
-
-
-            <div
-                id="account-message"
-                class="auth-message"
-            ></div>
-
+        <div class="empty-products account-empty-products">
+            <div class="empty-products-icon">🛒</div>
+            <h3>Brak zakupów</h3>
+            <p>Nie masz jeszcze żadnych zakupów przypisanych do tego konta.</p>
+            <a href="minecraft.html" class="button secondary">Przeglądaj Minecraft</a>
         </div>
-
-    </div>
-
-</section>
-
-
-<section class="projects">
-
-    <div class="section-title">
-
-        <span>
-            SHADOWTALE
-        </span>
-
-        <h2>
-            Moje zakupy
-        </h2>
-
-    </div>
-
-
-    <div class="empty-products">
-
-        <p>
-            🛒 Nie masz jeszcze żadnych zakupów.
-        </p>
-
-        <a
-            href="minecraft.html"
-            class="button secondary"
-        >
-            Przeglądaj Minecraft
-        </a>
-
-    </div>
-
-</section>
-
+    </section>
 </main>
 
-
 <footer>
-
     <div class="logo">
-        SHADOW<span>TALE</span>
+        <img src="assets/logo.png" alt="ShadowTale">
     </div>
-
-    <p>
-        © 2026 ShadowTale
-    </p>
-
+    <p>© 2026 ShadowTale</p>
+    <p>Minecraft • Undertale • Community</p>
 </footer>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="scripts.js"></script>
-
 </body>
-
 </html>
