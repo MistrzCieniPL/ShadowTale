@@ -1,7 +1,3 @@
-/* =====================================================
-   RESET
-===================================================== */
-
 * {
     margin: 0;
     padding: 0;
@@ -15,13 +11,8 @@ html {
 
 body {
     background: #070912;
-    color: #f3f4ff;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+    color: #f2f4ff;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 1.6;
 }
 
@@ -30,7 +21,9 @@ a {
     text-decoration: none;
 }
 
-button {
+button,
+input,
+textarea {
     font-family: inherit;
 }
 
@@ -45,79 +38,51 @@ button {
 
     z-index: 9000;
 
-    min-height: 72px;
+    height: 70px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 5%;
+    padding: 0 6%;
 
-    background: rgba(7, 9, 18, 0.96);
+    background: rgba(7, 9, 18, 0.97);
 
     border-bottom: 1px solid #20263a;
 
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(15px);
 }
 
 .logo {
-    flex-shrink: 0;
-
-    color: #ffffff;
+    color: white;
 
     font-size: 24px;
     font-weight: 900;
-
-    letter-spacing: -1px;
 }
 
 .logo span {
     color: #817fff;
 }
 
-.navbar nav {
-    display: flex;
-    align-items: center;
+.account-top {
+    padding: 9px 17px;
 
-    gap: 4px;
-}
-
-.navbar nav a {
-    padding: 9px 12px;
-
-    border-radius: 8px;
-
-    color: #9ca4bd;
-
-    font-size: 13px;
-    font-weight: 700;
-
-    white-space: nowrap;
-
-    transition: 0.2s ease;
-}
-
-.navbar nav a:hover {
-    color: #ffffff;
-    background: #151a2c;
-}
-
-.menu-toggle {
-    display: none;
-
-    width: 42px;
-    height: 42px;
-
-    border: 1px solid #303650;
+    border: 1px solid #303754;
     border-radius: 9px;
 
     background: #111629;
 
     color: white;
 
-    font-size: 21px;
+    font-size: 13px;
+    font-weight: 800;
 
-    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.account-top:hover {
+    background: #1b2138;
+    border-color: #7775ff;
 }
 
 
@@ -143,32 +108,29 @@ button {
 
     cursor: pointer;
 
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .button:hover {
     transform: translateY(-2px);
 }
 
-.button-primary {
+.primary {
     background: #7775ff;
-    color: #ffffff;
+    color: white;
 }
 
-.button-primary:hover {
-    background: #6866e8;
+.primary:hover {
+    background: #6866e7;
 }
 
-.button-secondary {
+.secondary {
     background: #12172a;
     border-color: #303752;
-    color: #ffffff;
+    color: white;
 }
 
-.button-secondary:hover {
+.secondary:hover {
     background: #1a2038;
 }
 
@@ -178,47 +140,42 @@ button {
 ===================================================== */
 
 .hero {
-    min-height: 650px;
+    min-height: 620px;
 
     display: flex;
     align-items: center;
 
-    padding: 90px 8%;
+    padding: 80px 8%;
 
     background:
         radial-gradient(
-            circle at 75% 25%,
-            rgba(110, 103, 255, 0.18),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 20% 70%,
-            rgba(50, 76, 170, 0.10),
-            transparent 35%
+            circle at 75% 30%,
+            rgba(105, 100, 255, 0.16),
+            transparent 36%
         );
 }
 
 .hero-content {
-    width: min(900px, 100%);
+    max-width: 850px;
 }
 
 .eyebrow {
     color: #8583ff;
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
 
     letter-spacing: 3px;
 }
 
 .hero h1 {
-    margin-top: 15px;
+    margin-top: 14px;
 
-    font-size: clamp(48px, 7vw, 88px);
+    font-size: clamp(48px, 7vw, 82px);
 
     line-height: 0.98;
 
-    letter-spacing: -5px;
+    letter-spacing: -4px;
 }
 
 .hero h1 span {
@@ -226,9 +183,9 @@ button {
 }
 
 .hero p {
-    max-width: 620px;
+    max-width: 600px;
 
-    margin-top: 27px;
+    margin-top: 25px;
 
     color: #969eb7;
 
@@ -240,20 +197,20 @@ button {
 
     gap: 10px;
 
-    margin-top: 32px;
+    margin-top: 30px;
 }
 
 
 /* =====================================================
-   SECTION
+   SECTIONS
 ===================================================== */
 
 .section {
-    width: min(1150px, 90%);
+    width: min(1120px, 88%);
 
     margin: 0 auto;
 
-    padding: 90px 0;
+    padding: 85px 0;
 }
 
 .section-heading {
@@ -273,13 +230,13 @@ button {
 .section-heading h2 {
     margin-top: 7px;
 
-    font-size: 40px;
+    font-size: 39px;
 
     line-height: 1.1;
 }
 
 .section-heading p {
-    margin-top: 10px;
+    margin-top: 9px;
 
     color: #858da7;
 
@@ -288,7 +245,7 @@ button {
 
 
 /* =====================================================
-   CATEGORY CARDS
+   KATEGORIE
 ===================================================== */
 
 .categories {
@@ -296,23 +253,23 @@ button {
 
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    gap: 18px;
+    gap: 30px;
 }
 
 .category-card {
-    min-height: 185px;
+    min-height: 190px;
 
     display: flex;
     align-items: center;
 
-    gap: 20px;
+    gap: 25px;
 
-    padding: 25px;
+    padding: 30px;
+
+    border: 1px solid #292f48;
+    border-radius: 17px;
 
     background: #0d1120;
-
-    border: 1px solid #252c44;
-    border-radius: 16px;
 
     transition: 0.2s ease;
 }
@@ -320,14 +277,14 @@ button {
 .category-card:hover {
     transform: translateY(-4px);
 
-    border-color: #6563c3;
+    border-color: #6664c5;
 
     background: #101528;
 }
 
 .category-icon {
-    width: 52px;
-    height: 52px;
+    width: 58px;
+    height: 58px;
 
     flex-shrink: 0;
 
@@ -335,85 +292,97 @@ button {
     align-items: center;
     justify-content: center;
 
-    border-radius: 12px;
+    border-radius: 13px;
 
-    background: #171c31;
+    background: #171c32;
 
-    font-size: 23px;
+    font-size: 24px;
 }
 
-.category-text {
+.category-info {
     min-width: 0;
 }
 
-.category-text h3 {
+.category-info h3 {
     font-size: 27px;
-
-    line-height: 1.1;
 }
 
-.category-text p {
-    margin: 7px 0 15px;
+.category-info p {
+    margin: 7px 0 17px;
 
-    color: #8c94ad;
+    color: #8e96af;
 
     font-size: 13px;
 }
 
-.category-link {
+.category-button {
     display: inline-flex;
 
     align-items: center;
 
-    gap: 8px;
+    gap: 9px;
 
-    color: #ffffff;
+    padding: 9px 14px;
 
-    font-size: 13px;
+    border: 1px solid #303854;
+    border-radius: 8px;
+
+    background: #141a2d;
+
+    color: white;
+
+    font-size: 12px;
     font-weight: 800;
+
+    transition: 0.2s ease;
 }
 
-.category-link strong {
+.category-button:hover {
+    background: #202741;
+    border-color: #7775ff;
+}
+
+.category-button span {
     color: #8583ff;
 
-    font-size: 17px;
+    font-size: 16px;
 }
 
 
 /* =====================================================
-   CATEGORY PAGES
+   KATEGORIE SZCZEGÓŁOWE
 ===================================================== */
 
-.category-page {
-    width: min(1150px, 90%);
+.category-area {
+    width: min(1120px, 88%);
 
     margin: 0 auto 25px;
 
-    padding: 65px 50px;
+    padding: 55px 45px;
 
-    border: 1px solid #252c44;
-    border-radius: 18px;
+    border: 1px solid #292f48;
+    border-radius: 17px;
 
-    background: #0b0f1d;
+    background: #0b0f1c;
 }
 
-.category-page-inner {
+.category-area-content {
     max-width: 850px;
 }
 
-.category-page h2 {
+.category-area h2 {
     margin-top: 7px;
 
-    font-size: 38px;
+    font-size: 37px;
 }
 
-.category-page p {
-    margin-top: 10px;
+.category-area p {
+    margin-top: 8px;
 
-    color: #8d95af;
+    color: #8d95ad;
 }
 
-.product-types {
+.item-list {
     display: flex;
 
     flex-wrap: wrap;
@@ -423,7 +392,7 @@ button {
     margin: 25px 0;
 }
 
-.product-types div {
+.item-list div {
     padding: 8px 12px;
 
     border: 1px solid #2b334e;
@@ -431,20 +400,20 @@ button {
 
     background: #12172a;
 
-    color: #b5bbd0;
+    color: #aeb5ca;
 
     font-size: 12px;
     font-weight: 700;
 }
 
-.undertale-page {
+.undertale {
     background:
         radial-gradient(
-            circle at 80% 30%,
-            rgba(180, 65, 90, 0.08),
-            transparent 40%
+            circle at 80% 40%,
+            rgba(180, 65, 90, 0.09),
+            transparent 45%
         ),
-        #0b0f1d;
+        #0b0f1c;
 }
 
 
@@ -452,60 +421,57 @@ button {
    CUSTOM
 ===================================================== */
 
-.custom-box {
-    min-height: 180px;
+.custom-box,
+.simple-box {
+    min-height: 165px;
 
     display: flex;
 
     align-items: center;
+
     justify-content: space-between;
 
     gap: 30px;
 
-    padding: 35px;
+    padding: 32px;
 
-    border: 1px solid #2a3050;
+    border: 1px solid #292f48;
     border-radius: 17px;
 
-    background:
-        linear-gradient(
-            120deg,
-            #11162a,
-            #0d1120
-        );
+    background: #0d1120;
 }
 
-.custom-box h2 {
-    margin-top: 7px;
+.custom-text h2,
+.simple-box h2 {
+    margin-top: 6px;
 
-    font-size: 31px;
+    font-size: 30px;
 }
 
-.custom-box p {
-    max-width: 700px;
+.custom-text p,
+.simple-box p {
+    margin-top: 6px;
 
-    margin-top: 7px;
-
-    color: #8c94ad;
+    color: #8d95ad;
 
     font-size: 14px;
 }
 
 
 /* =====================================================
-   TUTORIAL
+   MEDIA
 ===================================================== */
 
-.tutorial {
+.tutorial-card {
+    min-height: 260px;
+
     display: grid;
 
     grid-template-columns: 42% 58%;
 
     overflow: hidden;
 
-    min-height: 260px;
-
-    border: 1px solid #252c44;
+    border: 1px solid #292f48;
     border-radius: 17px;
 
     background: #0d1120;
@@ -513,13 +479,13 @@ button {
     transition: 0.2s ease;
 }
 
-.tutorial:hover {
+.tutorial-card:hover {
     transform: translateY(-3px);
 
-    border-color: #6563c3;
+    border-color: #6866c5;
 }
 
-.tutorial-thumbnail {
+.tutorial-image {
     min-height: 260px;
 
     display: flex;
@@ -529,28 +495,19 @@ button {
     align-items: center;
     justify-content: center;
 
-    gap: 14px;
+    gap: 13px;
 
     background:
         radial-gradient(
-            circle at center,
+            circle,
             #292e63,
-            #111526
+            #101526
         );
 }
 
-.tutorial-thumbnail > span {
-    color: #8583ff;
-
-    font-size: 10px;
-    font-weight: 900;
-
-    letter-spacing: 2px;
-}
-
 .play {
-    width: 64px;
-    height: 64px;
+    width: 65px;
+    height: 65px;
 
     display: flex;
 
@@ -565,10 +522,19 @@ button {
 
     color: white;
 
-    font-size: 22px;
+    font-size: 21px;
 }
 
-.tutorial-info {
+.thumbnail-text {
+    color: #8583ff;
+
+    font-size: 10px;
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+.tutorial-content {
     padding: 35px;
 
     display: flex;
@@ -578,7 +544,7 @@ button {
     justify-content: center;
 }
 
-.tutorial-label {
+.tutorial-content > span {
     color: #8583ff;
 
     font-size: 10px;
@@ -587,84 +553,24 @@ button {
     letter-spacing: 2px;
 }
 
-.tutorial-info h3 {
+.tutorial-content h3 {
     margin-top: 7px;
 
     font-size: 28px;
 }
 
-.tutorial-info p {
+.tutorial-content p {
     margin: 10px 0 18px;
 
-    color: #8d95ae;
+    color: #8d95ad;
 
     font-size: 14px;
 }
 
-.tutorial-info strong {
+.tutorial-content strong {
     color: #8583ff;
 
     font-size: 13px;
-}
-
-
-/* =====================================================
-   DONATE
-===================================================== */
-
-.donate-box {
-    min-height: 165px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 22px;
-
-    padding: 30px;
-
-    border: 1px solid #2a3050;
-    border-radius: 17px;
-
-    background: #0d1120;
-}
-
-.donate-icon {
-    width: 55px;
-    height: 55px;
-
-    flex-shrink: 0;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 13px;
-
-    background: #171c31;
-
-    color: #8583ff;
-
-    font-size: 23px;
-}
-
-.donate-content {
-    flex: 1;
-}
-
-.donate-content h2 {
-    margin-top: 5px;
-
-    font-size: 29px;
-}
-
-.donate-content p {
-    margin-top: 5px;
-
-    color: #8c94ad;
-
-    font-size: 14px;
 }
 
 
@@ -673,52 +579,21 @@ button {
 ===================================================== */
 
 .discord-box {
-    min-height: 185px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 30px;
-
-    padding: 40px;
-
-    text-align: left;
-
-    border: 1px solid #30365a;
-    border-radius: 18px;
-
     background:
         radial-gradient(
             circle at 80% 50%,
-            rgba(88, 101, 242, 0.13),
+            rgba(88, 101, 242, 0.12),
             transparent 45%
         ),
         #0d1120;
 }
 
-.discord-box h2 {
-    margin-top: 6px;
-
-    font-size: 32px;
-}
-
-.discord-box p {
-    margin-top: 6px;
-
-    color: #8d95ae;
-
-    font-size: 14px;
-}
-
-.discord-button {
+.discord {
     background: #5865f2;
 }
 
-.discord-button:hover {
-    background: #4b57d9;
+.discord:hover {
+    background: #4c58d7;
 }
 
 
@@ -731,18 +606,24 @@ button {
 
     grid-template-columns: repeat(3, minmax(0, 1fr));
 
-    gap: 16px;
+    gap: 18px;
 }
 
 .help-card {
     min-height: 175px;
 
-    padding: 24px;
+    padding: 23px;
 
-    border: 1px solid #252c44;
+    text-align: left;
+
+    border: 1px solid #292f48;
     border-radius: 15px;
 
     background: #0d1120;
+
+    color: white;
+
+    cursor: pointer;
 
     transition: 0.2s ease;
 }
@@ -750,19 +631,20 @@ button {
 .help-card:hover {
     transform: translateY(-3px);
 
-    border-color: #6563c3;
+    border-color: #6866c5;
 }
 
-.help-card small {
+.help-card > span {
     color: #8583ff;
 
+    font-size: 11px;
     font-weight: 900;
 }
 
 .help-card h3 {
-    margin-top: 13px;
+    margin-top: 12px;
 
-    font-size: 19px;
+    font-size: 18px;
 }
 
 .help-card p {
@@ -775,74 +657,154 @@ button {
 
 
 /* =====================================================
-   ACCOUNT
+   HELP PANEL
 ===================================================== */
 
-.account-box {
-    max-width: 800px;
+.help-panel {
+    display: none;
 
-    padding: 45px;
+    position: relative;
 
-    border: 1px solid #292f4b;
-    border-radius: 18px;
+    margin-top: 20px;
+
+    padding: 30px;
+
+    border: 1px solid #303754;
+    border-radius: 15px;
 
     background: #0d1120;
 }
 
-.account-box h2 {
+.help-panel.open {
+    display: block;
+}
+
+.close-panel {
+    position: absolute;
+
+    top: 15px;
+    right: 15px;
+
+    width: 30px;
+    height: 30px;
+
+    border: 0;
+    border-radius: 7px;
+
+    background: #181e32;
+
+    color: white;
+
+    font-size: 19px;
+
+    cursor: pointer;
+}
+
+.help-panel h3 {
+    margin-top: 7px;
+
+    font-size: 25px;
+}
+
+.help-panel p {
+    margin: 8px 0 18px;
+
+    color: #8d95ad;
+}
+
+
+/* =====================================================
+   FORMS
+===================================================== */
+
+.form-input {
+    width: 100%;
+
+    display: block;
+
+    margin-top: 10px;
+
+    padding: 12px;
+
+    border: 1px solid #2b3450;
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #141a2d;
+
+    color: white;
+
+    font-size: 13px;
+}
+
+textarea.form-input {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+.form-input:focus {
+    border-color: #7775ff;
+}
+
+
+/* =====================================================
+   FAQ
+===================================================== */
+
+.faq-item {
+    padding: 15px 0;
+
+    border-bottom: 1px solid #242b42;
+}
+
+.faq-item strong {
+    font-size: 14px;
+}
+
+.faq-item p {
+    margin: 4px 0 0;
+}
+
+
+/* =====================================================
+   ACCOUNT
+===================================================== */
+
+.account-panel {
+    max-width: 780px;
+
+    padding: 40px;
+
+    border: 1px solid #292f48;
+    border-radius: 17px;
+
+    background: #0d1120;
+}
+
+.account-panel h2 {
     margin-top: 7px;
 
     font-size: 34px;
 }
 
-.account-box > p {
-    margin-top: 8px;
+.account-panel > p {
+    margin-top: 6px;
 
-    color: #8c94ad;
+    color: #8d95ad;
 }
 
-.account-buttons {
+.account-actions {
     display: flex;
 
     gap: 10px;
 
+    margin-top: 23px;
+}
+
+.account-result {
     margin-top: 25px;
-}
-
-.account-message {
-    margin-top: 20px;
-
-    color: #8583ff;
-
-    font-size: 13px;
-}
-
-
-/* =====================================================
-   INFO SECTIONS
-===================================================== */
-
-.info-section {
-    width: min(1150px, 90%);
-
-    margin: 0 auto 20px;
-
-    padding: 30px;
-
-    border: 1px solid #252c44;
-    border-radius: 14px;
-
-    background: #0d1120;
-}
-
-.info-section h2 {
-    font-size: 24px;
-}
-
-.info-section p {
-    margin-top: 6px;
-
-    color: #858da7;
 }
 
 
@@ -868,7 +830,7 @@ button {
 
     padding: 0 17px;
 
-    border: 1px solid #6765ce;
+    border: 1px solid #6765cd;
     border-radius: 11px;
 
     background: #7775ff;
@@ -881,9 +843,7 @@ button {
     cursor: pointer;
 
     box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.45);
-
-    transition: 0.2s ease;
+        0 12px 35px rgba(0, 0, 0, 0.5);
 }
 
 .chat-button:hover {
@@ -892,7 +852,7 @@ button {
 
 
 /* =====================================================
-   CHAT WINDOW
+   CHAT
 ===================================================== */
 
 .chat-window {
@@ -923,29 +883,24 @@ button {
         0 25px 70px rgba(0, 0, 0, 0.6);
 
     opacity: 0;
+
     visibility: hidden;
 
-    transform:
-        translateY(12px)
-        scale(0.97);
+    transform: translateY(12px);
 
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .chat-window.open {
     opacity: 1;
+
     visibility: visible;
 
-    transform:
-        translateY(0)
-        scale(1);
+    transform: translateY(0);
 }
 
-.chat-header {
-    min-height: 64px;
+.chat-top {
+    min-height: 63px;
 
     display: flex;
 
@@ -953,20 +908,20 @@ button {
 
     justify-content: space-between;
 
-    padding: 0 17px;
+    padding: 0 16px;
 
     border-bottom: 1px solid #252b42;
 
     background: #111629;
 }
 
-.chat-header strong {
+.chat-top strong {
     display: block;
 
     font-size: 14px;
 }
 
-.chat-header small {
+.chat-top small {
     display: block;
 
     color: #727b95;
@@ -974,14 +929,14 @@ button {
     font-size: 10px;
 }
 
-.chat-header button {
+.chat-close {
     width: 31px;
     height: 31px;
 
     border: 0;
     border-radius: 7px;
 
-    background: #1b2135;
+    background: #1a2035;
 
     color: white;
 
@@ -1001,7 +956,7 @@ button {
 
     gap: 9px;
 
-    padding: 15px;
+    padding: 14px;
 }
 
 .chat-system {
@@ -1009,13 +964,13 @@ button {
 
     max-width: 90%;
 
-    padding: 8px 11px;
+    padding: 8px 10px;
 
     border-radius: 8px;
 
     background: #141a2c;
 
-    color: #777f99;
+    color: #777f98;
 
     font-size: 11px;
 
@@ -1057,26 +1012,20 @@ button {
 
     flex: 1;
 
-    padding: 10px 11px;
-
-    outline: none;
+    padding: 10px;
 
     border: 1px solid #2b3450;
     border-radius: 8px;
 
+    outline: none;
+
     background: #151b2e;
 
     color: white;
-
-    font-size: 13px;
-}
-
-.chat-form input:focus {
-    border-color: #7775ff;
 }
 
 .chat-form button {
-    width: 41px;
+    width: 42px;
 
     border: 0;
     border-radius: 8px;
@@ -1094,7 +1043,7 @@ button {
 ===================================================== */
 
 footer {
-    min-height: 100px;
+    min-height: 95px;
 
     display: flex;
 
@@ -1104,7 +1053,7 @@ footer {
 
     gap: 20px;
 
-    padding: 25px 5%;
+    padding: 25px 6%;
 
     border-top: 1px solid #20263a;
 
@@ -1127,7 +1076,7 @@ footer {
 .footer-links {
     display: flex;
 
-    gap: 17px;
+    gap: 16px;
 }
 
 .footer-links a:hover {
@@ -1139,92 +1088,28 @@ footer {
    TABLET
 ===================================================== */
 
-@media (max-width: 1050px) {
-
-    .navbar {
-        padding: 0 3%;
-    }
-
-    .navbar nav {
-        gap: 0;
-    }
-
-    .navbar nav a {
-        padding: 8px 8px;
-
-        font-size: 12px;
-    }
-
-}
-
-
-/* =====================================================
-   MOBILE NAV
-===================================================== */
-
 @media (max-width: 850px) {
-
-    .navbar {
-        min-height: 66px;
-
-        padding: 0 20px;
-    }
-
-    .menu-toggle {
-        display: block;
-    }
-
-    .navbar nav {
-        position: absolute;
-
-        top: 66px;
-        left: 0;
-        right: 0;
-
-        display: none;
-
-        flex-direction: column;
-
-        align-items: stretch;
-
-        padding: 10px 20px 15px;
-
-        background: #090c17;
-
-        border-bottom: 1px solid #252c44;
-    }
-
-    .navbar nav.open {
-        display: flex;
-    }
-
-    .navbar nav a {
-        padding: 12px;
-
-        text-align: center;
-
-        font-size: 14px;
-    }
 
     .categories {
         grid-template-columns: 1fr;
+
+        gap: 20px;
     }
 
     .help-grid {
         grid-template-columns: 1fr;
     }
 
-    .tutorial {
+    .tutorial-card {
         grid-template-columns: 1fr;
     }
 
-    .tutorial-thumbnail {
+    .tutorial-image {
         min-height: 220px;
     }
 
     .custom-box,
-    .discord-box,
-    .donate-box {
+    .simple-box {
         align-items: flex-start;
 
         flex-direction: column;
@@ -1234,13 +1119,17 @@ footer {
 
 
 /* =====================================================
-   SMALL MOBILE
+   MOBILE
 ===================================================== */
 
 @media (max-width: 600px) {
 
+    .navbar {
+        padding: 0 20px;
+    }
+
     .hero {
-        min-height: 560px;
+        min-height: 570px;
 
         padding: 65px 6%;
     }
@@ -1248,11 +1137,7 @@ footer {
     .hero h1 {
         font-size: 48px;
 
-        letter-spacing: -3px;
-    }
-
-    .hero p {
-        font-size: 15px;
+        letter-spacing: -2px;
     }
 
     .hero-buttons {
@@ -1274,56 +1159,49 @@ footer {
     }
 
     .category-card {
+        align-items: flex-start;
+
+        gap: 17px;
+
         padding: 22px;
     }
 
-    .category-page {
+    .category-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .category-info h3 {
+        font-size: 24px;
+    }
+
+    .category-area {
         width: 88%;
 
         padding: 35px 25px;
     }
 
-    .category-page h2 {
+    .category-area h2 {
         font-size: 30px;
     }
 
-    .custom-box {
-        padding: 28px;
-    }
-
-    .custom-box h2 {
-        font-size: 27px;
-    }
-
-    .tutorial-info {
+    .tutorial-content {
         padding: 27px;
     }
 
-    .tutorial-info h3 {
+    .tutorial-content h3 {
         font-size: 24px;
     }
 
-    .donate-box {
-        padding: 25px;
+    .account-panel {
+        padding: 30px 24px;
     }
 
-    .discord-box {
-        padding: 30px 25px;
-    }
-
-    .discord-box h2 {
-        font-size: 28px;
-    }
-
-    .account-box {
-        padding: 30px 25px;
-    }
-
-    .account-buttons {
+    .account-actions {
         flex-direction: column;
     }
 
-    .account-buttons .button {
+    .account-actions .button {
         width: 100%;
     }
 
