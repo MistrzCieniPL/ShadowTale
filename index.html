@@ -11,493 +11,854 @@
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
+<!-- ================= NAVBAR ================= -->
 
-    <header class="navbar">
+<header class="navbar">
 
-        <div class="logo">
-            Shadow<span>Tale</span>
-        </div>
+    <a href="#home" class="logo">
+        Shadow<span>Tale</span>
+    </a>
 
-        <nav>
-            <a href="index.html" class="active">Strona główna</a>
-            <a href="minecraft.html">Minecraft</a>
-            <a href="undertale.html">Undertale</a>
-            <a href="media.html">Media</a>
-            <a href="donate.html">Donate</a>
-            <a href="pomoc.html">Pomoc</a>
-            <a href="regulaminy.html">Regulaminy</a>
-            <a href="konto.html">Konto</a>
-        </nav>
+    <button class="menu-toggle" id="menuToggle">
+        ☰
+    </button>
 
-    </header>
+    <nav id="mainNav">
+
+        <a href="#home">Strona główna</a>
+        <a href="#sklep">Sklep</a>
+        <a href="#media">Media</a>
+        <a href="#donate">Donate</a>
+        <a href="#pomoc">Pomoc</a>
+        <a href="#discord">Discord</a>
+        <a href="#konto">Konto</a>
+
+    </nav>
+
+</header>
 
 
-    <!-- ================= HERO ================= -->
+<!-- ================= HERO ================= -->
 
-    <main>
+<main id="home">
 
-        <section class="hero">
+    <section class="hero">
 
-            <div class="hero-content">
+        <div class="hero-content">
 
-                <p class="small-title">
-                    SHADOWTALE.PL
-                </p>
-
-                <h1>
-                    Minecraft.<br>
-                    Undertale.<br>
-                    <span>Jedno miejsce.</span>
-                </h1>
-
-                <p class="hero-description">
-                    Sklep, projekty, poradniki i społeczność ShadowTale
-                    w jednym miejscu.
-                </p>
-
-                <div class="hero-buttons">
-
-                    <a href="#kategorie" class="btn primary">
-                        Przeglądaj sklep
-                    </a>
-
-                    <a href="discord.html" class="btn secondary">
-                        Discord
-                    </a>
-
-                </div>
-
+            <div class="eyebrow">
+                SHADOWTALE.PL
             </div>
 
-        </section>
+            <h1>
+                Minecraft.<br>
+                Undertale.<br>
+                <span>Jedna społeczność.</span>
+            </h1>
 
+            <p>
+                Projekty, sklep, poradniki i społeczność
+                ShadowTale w jednym miejscu.
+            </p>
 
-        <!-- ================= KATEGORIE ================= -->
+            <div class="hero-buttons">
 
-        <section class="section" id="kategorie">
+                <a href="#sklep" class="button button-primary">
+                    Przejdź do sklepu
+                </a>
 
-            <div class="section-header">
-
-                <p class="section-label">
-                    SKLEP
-                </p>
-
-                <h2>
-                    Wybierz kategorię
-                </h2>
-
-                <p>
-                    Przejdź bezpośrednio do interesującej Cię części sklepu.
-                </p>
-
-            </div>
-
-
-            <div class="categories">
-
-                <!-- MINECRAFT -->
-
-                <article class="category-card minecraft-card">
-
-                    <div class="category-icon">
-                        ⛏
-                    </div>
-
-                    <div class="category-content">
-
-                        <p class="category-label">
-                            KATEGORIA 01
-                        </p>
-
-                        <h3>
-                            Minecraft
-                        </h3>
-
-                        <p>
-                            Skripty, konfiguracje, mapy, tekstury,
-                            skiny i inne projekty związane z Minecraft.
-                        </p>
-
-                        <a href="minecraft.html" class="category-button">
-                            Przejdź do Minecraft
-                            <span>→</span>
-                        </a>
-
-                    </div>
-
-                </article>
-
-
-                <!-- UNDERTALE -->
-
-                <article class="category-card undertale-card">
-
-                    <div class="category-icon">
-                        ❤️
-                    </div>
-
-                    <div class="category-content">
-
-                        <p class="category-label">
-                            KATEGORIA 02
-                        </p>
-
-                        <h3>
-                            Undertale
-                        </h3>
-
-                        <p>
-                            Lore postaci, przedmioty, informacje,
-                            zestawienia i ciekawostki ze świata Undertale.
-                        </p>
-
-                        <a href="undertale.html" class="category-button">
-                            Przejdź do Undertale
-                            <span>→</span>
-                        </a>
-
-                    </div>
-
-                </article>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= CUSTOM ================= -->
-
-        <section class="custom-section">
-
-            <div class="custom-box">
-
-                <div>
-
-                    <p class="section-label">
-                        POTRZEBUJESZ CZEGOŚ WIĘCEJ?
-                    </p>
-
-                    <h2>
-                        Zamów Custom
-                    </h2>
-
-                    <p>
-                        Potrzebujesz indywidualnego projektu?
-                        Opisz nam, czego potrzebujesz, a przygotujemy
-                        dla Ciebie rozwiązanie dopasowane do Twoich wymagań.
-                    </p>
-
-                </div>
-
-                <a href="TWÓJ_LINK_DISCORD" class="btn primary">
-                    Zamów Custom
+                <a href="#discord" class="button button-secondary">
+                    Discord
                 </a>
 
             </div>
 
-        </section>
+        </div>
+
+    </section>
 
 
-        <!-- ================= MEDIA ================= -->
+    <!-- ================= SKLEP ================= -->
 
-        <section class="section media-section">
+    <section class="section" id="sklep">
 
-            <div class="section-header">
+        <div class="section-heading">
 
-                <p class="section-label">
-                    MEDIA
-                </p>
+            <span>SKLEP</span>
 
-                <h2>
-                    Najnowszy materiał
-                </h2>
+            <h2>
+                Wybierz kategorię
+            </h2>
 
-                <p>
-                    Poradniki, prezentacje i materiały związane
-                    z projektami ShadowTale.
-                </p>
+            <p>
+                Wybierz interesującą Cię kategorię i przejdź dalej.
+            </p>
 
-            </div>
+        </div>
 
 
-            <div class="media-preview">
+        <div class="categories">
 
-                <div class="media-thumbnail">
+            <!-- MINECRAFT -->
 
-                    <div class="play-button">
-                        ▶
-                    </div>
+            <a href="#minecraft" class="category-card">
 
-                    <span>
-                        YOUTUBE
-                    </span>
-
+                <div class="category-icon">
+                    ⛏
                 </div>
 
-
-                <div class="media-info">
-
-                    <p class="category-label">
-                        PORADNIK
-                    </p>
+                <div class="category-text">
 
                     <h3>
-                        Jak zamówić Custom?
+                        Minecraft
                     </h3>
 
                     <p>
-                        Zobacz krótki poradnik pokazujący,
-                        jak wygląda proces zamawiania własnego projektu.
+                        Skripty, konfiguracje, mapy,
+                        tekstury, skiny i inne projekty.
                     </p>
 
-                    <a href="LINK_DO_PORADNIKA_YOUTUBE"
-                       target="_blank"
-                       class="btn primary">
-                        Obejrzyj poradnik
-                    </a>
+                    <div class="category-link">
+                        Przejdź do Minecraft
+                        <strong>→</strong>
+                    </div>
 
+                </div>
+
+            </a>
+
+
+            <!-- UNDERTALE -->
+
+            <a href="#undertale" class="category-card">
+
+                <div class="category-icon">
+                    ♥
+                </div>
+
+                <div class="category-text">
+
+                    <h3>
+                        Undertale
+                    </h3>
+
+                    <p>
+                        Lore, postacie, przedmioty,
+                        informacje i ciekawostki.
+                    </p>
+
+                    <div class="category-link">
+                        Przejdź do Undertale
+                        <strong>→</strong>
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MINECRAFT ================= -->
+
+    <section class="category-page" id="minecraft">
+
+        <div class="category-page-inner">
+
+            <span class="section-label">
+                MINECRAFT
+            </span>
+
+            <h2>
+                Projekty Minecraft
+            </h2>
+
+            <p>
+                Znajdziesz tutaj wszystkie materiały
+                i projekty związane z Minecraft.
+            </p>
+
+
+            <div class="product-types">
+
+                <div>
+                    TXT
+                </div>
+
+                <div>
+                    Mapy
+                </div>
+
+                <div>
+                    Skripty
+                </div>
+
+                <div>
+                    Configi
+                </div>
+
+                <div>
+                    Skins
+                </div>
+
+                <div>
+                    Save'y
                 </div>
 
             </div>
 
-        </section>
+
+            <a
+                href="#custom"
+                class="button button-primary"
+            >
+                Zamów Custom
+            </a>
+
+        </div>
+
+    </section>
 
 
-        <!-- ================= DISCORD ================= -->
+    <!-- ================= UNDERTALE ================= -->
 
-        <section class="discord-section">
+    <section class="category-page undertale-page" id="undertale">
 
-            <div class="discord-content">
+        <div class="category-page-inner">
 
-                <p class="section-label">
-                    SPOŁECZNOŚĆ
+            <span class="section-label">
+                UNDERTALE
+            </span>
+
+            <h2>
+                Świat Undertale
+            </h2>
+
+            <p>
+                Lore postaci, przedmioty, informacje,
+                zestawienia i ciekawostki.
+            </p>
+
+
+            <div class="product-types">
+
+                <div>
+                    Postacie
+                </div>
+
+                <div>
+                    Lore
+                </div>
+
+                <div>
+                    Przedmioty
+                </div>
+
+                <div>
+                    Dane
+                </div>
+
+                <div>
+                    Ciekawostki
+                </div>
+
+                <div>
+                    Zestawienia
+                </div>
+
+            </div>
+
+
+            <a
+                href="#custom"
+                class="button button-primary"
+            >
+                Zamów Custom
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CUSTOM ================= -->
+
+    <section class="section" id="custom">
+
+        <div class="custom-box">
+
+            <div>
+
+                <span class="section-label">
+                    CUSTOM
+                </span>
+
+                <h2>
+                    Potrzebujesz czegoś własnego?
+                </h2>
+
+                <p>
+                    Zamów indywidualny projekt Minecraft
+                    lub Undertale. Opisz nam, czego potrzebujesz.
                 </p>
+
+            </div>
+
+
+            <a
+                href="TWÓJ_LINK_DISCORD"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="button button-primary"
+            >
+                Zamów Custom
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MEDIA ================= -->
+
+    <section class="section" id="media">
+
+        <div class="section-heading">
+
+            <span>MEDIA</span>
+
+            <h2>
+                Jak korzystać ze strony?
+            </h2>
+
+        </div>
+
+
+        <a
+            href="LINK_DO_PORADNIKA_YOUTUBE"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="tutorial"
+        >
+
+            <div class="tutorial-thumbnail">
+
+                <div class="play">
+                    ▶
+                </div>
+
+                <span>
+                    SHADOWTALE.PL
+                </span>
+
+            </div>
+
+
+            <div class="tutorial-info">
+
+                <div class="tutorial-label">
+                    PORADNIK
+                </div>
+
+                <h3>
+                    Jak korzystać ze strony ShadowTale?
+                </h3>
+
+                <p>
+                    Dowiedz się, gdzie znaleźć sklep,
+                    konto, pomoc, Discord, Donate
+                    i pozostałe funkcje strony.
+                </p>
+
+                <strong>
+                    Obejrzyj poradnik →
+                </strong>
+
+            </div>
+
+        </a>
+
+    </section>
+
+
+    <!-- ================= DONATE ================= -->
+
+    <section class="section" id="donate">
+
+        <div class="donate-box">
+
+            <div class="donate-icon">
+                ♥
+            </div>
+
+            <div class="donate-content">
+
+                <span class="section-label">
+                    WSPARCIE
+                </span>
+
+                <h2>
+                    Wesprzyj ShadowTale
+                </h2>
+
+                <p>
+                    Jeśli chcesz wesprzeć rozwój projektu,
+                    możesz zrobić to poprzez Tipply.
+                </p>
+
+            </div>
+
+
+            <a
+                href="TWÓJ_LINK_TIPPLY"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="button button-primary"
+            >
+                Donate
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= DISCORD ================= -->
+
+    <section class="section" id="discord">
+
+        <div class="discord-box">
+
+            <div>
+
+                <span class="section-label">
+                    SPOŁECZNOŚĆ
+                </span>
 
                 <h2>
                     Dołącz do ShadowTale
                 </h2>
 
                 <p>
-                    Jeden wspólny serwer Discord dla całej społeczności
-                    ShadowTale — Minecraft, Undertale i wszystkie projekty.
+                    Jeden wspólny Discord dla całej społeczności
+                    ShadowTale.
                 </p>
 
-                <a href="TWÓJ_LINK_DISCORD"
-                   target="_blank"
-                   class="btn discord-button">
-                    Dołącz na Discord
-                </a>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= POMOC ================= -->
-
-        <section class="section">
-
-            <div class="section-header">
-
-                <p class="section-label">
-                    POMOC
-                </p>
-
-                <h2>
-                    Potrzebujesz pomocy?
-                </h2>
-
             </div>
 
 
-            <div class="help-grid">
-
-                <a href="odwolanie.html" class="help-card">
-
-                    <span>01</span>
-
-                    <h3>
-                        Odwołanie
-                    </h3>
-
-                    <p>
-                        Złóż odwołanie od bana lub mute.
-                    </p>
-
-                </a>
-
-
-                <a href="wiadomosc.html" class="help-card">
-
-                    <span>02</span>
-
-                    <h3>
-                        Wyślij wiadomość
-                    </h3>
-
-                    <p>
-                        Skontaktuj się z zespołem ShadowTale.
-                    </p>
-
-                </a>
-
-
-                <a href="pomoc.html" class="help-card">
-
-                    <span>03</span>
-
-                    <h3>
-                        Centrum pomocy
-                    </h3>
-
-                    <p>
-                        Znajdź odpowiedzi na najczęstsze pytania.
-                    </p>
-
-                </a>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- ================= CHAT ================= -->
-
-    <button id="chat-toggle" class="chat-toggle">
-        💬
-        <span>Chat</span>
-    </button>
-
-
-    <div id="chat-window" class="chat-window">
-
-        <div class="chat-header">
-
-            <div>
-                <strong>ShadowTale Chat</strong>
-                <small>Online</small>
-            </div>
-
-            <button id="chat-close">
-                ×
-            </button>
-
-        </div>
-
-
-        <div id="chat-messages" class="chat-messages">
-
-            <div class="chat-message system">
-                Witaj na czacie ShadowTale!
-            </div>
-
-        </div>
-
-
-        <form id="chat-form" class="chat-form">
-
-            <input
-                id="chat-input"
-                type="text"
-                placeholder="Napisz wiadomość..."
-                autocomplete="off"
+            <a
+                href="TWÓJ_LINK_DISCORD"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="button discord-button"
             >
+                Dołącz na Discord
+            </a>
 
-            <button type="submit">
-                ➤
-            </button>
+        </div>
 
-        </form>
+    </section>
+
+
+    <!-- ================= POMOC ================= -->
+
+    <section class="section" id="pomoc">
+
+        <div class="section-heading">
+
+            <span>POMOC</span>
+
+            <h2>
+                Centrum pomocy
+            </h2>
+
+            <p>
+                Wybierz, czego potrzebujesz.
+            </p>
+
+        </div>
+
+
+        <div class="help-grid">
+
+            <a href="#odwolanie" class="help-card">
+
+                <small>
+                    01
+                </small>
+
+                <h3>
+                    Odwołanie od bana / mute
+                </h3>
+
+                <p>
+                    Wyślij odwołanie do administracji.
+                </p>
+
+            </a>
+
+
+            <a href="#wiadomosc" class="help-card">
+
+                <small>
+                    02
+                </small>
+
+                <h3>
+                    Wyślij wiadomość
+                </h3>
+
+                <p>
+                    Skontaktuj się z zespołem ShadowTale.
+                </p>
+
+            </a>
+
+
+            <a href="#faq" class="help-card">
+
+                <small>
+                    03
+                </small>
+
+                <h3>
+                    FAQ
+                </h3>
+
+                <p>
+                    Najczęściej zadawane pytania.
+                </p>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= KONTO ================= -->
+
+    <section class="section" id="konto">
+
+        <div class="account-box">
+
+            <span class="section-label">
+                KONTO
+            </span>
+
+            <h2>
+                Twoje konto ShadowTale
+            </h2>
+
+            <p>
+                Zaloguj się lub utwórz konto,
+                aby korzystać z funkcji użytkownika.
+            </p>
+
+
+            <div class="account-buttons">
+
+                <button
+                    class="button button-primary"
+                    onclick="showAccountMessage('logowanie')"
+                >
+                    Zaloguj się
+                </button>
+
+                <button
+                    class="button button-secondary"
+                    onclick="showAccountMessage('rejestracja')"
+                >
+                    Utwórz konto
+                </button>
+
+            </div>
+
+
+            <div
+                id="accountMessage"
+                class="account-message"
+            ></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= POMOC MODALE ================= -->
+
+    <div id="odwolanie" class="info-section">
+
+        <h2>
+            Odwołanie od bana / mute
+        </h2>
+
+        <p>
+            Formularz odwołania zostanie tutaj dodany
+            w kolejnej wersji systemu.
+        </p>
 
     </div>
 
 
-    <!-- ================= FOOTER ================= -->
+    <div id="wiadomosc" class="info-section">
 
-    <footer>
-
-        <div class="footer-logo">
-            Shadow<span>Tale</span>
-        </div>
+        <h2>
+            Wyślij wiadomość
+        </h2>
 
         <p>
-            © 2026 ShadowTale.pl
+            System wiadomości zostanie połączony
+            z kontami użytkowników.
         </p>
 
-        <div class="footer-links">
+    </div>
 
-            <a href="regulaminy.html">
-                Regulaminy
-            </a>
 
-            <a href="pomoc.html">
-                Pomoc
-            </a>
+    <div id="faq" class="info-section">
 
-            <a href="konto.html">
-                Konto
-            </a>
+        <h2>
+            FAQ
+        </h2>
+
+        <p>
+            Najczęściej zadawane pytania pojawią się tutaj.
+        </p>
+
+    </div>
+
+</main>
+
+
+<!-- ================= CHAT BUTTON ================= -->
+
+<button
+    class="chat-button"
+    id="chatButton"
+    aria-label="Otwórz chat"
+>
+    💬
+    <span>Chat</span>
+</button>
+
+
+<!-- ================= CHAT ================= -->
+
+<div
+    class="chat-window"
+    id="chatWindow"
+>
+
+    <div class="chat-header">
+
+        <div>
+
+            <strong>
+                ShadowTale Chat
+            </strong>
+
+            <small>
+                Wersja demonstracyjna
+            </small>
 
         </div>
 
-    </footer>
+
+        <button
+            id="chatClose"
+            aria-label="Zamknij chat"
+        >
+            ×
+        </button>
+
+    </div>
 
 
-    <!-- ================= CHAT SCRIPT ================= -->
+    <div
+        class="chat-messages"
+        id="chatMessages"
+    >
 
-    <script>
+        <div class="chat-system">
+            Witaj na czacie ShadowTale!
+        </div>
 
-        const chatToggle = document.getElementById("chat-toggle");
-        const chatWindow = document.getElementById("chat-window");
-        const chatClose = document.getElementById("chat-close");
+        <div class="chat-system">
+            Zaloguj się, aby w przyszłości
+            korzystać z pełnego systemu czatu.
+        </div>
 
-        const chatForm = document.getElementById("chat-form");
-        const chatInput = document.getElementById("chat-input");
-        const chatMessages = document.getElementById("chat-messages");
-
-
-        chatToggle.addEventListener("click", () => {
-
-            chatWindow.classList.toggle("open");
-
-        });
+    </div>
 
 
-        chatClose.addEventListener("click", () => {
+    <form
+        class="chat-form"
+        id="chatForm"
+    >
 
-            chatWindow.classList.remove("open");
+        <input
+            type="text"
+            id="chatInput"
+            placeholder="Napisz wiadomość..."
+            autocomplete="off"
+        >
 
-        });
+        <button type="submit">
+            ➤
+        </button>
 
+    </form>
 
-        chatForm.addEventListener("submit", (event) => {
-
-            event.preventDefault();
-
-            const message = chatInput.value.trim();
-
-            if (!message) return;
-
-
-            const messageElement = document.createElement("div");
-
-            messageElement.className = "chat-message user";
-
-            messageElement.textContent = message;
-
-            chatMessages.appendChild(messageElement);
+</div>
 
 
-            chatInput.value = "";
+<!-- ================= FOOTER ================= -->
 
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+<footer>
 
-        });
+    <div class="footer-logo">
+        Shadow<span>Tale</span>
+    </div>
 
-    </script>
+    <p>
+        © 2026 ShadowTale.pl
+    </p>
+
+    <div class="footer-links">
+
+        <a href="#regulaminy">
+            Regulaminy
+        </a>
+
+        <a href="#pomoc">
+            Pomoc
+        </a>
+
+        <a href="#konto">
+            Konto
+        </a>
+
+    </div>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+const menuToggle = document.getElementById("menuToggle");
+const mainNav = document.getElementById("mainNav");
+
+menuToggle.addEventListener("click", () => {
+
+    mainNav.classList.toggle("open");
+
+});
+
+
+document.querySelectorAll("#mainNav a").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+        mainNav.classList.remove("open");
+
+    });
+
+});
+
+
+/* ================= CHAT ================= */
+
+const chatButton = document.getElementById("chatButton");
+const chatWindow = document.getElementById("chatWindow");
+const chatClose = document.getElementById("chatClose");
+
+chatButton.addEventListener("click", () => {
+
+    chatWindow.classList.toggle("open");
+
+});
+
+
+chatClose.addEventListener("click", () => {
+
+    chatWindow.classList.remove("open");
+
+});
+
+
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+const chatMessages = document.getElementById("chatMessages");
+
+
+chatForm.addEventListener("submit", (event) => {
+
+    event.preventDefault();
+
+    const message = chatInput.value.trim();
+
+    if (!message) {
+        return;
+    }
+
+
+    const messageElement = document.createElement("div");
+
+    messageElement.className = "chat-user";
+
+    messageElement.textContent = message;
+
+    chatMessages.appendChild(messageElement);
+
+    chatInput.value = "";
+
+    chatMessages.scrollTop =
+        chatMessages.scrollHeight;
+
+});
+
+
+/* ================= KONTO ================= */
+
+function showAccountMessage(type) {
+
+    const message =
+        document.getElementById("accountMessage");
+
+    if (type === "logowanie") {
+
+        message.textContent =
+            "System logowania zostanie dodany w kolejnej wersji.";
+
+    } else {
+
+        message.textContent =
+            "System rejestracji zostanie dodany w kolejnej wersji.";
+
+    }
+
+}
+
+
+/* ================= ESC ================= */
+
+document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape") {
+
+        chatWindow.classList.remove("open");
+        mainNav.classList.remove("open");
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>
