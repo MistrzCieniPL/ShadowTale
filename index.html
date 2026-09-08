@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080611">
-    <title>ShadowTale — Minecraft & Undertale</title>
+
+    <title>ShadowTale.pl</title>
+    <meta name="description" content="ShadowTale.pl — Minecraft, Undertale, skrypty, mapy, konfiguracje i pomoc.">
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- SPADAJĄCE GWIAZDY -->
+    <!-- TŁO -->
+    <div class="space-bg"></div>
+
     <div class="stars" aria-hidden="true">
         <span class="star star-1"></span>
         <span class="star star-2"></span>
@@ -26,589 +30,568 @@
         <span class="star star-12"></span>
     </div>
 
-    <!-- TŁO -->
-    <div class="space-bg"></div>
-
     <!-- HEADER -->
     <header class="header">
         <div class="header-inner">
 
             <button class="logo" data-route="home">
                 <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span>
+                <small>.PL</small>
             </button>
 
             <button class="account-button" data-route="account">
                 <span>👤</span>
-                <span>Konto</span>
+                Konto
             </button>
 
         </div>
     </header>
 
+    <!-- MAIN -->
     <main>
 
         <!-- ================= HOME ================= -->
+
         <section class="view active" data-page="home">
 
             <div class="hero">
-                <div class="hero-content">
-                    <div class="hero-badge">✦ Witaj w ShadowTale</div>
+                <div class="hero-badge">✦ WITAJ NA SHADOWTALE.PL ✦</div>
 
-                    <h1>
-                        Twój świat.<br>
-                        <span>Twoje zasady.</span>
-                    </h1>
+                <h1>
+                    Twój świat
+                    <span>w jednym miejscu.</span>
+                </h1>
 
-                    <p>
-                        Skrypty, mapy, configi, materiały do Minecrafta
-                        oraz świat Undertale w jednym miejscu.
-                    </p>
+                <p>
+                    Skrypty, mapy, konfiguracje, materiały do Minecrafta,
+                    lore Undertale i wiele więcej.
+                </p>
 
-                    <div class="hero-buttons">
-                        <button class="btn btn-primary" data-route="minecraft">
-                            Minecraft
-                        </button>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" data-route="minecraft">
+                        ⛏ Minecraft
+                    </button>
 
-                        <button class="btn btn-secondary" data-route="undertale">
-                            Undertale
-                        </button>
-                    </div>
+                    <button class="btn btn-secondary" data-route="undertale">
+                        ❤️ Undertale
+                    </button>
                 </div>
             </div>
 
-            <!-- GŁÓWNE KATEGORIE -->
-            <section class="section">
-                <div class="section-heading">
-                    <span class="section-label">SHADOWTALE</span>
+            <div class="section-heading">
+                <span>01</span>
+                <div>
                     <h2>Co znajdziesz na stronie?</h2>
                     <p>Wybierz interesującą Cię kategorię.</p>
                 </div>
+            </div>
 
-                <div class="card-grid">
+            <div class="card-grid">
 
-                    <article class="category-card">
-                        <div class="card-icon minecraft-icon">⛏️</div>
-                        <div class="card-content">
-                            <span class="card-tag">MINECRAFT</span>
-                            <h3>Materiały Minecraft</h3>
-                            <p>Skrypty, mapy, configi, TXT oraz skiny.</p>
-                            <button class="btn btn-small btn-primary" data-route="minecraft">
-                                Przejdź →
-                            </button>
-                        </div>
-                    </article>
+                <button class="category-card" data-route="minecraft">
+                    <div class="category-icon minecraft-icon">⛏</div>
+                    <div>
+                        <h3>Minecraft</h3>
+                        <p>Skrypty, mapy, configi, TXT i skiny.</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </button>
 
-                    <article class="category-card">
-                        <div class="card-icon undertale-icon">♥</div>
-                        <div class="card-content">
-                            <span class="card-tag">UNDERTALE</span>
-                            <h3>Świat Undertale</h3>
-                            <p>Lore postaci, przedmiotów, dane, wykresy i save'y.</p>
-                            <button class="btn btn-small btn-primary" data-route="undertale">
-                                Przejdź →
-                            </button>
-                        </div>
-                    </article>
+                <button class="category-card" data-route="undertale">
+                    <div class="category-icon undertale-icon">♥</div>
+                    <div>
+                        <h3>Undertale</h3>
+                        <p>Lore, dane, przedmioty oraz Save'y.</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </button>
 
-                    <article class="category-card">
-                        <div class="card-icon help-icon">?</div>
-                        <div class="card-content">
-                            <span class="card-tag">POMOC</span>
-                            <h3>Centrum Pomocy</h3>
-                            <p>Wybierz kategorię i znajdź odpowiedź na swoje pytanie.</p>
-                            <button class="btn btn-small btn-primary" data-route="help">
-                                Centrum Pomocy →
-                            </button>
-                        </div>
-                    </article>
+                <button class="category-card" data-route="help">
+                    <div class="category-icon">?</div>
+                    <div>
+                        <h3>Centrum Pomocy</h3>
+                        <p>Pomoc dotycząca konta, zamówień i strony.</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </button>
 
-                </div>
-            </section>
+                <button class="category-card" data-route="regulations">
+                    <div class="category-icon">§</div>
+                    <div>
+                        <h3>Regulaminy</h3>
+                        <p>Regulamin serwisu, sklepu i prywatność.</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </button>
 
-            <!-- DODATKOWE -->
-            <section class="section">
-                <div class="card-grid">
+                <button class="category-card" data-route="media">
+                    <div class="category-icon">▶</div>
+                    <div>
+                        <h3>Media</h3>
+                        <p>Materiały i poradniki ShadowTale.</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </button>
 
-                    <article class="info-card">
-                        <div class="info-icon">📜</div>
-                        <div>
-                            <h3>Regulaminy</h3>
-                            <p>Zapoznaj się z zasadami działania ShadowTale.</p>
-                            <button class="btn btn-outline" data-route="regulations">
-                                Zobacz regulaminy
-                            </button>
-                        </div>
-                    </article>
+                <button class="category-card" data-action="discord">
+                    <div class="category-icon">◈</div>
+                    <div>
+                        <h3>Discord</h3>
+                        <p>Dołącz do społeczności ShadowTale.</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </button>
 
-                    <article class="info-card">
-                        <div class="info-icon">🎬</div>
-                        <div>
-                            <h3>Media</h3>
-                            <p>Poradnik pokazujący korzystanie z ShadowTale.</p>
-                            <button class="btn btn-outline" data-route="media">
-                                Zobacz media
-                            </button>
-                        </div>
-                    </article>
-
-                    <article class="info-card">
-                        <div class="info-icon">💬</div>
-                        <div>
-                            <h3>Discord</h3>
-                            <p>Dołącz do społeczności ShadowTale.</p>
-                            <button class="btn btn-outline" data-action="discord">
-                                Dołącz na Discord
-                            </button>
-                        </div>
-                    </article>
-
-                </div>
-            </section>
-
+            </div>
         </section>
 
 
         <!-- ================= KONTO ================= -->
+
         <section class="view" data-page="account">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="home">← Wróć</button>
-                <span class="section-label">SHADOWTALE</span>
+
+                <span class="eyebrow">SHADOWTALE ACCOUNT</span>
                 <h1>Twoje konto</h1>
                 <p>Zaloguj się lub utwórz nowe konto.</p>
             </div>
 
-            <div id="account-area"></div>
+            <div id="account-content"></div>
 
         </section>
 
 
         <!-- ================= MINECRAFT ================= -->
+
         <section class="view" data-page="minecraft">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="home">← Wróć</button>
-                <span class="section-label">MINECRAFT</span>
-                <h1>Materiały Minecraft</h1>
-                <p>Wybierz kategorię.</p>
+
+                <span class="eyebrow">MINECRAFT</span>
+                <h1>Centrum Minecraft</h1>
+                <p>Wybierz kategorię materiałów.</p>
             </div>
 
             <div class="card-grid">
 
-                <article class="category-card">
-                    <div class="card-icon">⚙️</div>
-                    <div class="card-content">
-                        <span class="card-tag">SKRYPTY</span>
+                <button class="category-card" data-route="minecraft-scripts">
+                    <div class="category-icon">⌘</div>
+                    <div>
                         <h3>Skrypty</h3>
-                        <p>Gotowe rozwiązania napisane w Skript.</p>
-                        <button class="btn btn-small btn-primary" data-route="minecraft-scripts">
-                            Otwórz →
-                        </button>
+                        <p>Gotowe rozwiązania dla serwerów Minecraft.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
-                <article class="category-card">
-                    <div class="card-icon">🗺️</div>
-                    <div class="card-content">
-                        <span class="card-tag">MAPY</span>
+                <button class="category-card" data-route="minecraft-maps">
+                    <div class="category-icon">🗺</div>
+                    <div>
                         <h3>Mapy</h3>
-                        <p>Mapy i światy przygotowane do Minecraft.</p>
-                        <button class="btn btn-small btn-primary" data-route="minecraft-maps">
-                            Otwórz →
-                        </button>
+                        <p>Mapy i światy do wykorzystania na serwerze.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
-                <article class="category-card">
-                    <div class="card-icon">🔧</div>
-                    <div class="card-content">
-                        <span class="card-tag">CONFIGI</span>
+                <button class="category-card" data-route="minecraft-configs">
+                    <div class="category-icon">⚙</div>
+                    <div>
                         <h3>Configi</h3>
-                        <p>Konfiguracje do serwerów i pluginów.</p>
-                        <button class="btn btn-small btn-primary" data-route="minecraft-configs">
-                            Otwórz →
-                        </button>
+                        <p>Konfiguracje pluginów i serwerów.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
-                <article class="category-card">
-                    <div class="card-icon">📄</div>
-                    <div class="card-content">
-                        <span class="card-tag">TXT</span>
+                <button class="category-card" data-route="minecraft-txt">
+                    <div class="category-icon">TXT</div>
+                    <div>
                         <h3>TXT</h3>
-                        <p>Pliki tekstowe i materiały pomocnicze.</p>
-                        <button class="btn btn-small btn-primary" data-route="minecraft-txt">
-                            Otwórz →
-                        </button>
+                        <p>Pliki tekstowe, wiadomości i materiały.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
-                <article class="category-card">
-                    <div class="card-icon">🧍</div>
-                    <div class="card-content">
-                        <span class="card-tag">SKINY</span>
+                <button class="category-card" data-route="minecraft-skins">
+                    <div class="category-icon">◆</div>
+                    <div>
                         <h3>Skiny</h3>
-                        <p>Skórki do Minecraft w klimacie ShadowTale.</p>
-                        <button class="btn btn-small btn-primary" data-route="minecraft-skins">
-                            Otwórz →
-                        </button>
+                        <p>Skórki do Minecrafta.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
             </div>
-
         </section>
 
 
         <!-- ================= SKRYPTY ================= -->
+
         <section class="view" data-page="minecraft-scripts">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="minecraft">← Minecraft</button>
-                <span class="section-label">MINECRAFT / SKRYPTY</span>
+
+                <span class="eyebrow">MINECRAFT / SKRYPTY</span>
                 <h1>Skrypty</h1>
-                <p>Wybierz interesujący Cię skrypt.</p>
+                <p>Wybierz rodzaj skryptu.</p>
             </div>
 
             <div class="card-grid">
 
-                <article class="product-card">
-                    <div class="product-icon">🌐</div>
-                    <span class="card-tag">SKRIPT</span>
+                <button class="product-card" data-route="minecraft-region">
+                    <div class="product-top">
+                        <span class="product-tag">SKRIPT</span>
+                        <span class="product-price">—</span>
+                    </div>
+
                     <h3>Region</h3>
                     <p>
-                        System regionów z ustawieniami PvP, niszczenia,
-                        stawiania bloków i innymi opcjami.
+                        System regionów z ustawieniami PvP,
+                        blokadą budowania i innymi opcjami.
                     </p>
 
                     <div class="product-footer">
-                        <strong>Do pobrania</strong>
-                        <button class="btn btn-small btn-primary" data-route="minecraft-region">
-                            Szczegóły
-                        </button>
+                        <span>Zobacz szczegóły</span>
+                        <b>→</b>
                     </div>
-                </article>
+                </button>
 
-                <article class="product-card">
-                    <div class="product-icon">📅</div>
-                    <span class="card-tag">SKRIPT</span>
+                <button class="product-card" data-route="minecraft-daily">
+                    <div class="product-top">
+                        <span class="product-tag">SKRIPT</span>
+                        <span class="product-price">—</span>
+                    </div>
+
                     <h3>Daily</h3>
                     <p>
-                        System codziennych zadań i nagród dla serwera Minecraft.
+                        System codziennych zadań i nagród.
                     </p>
 
                     <div class="product-footer">
-                        <strong>Do pobrania</strong>
-                        <button class="btn btn-small btn-primary" data-route="minecraft-daily">
-                            Szczegóły
-                        </button>
+                        <span>Zobacz szczegóły</span>
+                        <b>→</b>
                     </div>
-                </article>
+                </button>
 
             </div>
-
         </section>
 
 
         <!-- ================= REGION ================= -->
+
         <section class="view" data-page="minecraft-region">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="minecraft-scripts">← Skrypty</button>
-                <span class="section-label">SKRIPT</span>
+
+                <span class="eyebrow">MINECRAFT / SKRYPTY</span>
                 <h1>Region</h1>
-                <p>Rozbudowany system zarządzania regionami.</p>
+                <p>System zarządzania regionami.</p>
             </div>
 
-            <div class="detail-layout">
+            <div class="info-card">
+                <div class="info-icon">◆</div>
 
-                <article class="detail-card">
-                    <h2>Opis</h2>
+                <div class="info-content">
+                    <h2>System Region</h2>
+
                     <p>
-                        System pozwala tworzyć i zarządzać regionami na serwerze.
-                        Możesz ustawić między innymi PvP, możliwość niszczenia
-                        i stawiania bloków, używanie mikstur oraz inne opcje.
+                        Rozbudowany system regionów przeznaczony dla serwerów
+                        Minecraft. Pozwala między innymi zarządzać PvP,
+                        niszczeniem i stawianiem bloków oraz innymi ustawieniami.
                     </p>
 
-                    <h3>Funkcje</h3>
-
-                    <ul class="feature-list">
-                        <li>✓ Tworzenie regionów</li>
-                        <li>✓ Zarządzanie ustawieniami</li>
-                        <li>✓ PvP ON/OFF</li>
-                        <li>✓ Break ON/OFF</li>
-                        <li>✓ Place ON/OFF</li>
+                    <ul>
+                        <li>✓ System regionów</li>
+                        <li>✓ Ustawienia PvP</li>
+                        <li>✓ Blokowanie niszczenia bloków</li>
+                        <li>✓ Blokowanie stawiania bloków</li>
                         <li>✓ Obsługa wybranych przedmiotów</li>
-                        <li>✓ Wizualna granica regionu</li>
+                        <li>✓ Granice regionu</li>
                     </ul>
 
                     <button class="btn btn-primary" data-action="download">
-                        Pobieranie po zakupie
+                        Pobierz / Zamów
                     </button>
-                </article>
-
+                </div>
             </div>
 
         </section>
 
 
         <!-- ================= DAILY ================= -->
+
         <section class="view" data-page="minecraft-daily">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="minecraft-scripts">← Skrypty</button>
-                <span class="section-label">SKRIPT</span>
+
+                <span class="eyebrow">MINECRAFT / SKRYPTY</span>
                 <h1>Daily</h1>
-                <p>Codzienne zadania dla graczy.</p>
+                <p>Codzienne zadania i nagrody.</p>
             </div>
 
-            <article class="detail-card">
-                <h2>System Daily</h2>
+            <div class="info-card">
+                <div class="info-icon">★</div>
 
-                <p>
-                    System pozwalający stworzyć codzienne zadania,
-                    dzięki którym gracze mogą regularnie zdobywać nagrody.
-                </p>
+                <div class="info-content">
+                    <h2>Daily System</h2>
 
-                <h3>Możliwości</h3>
+                    <p>
+                        System codziennych wyzwań dla graczy.
+                        Idealny do serwerów survival, economy oraz innych trybów.
+                    </p>
 
-                <ul class="feature-list">
-                    <li>✓ Codzienne zadania</li>
-                    <li>✓ Nagrody</li>
-                    <li>✓ Automatyczne resetowanie</li>
-                    <li>✓ Obsługa wielu zadań</li>
-                </ul>
+                    <ul>
+                        <li>✓ Codzienne zadania</li>
+                        <li>✓ Nagrody</li>
+                        <li>✓ Możliwość rozbudowy</li>
+                        <li>✓ Prosta konfiguracja</li>
+                    </ul>
 
-                <button class="btn btn-primary" data-action="download">
-                    Pobieranie po zakupie
-                </button>
-            </article>
+                    <button class="btn btn-primary" data-action="download">
+                        Pobierz / Zamów
+                    </button>
+                </div>
+            </div>
 
         </section>
 
 
         <!-- ================= MAPY ================= -->
+
         <section class="view" data-page="minecraft-maps">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="minecraft">← Minecraft</button>
-                <span class="section-label">MINECRAFT</span>
+
+                <span class="eyebrow">MINECRAFT</span>
                 <h1>Mapy</h1>
-                <p>Mapy przygotowane do wykorzystania na serwerach.</p>
+                <p>Mapy i światy Minecraft.</p>
             </div>
 
-            <div class="empty-card">
-                <span>🗺️</span>
-                <h2>Mapy w przygotowaniu</h2>
-                <p>Pierwsze mapy ShadowTale pojawią się tutaj już wkrótce.</p>
+            <div class="empty-state">
+                <div>🗺</div>
+                <h2>Wkrótce</h2>
+                <p>Mapa zostanie dodana do oferty ShadowTale.</p>
             </div>
 
         </section>
 
 
         <!-- ================= CONFIGI ================= -->
+
         <section class="view" data-page="minecraft-configs">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="minecraft">← Minecraft</button>
-                <span class="section-label">MINECRAFT</span>
+
+                <span class="eyebrow">MINECRAFT</span>
                 <h1>Configi</h1>
-                <p>Konfiguracje dla serwerów Minecraft.</p>
+                <p>Konfiguracje pluginów i serwerów.</p>
             </div>
 
-            <div class="empty-card">
-                <span>🔧</span>
-                <h2>Configi w przygotowaniu</h2>
-                <p>Materiały zostaną dodane tutaj w przyszłości.</p>
+            <div class="empty-state">
+                <div>⚙</div>
+                <h2>Wkrótce</h2>
+                <p>Konfiguracje zostaną dodane do oferty.</p>
             </div>
 
         </section>
 
 
         <!-- ================= TXT ================= -->
+
         <section class="view" data-page="minecraft-txt">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="minecraft">← Minecraft</button>
-                <span class="section-label">MINECRAFT</span>
+
+                <span class="eyebrow">MINECRAFT</span>
                 <h1>TXT</h1>
-                <p>Materiały tekstowe.</p>
+                <p>Pliki tekstowe i materiały.</p>
             </div>
 
-            <div class="empty-card">
-                <span>📄</span>
-                <h2>Materiały w przygotowaniu</h2>
-                <p>Pliki TXT zostaną dodane tutaj.</p>
+            <div class="empty-state">
+                <div>TXT</div>
+                <h2>Wkrótce</h2>
+                <p>Materiały tekstowe zostaną dodane później.</p>
             </div>
 
         </section>
 
 
         <!-- ================= SKINY ================= -->
+
         <section class="view" data-page="minecraft-skins">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="minecraft">← Minecraft</button>
-                <span class="section-label">MINECRAFT</span>
+
+                <span class="eyebrow">MINECRAFT</span>
                 <h1>Skiny</h1>
-                <p>Skórki do Minecraft.</p>
+                <p>Skórki do Minecrafta.</p>
             </div>
 
-            <div class="empty-card">
-                <span>🧍</span>
-                <h2>Skiny w przygotowaniu</h2>
-                <p>Nowe skiny ShadowTale pojawią się tutaj.</p>
+            <div class="empty-state">
+                <div>◆</div>
+                <h2>Wkrótce</h2>
+                <p>Skiny zostaną dodane do oferty.</p>
             </div>
 
         </section>
 
 
         <!-- ================= UNDERTALE ================= -->
+
         <section class="view" data-page="undertale">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="home">← Wróć</button>
-                <span class="section-label">UNDERTALE</span>
-                <h1>Świat Undertale</h1>
-                <p>Informacje, dane i materiały związane z grą.</p>
+
+                <span class="eyebrow">UNDERTALE</span>
+                <h1>Centrum Undertale</h1>
+                <p>Informacje, lore i dane ze świata Undertale.</p>
             </div>
 
             <div class="card-grid">
 
-                <article class="category-card">
-                    <div class="card-icon">👤</div>
-                    <div class="card-content">
-                        <span class="card-tag">LORE</span>
+                <button class="category-card" data-route="undertale-characters">
+                    <div class="category-icon">♥</div>
+                    <div>
                         <h3>Lore postaci</h3>
-                        <p>Informacje o postaciach i ich historii.</p>
-                        <button class="btn btn-small btn-primary" data-route="undertale-characters">
-                            Otwórz →
-                        </button>
+                        <p>Informacje o postaciach Undertale.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
-                <article class="category-card">
-                    <div class="card-icon">🎒</div>
-                    <div class="card-content">
-                        <span class="card-tag">LORE</span>
+                <button class="category-card" data-route="undertale-items">
+                    <div class="category-icon">◆</div>
+                    <div>
                         <h3>Lore przedmiotów</h3>
-                        <p>Znaczenie i historia najważniejszych przedmiotów.</p>
-                        <button class="btn btn-small btn-primary" data-route="undertale-items">
-                            Otwórz →
-                        </button>
+                        <p>Historia i informacje o przedmiotach.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
-                <article class="category-card">
-                    <div class="card-icon">📊</div>
-                    <div class="card-content">
-                        <span class="card-tag">DANE</span>
+                <button class="category-card" data-route="undertale-data">
+                    <div class="category-icon">⌁</div>
+                    <div>
                         <h3>Dane / wykresy</h3>
-                        <p>Statystyki i informacje przedstawione w czytelnej formie.</p>
-                        <button class="btn btn-small btn-primary" data-route="undertale-data">
-                            Otwórz →
-                        </button>
+                        <p>Dane i ciekawostki przedstawione wizualnie.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
-                <article class="category-card">
-                    <div class="card-icon">💾</div>
-                    <div class="card-content">
-                        <span class="card-tag">SAVE</span>
+                <button class="category-card" data-route="undertale-saves">
+                    <div class="category-icon">▣</div>
+                    <div>
                         <h3>Save'y</h3>
-                        <p>Materiały dotyczące zapisów gry Undertale.</p>
-                        <button class="btn btn-small btn-primary" data-route="undertale-saves">
-                            Otwórz →
-                        </button>
+                        <p>Materiały związane z zapisami Undertale.</p>
                     </div>
-                </article>
+                    <span class="arrow">→</span>
+                </button>
 
             </div>
-
         </section>
 
 
-        <!-- ================= UNDERTALE CHARACTERS ================= -->
+        <!-- ================= UNDERTALE POSTACIE ================= -->
+
         <section class="view" data-page="undertale-characters">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="undertale">← Undertale</button>
-                <span class="section-label">UNDERTALE / LORE</span>
+
+                <span class="eyebrow">UNDERTALE</span>
                 <h1>Lore postaci</h1>
+                <p>Poznaj historię postaci ze świata Undertale.</p>
             </div>
 
-            <div class="empty-card">
-                <span>👤</span>
-                <h2>Baza postaci w przygotowaniu</h2>
-                <p>Informacje o postaciach zostaną dodane tutaj.</p>
+            <div class="empty-state">
+                <div>♥</div>
+                <h2>Wkrótce</h2>
+                <p>Materiały zostaną dodane.</p>
             </div>
 
         </section>
 
 
-        <!-- ================= UNDERTALE ITEMS ================= -->
+        <!-- ================= UNDERTALE PRZEDMIOTY ================= -->
+
         <section class="view" data-page="undertale-items">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="undertale">← Undertale</button>
-                <span class="section-label">UNDERTALE / LORE</span>
+
+                <span class="eyebrow">UNDERTALE</span>
                 <h1>Lore przedmiotów</h1>
+                <p>Historia oraz znaczenie przedmiotów.</p>
             </div>
 
-            <div class="empty-card">
-                <span>🎒</span>
-                <h2>Baza przedmiotów w przygotowaniu</h2>
-                <p>Informacje o przedmiotach zostaną dodane tutaj.</p>
+            <div class="empty-state">
+                <div>◆</div>
+                <h2>Wkrótce</h2>
+                <p>Materiały zostaną dodane.</p>
             </div>
 
         </section>
 
 
-        <!-- ================= UNDERTALE DATA ================= -->
+        <!-- ================= UNDERTALE DANE ================= -->
+
         <section class="view" data-page="undertale-data">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="undertale">← Undertale</button>
-                <span class="section-label">UNDERTALE / DANE</span>
+
+                <span class="eyebrow">UNDERTALE</span>
                 <h1>Dane / wykresy</h1>
+                <p>Dane i ciekawostki dotyczące gry.</p>
             </div>
 
-            <div class="empty-card">
-                <span>📊</span>
-                <h2>Dane w przygotowaniu</h2>
-                <p>Wykresy i zestawienia pojawią się tutaj.</p>
+            <div class="empty-state">
+                <div>⌁</div>
+                <h2>Wkrótce</h2>
+                <p>Wykresy i dane zostaną dodane.</p>
             </div>
 
         </section>
 
 
-        <!-- ================= UNDERTALE SAVES ================= -->
+        <!-- ================= UNDERTALE SAVE ================= -->
+
         <section class="view" data-page="undertale-saves">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="undertale">← Undertale</button>
-                <span class="section-label">UNDERTALE / SAVE</span>
+
+                <span class="eyebrow">UNDERTALE</span>
                 <h1>Save'y</h1>
-                <p>Materiały dotyczące zapisów gry.</p>
+                <p>Materiały związane z zapisami gry.</p>
             </div>
 
-            <div class="empty-card">
-                <span>💾</span>
-                <h2>Save'y w przygotowaniu</h2>
-                <p>Materiały zostaną dodane tutaj.</p>
+            <div class="empty-state">
+                <div>▣</div>
+                <h2>Wkrótce</h2>
+                <p>Save'y zostaną dodane.</p>
             </div>
 
         </section>
 
 
         <!-- ================= POMOC ================= -->
+
         <section class="view" data-page="help">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="home">← Wróć</button>
-                <span class="section-label">CENTRUM POMOCY</span>
-                <h1>W czym możemy pomóc?</h1>
-                <p>Wybierz kategorię, aby zobaczyć najczęstsze pytania.</p>
+
+                <span class="eyebrow">POMOC</span>
+                <h1>Centrum Pomocy</h1>
+                <p>Wybierz temat, w którym potrzebujesz pomocy.</p>
             </div>
 
             <div class="help-grid">
@@ -617,7 +600,7 @@
                     <span class="help-card-icon">👤</span>
                     <span class="help-card-text">
                         <strong>Konto</strong>
-                        <small>Logowanie, rejestracja i dane konta</small>
+                        <small>Logowanie, rejestracja i konto.</small>
                     </span>
                     <span class="help-arrow">→</span>
                 </button>
@@ -626,7 +609,7 @@
                     <span class="help-card-icon">🛒</span>
                     <span class="help-card-text">
                         <strong>Zamówienia</strong>
-                        <small>Zakupy i status zamówienia</small>
+                        <small>Zakupy, produkty i zamówienia.</small>
                     </span>
                     <span class="help-arrow">→</span>
                 </button>
@@ -635,25 +618,25 @@
                     <span class="help-card-icon">💳</span>
                     <span class="help-card-text">
                         <strong>Płatności</strong>
-                        <small>Informacje dotyczące płatności</small>
+                        <small>Informacje dotyczące płatności.</small>
                     </span>
                     <span class="help-arrow">→</span>
                 </button>
 
                 <button class="help-card" data-route="help-downloads">
-                    <span class="help-card-icon">📥</span>
+                    <span class="help-card-icon">↓</span>
                     <span class="help-card-text">
                         <strong>Pobieranie plików</strong>
-                        <small>Pliki, dostęp i pobieranie</small>
+                        <small>Problemy z pobieraniem.</small>
                     </span>
                     <span class="help-arrow">→</span>
                 </button>
 
                 <button class="help-card" data-route="help-minecraft">
-                    <span class="help-card-icon">⛏️</span>
+                    <span class="help-card-icon">⛏</span>
                     <span class="help-card-text">
                         <strong>Minecraft</strong>
-                        <small>Skrypty, mapy i konfiguracje</small>
+                        <small>Skrypty, mapy i materiały.</small>
                     </span>
                     <span class="help-arrow">→</span>
                 </button>
@@ -662,459 +645,359 @@
                     <span class="help-card-icon">♥</span>
                     <span class="help-card-text">
                         <strong>Undertale</strong>
-                        <small>Lore, dane i materiały</small>
+                        <small>Materiały i informacje.</small>
                     </span>
                     <span class="help-arrow">→</span>
                 </button>
 
                 <button class="help-card" data-route="help-tech">
-                    <span class="help-card-icon">🛠️</span>
+                    <span class="help-card-icon">⚙</span>
                     <span class="help-card-text">
                         <strong>Problemy techniczne</strong>
-                        <small>Strona, błędy i problemy</small>
+                        <small>Błędy i problemy ze stroną.</small>
                     </span>
                     <span class="help-arrow">→</span>
                 </button>
 
             </div>
-
         </section>
 
 
-        <!-- ================= HELP ACCOUNT ================= -->
+        <!-- ================= POMOC - PODSTRONY ================= -->
+
         <section class="view" data-page="help-account">
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="help">← Centrum Pomocy</button>
-                <span class="section-label">POMOC / KONTO</span>
+                <span class="eyebrow">POMOC / KONTO</span>
                 <h1>Konto</h1>
             </div>
 
-            <div class="faq-grid">
-                <article class="faq-card">
-                    <h3>Jak utworzyć konto?</h3>
-                    <p>Przejdź do sekcji Konto i wybierz formularz rejestracji.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Nie mogę się zalogować</h3>
-                    <p>Sprawdź poprawność adresu e-mail i hasła. Jeśli problem nadal występuje, skontaktuj się z pomocą.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Czy konto jest potrzebne?</h3>
-                    <p>Konto pozwala w przyszłości powiązać zakupy i dostęp do zakupionych materiałów.</p>
-                </article>
+            <div class="article-card">
+                <h2>Problemy z kontem</h2>
+                <p>
+                    Jeżeli masz problem z logowaniem lub rejestracją,
+                    sprawdź poprawność wpisywanych danych.
+                </p>
+                <p>
+                    W przypadku dalszych problemów skontaktuj się
+                    z administracją ShadowTale.
+                </p>
             </div>
         </section>
 
 
-        <!-- ================= HELP ORDERS ================= -->
         <section class="view" data-page="help-orders">
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="help">← Centrum Pomocy</button>
-                <span class="section-label">POMOC / ZAMÓWIENIA</span>
+                <span class="eyebrow">POMOC / ZAMÓWIENIA</span>
                 <h1>Zamówienia</h1>
             </div>
 
-            <div class="faq-grid">
-                <article class="faq-card">
-                    <h3>Gdzie znajdę moje zamówienie?</h3>
-                    <p>Po uruchomieniu pełnego systemu zamówienia będą dostępne w panelu konta.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Nie otrzymałem pliku</h3>
-                    <p>Sprawdź sekcję pobierania. Jeśli problem występuje nadal, skontaktuj się z pomocą.</p>
-                </article>
+            <div class="article-card">
+                <h2>Jak działa zamówienie?</h2>
+                <p>
+                    Wybierz produkt, zapoznaj się z jego opisem
+                    i przejdź przez proces zamówienia.
+                </p>
             </div>
         </section>
 
 
-        <!-- ================= HELP PAYMENTS ================= -->
         <section class="view" data-page="help-payments">
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="help">← Centrum Pomocy</button>
-                <span class="section-label">POMOC / PŁATNOŚCI</span>
+                <span class="eyebrow">POMOC / PŁATNOŚCI</span>
                 <h1>Płatności</h1>
             </div>
 
-            <div class="faq-grid">
-                <article class="faq-card">
-                    <h3>Jak zapłacić za produkt?</h3>
-                    <p>Po przygotowaniu systemu sklepu dostępne metody płatności będą pokazane podczas zamówienia.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Płatność się nie udała</h3>
-                    <p>Sprawdź status płatności i w razie potrzeby skontaktuj się z pomocą.</p>
-                </article>
+            <div class="article-card">
+                <h2>Problemy z płatnością</h2>
+                <p>
+                    Jeżeli płatność nie została poprawnie przetworzona,
+                    nie próbuj wielokrotnie wykonywać tej samej płatności.
+                </p>
             </div>
         </section>
 
 
-        <!-- ================= HELP DOWNLOADS ================= -->
         <section class="view" data-page="help-downloads">
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="help">← Centrum Pomocy</button>
-                <span class="section-label">POMOC / POBIERANIE</span>
+                <span class="eyebrow">POMOC / POBIERANIE</span>
                 <h1>Pobieranie plików</h1>
             </div>
 
-            <div class="faq-grid">
-                <article class="faq-card">
-                    <h3>Gdzie pobiorę zakupiony plik?</h3>
-                    <p>Docelowo pliki będą dostępne z poziomu konta użytkownika.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Plik nie chce się pobrać</h3>
-                    <p>Sprawdź połączenie z internetem i spróbuj ponownie. W razie problemu skontaktuj się z pomocą.</p>
-                </article>
+            <div class="article-card">
+                <h2>Nie możesz pobrać pliku?</h2>
+                <p>
+                    Sprawdź swoje zamówienie oraz upewnij się,
+                    że jesteś zalogowany na właściwe konto.
+                </p>
             </div>
         </section>
 
 
-        <!-- ================= HELP MINECRAFT ================= -->
         <section class="view" data-page="help-minecraft">
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="help">← Centrum Pomocy</button>
-                <span class="section-label">POMOC / MINECRAFT</span>
+                <span class="eyebrow">POMOC / MINECRAFT</span>
                 <h1>Minecraft</h1>
             </div>
 
-            <div class="faq-grid">
-                <article class="faq-card">
-                    <h3>Jak używać skryptów?</h3>
-                    <p>Każdy skrypt powinien posiadać własną instrukcję instalacji i wymagania dotyczące wersji.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Skrypt nie działa</h3>
-                    <p>Sprawdź wersję Minecraft, Skript oraz wymagane dodatki.</p>
-                </article>
+            <div class="article-card">
+                <h2>Materiały Minecraft</h2>
+                <p>
+                    Pomoc dotycząca skryptów, map, konfiguracji,
+                    TXT oraz skinów znajduje się w tej sekcji.
+                </p>
             </div>
         </section>
 
 
-        <!-- ================= HELP UNDERTALE ================= -->
         <section class="view" data-page="help-undertale">
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="help">← Centrum Pomocy</button>
-                <span class="section-label">POMOC / UNDERTALE</span>
+                <span class="eyebrow">POMOC / UNDERTALE</span>
                 <h1>Undertale</h1>
             </div>
 
-            <div class="faq-grid">
-                <article class="faq-card">
-                    <h3>Gdzie znaleźć lore?</h3>
-                    <p>Wszystkie materiały dotyczące lore będą dostępne w sekcji Undertale.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Gdzie znajdują się save'y?</h3>
-                    <p>Save'y znajdują się w kategorii Undertale → Save'y.</p>
-                </article>
+            <div class="article-card">
+                <h2>Materiały Undertale</h2>
+                <p>
+                    Pomoc dotycząca lore, danych, przedmiotów
+                    oraz Save'ów znajduje się tutaj.
+                </p>
             </div>
         </section>
 
 
-        <!-- ================= HELP TECH ================= -->
         <section class="view" data-page="help-tech">
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="help">← Centrum Pomocy</button>
-                <span class="section-label">POMOC / TECHNICZNE</span>
+                <span class="eyebrow">POMOC / TECHNICZNE</span>
                 <h1>Problemy techniczne</h1>
             </div>
 
-            <div class="faq-grid">
-                <article class="faq-card">
-                    <h3>Strona wyświetla się nieprawidłowo</h3>
-                    <p>Odśwież stronę i sprawdź, czy korzystasz z aktualnej przeglądarki.</p>
-                </article>
-
-                <article class="faq-card">
-                    <h3>Przycisk nie działa</h3>
-                    <p>Spróbuj ponownie. Jeśli problem nadal występuje, zgłoś go administracji ShadowTale.</p>
-                </article>
+            <div class="article-card">
+                <h2>Problem ze stroną?</h2>
+                <p>
+                    Odśwież stronę i sprawdź połączenie z internetem.
+                    Jeśli problem nadal występuje, skontaktuj się z administracją.
+                </p>
             </div>
         </section>
 
 
         <!-- ================= REGULAMINY ================= -->
+
         <section class="view" data-page="regulations">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="home">← Wróć</button>
-                <span class="section-label">DOKUMENTY</span>
+
+                <span class="eyebrow">DOKUMENTY</span>
                 <h1>Regulaminy</h1>
-                <p>Najważniejsze dokumenty dotyczące ShadowTale.</p>
+                <p>Najważniejsze dokumenty ShadowTale.</p>
             </div>
 
             <div class="regulations-grid">
 
-                <article class="regulation-card">
-                    <div class="reg-icon">📜</div>
+                <button class="regulation-card" data-route="reg-service">
+                    <div class="reg-icon">§</div>
                     <div class="reg-body">
-                        <span class="card-tag">01</span>
-                        <h2>Regulamin serwisu</h2>
-                        <p>Zasady korzystania ze strony, kont oraz dostępnych materiałów.</p>
-                        <button class="btn btn-primary reg-button" data-route="reg-service">
-                            Czytaj regulamin →
-                        </button>
+                        <h3>Regulamin serwisu</h3>
+                        <p>Zasady korzystania z ShadowTale.pl.</p>
+                        <span>Otwórz dokument →</span>
                     </div>
-                </article>
+                </button>
 
-                <article class="regulation-card">
+                <button class="regulation-card" data-route="reg-store">
                     <div class="reg-icon">🛒</div>
                     <div class="reg-body">
-                        <span class="card-tag">02</span>
-                        <h2>Regulamin sklepu</h2>
-                        <p>Zasady dotyczące produktów, zamówień, płatności i plików cyfrowych.</p>
-                        <button class="btn btn-primary reg-button" data-route="reg-store">
-                            Czytaj regulamin →
-                        </button>
+                        <h3>Regulamin sklepu</h3>
+                        <p>Zasady dotyczące zakupów i produktów.</p>
+                        <span>Otwórz dokument →</span>
                     </div>
-                </article>
+                </button>
 
-                <article class="regulation-card">
+                <button class="regulation-card" data-route="reg-privacy">
                     <div class="reg-icon">🔒</div>
                     <div class="reg-body">
-                        <span class="card-tag">03</span>
-                        <h2>Polityka prywatności</h2>
-                        <p>Informacje dotyczące danych użytkowników i prywatności.</p>
-                        <button class="btn btn-primary reg-button" data-route="reg-privacy">
-                            Czytaj politykę →
-                        </button>
+                        <h3>Polityka prywatności</h3>
+                        <p>Informacje dotyczące danych użytkowników.</p>
+                        <span>Otwórz dokument →</span>
                     </div>
-                </article>
+                </button>
 
             </div>
-
-            <div class="legal-notice">
-                <strong>⚠️ Ważne</strong>
-                <p>
-                    Powyższe treści są szablonem informacyjnym strony.
-                    Przed rozpoczęciem rzeczywistej sprzedaży regulaminy powinny
-                    zostać odpowiednio uzupełnione i sprawdzone pod kątem obowiązujących przepisów.
-                </p>
-            </div>
-
         </section>
 
 
-        <!-- ================= REG SERVICE ================= -->
+        <!-- ================= REGULAMIN SERWISU ================= -->
+
         <section class="view" data-page="reg-service">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="regulations">← Regulaminy</button>
-                <span class="section-label">REGULAMIN SERWISU</span>
+
+                <span class="eyebrow">DOKUMENT</span>
                 <h1>Regulamin serwisu</h1>
             </div>
 
             <article class="document-card">
 
-                <div class="document-section">
-                    <h2>§1. Postanowienia ogólne</h2>
-                    <p>
-                        ShadowTale jest serwisem internetowym umożliwiającym
-                        dostęp do materiałów związanych między innymi z Minecraft
-                        oraz Undertale.
-                    </p>
-                </div>
+                <h2>1. Postanowienia ogólne</h2>
+                <p>
+                    ShadowTale.pl jest serwisem internetowym oferującym
+                    materiały związane między innymi z Minecraft oraz Undertale.
+                </p>
 
-                <div class="document-section">
-                    <h2>§2. Konto użytkownika</h2>
-                    <p>
-                        Użytkownik powinien podawać prawdziwe informacje wymagane
-                        przez serwis. Konto nie powinno być udostępniane innym osobom.
-                    </p>
-                </div>
+                <h2>2. Korzystanie z serwisu</h2>
+                <p>
+                    Użytkownik zobowiązuje się korzystać ze strony zgodnie
+                    z obowiązującym prawem oraz zasadami serwisu.
+                </p>
 
-                <div class="document-section">
-                    <h2>§3. Korzystanie z serwisu</h2>
-                    <p>
-                        Zabronione jest wykorzystywanie serwisu w sposób naruszający
-                        prawo, bezpieczeństwo innych użytkowników lub prawidłowe
-                        działanie strony.
-                    </p>
-                </div>
-
-                <div class="document-section">
-                    <h2>§4. Materiały</h2>
-                    <p>
-                        Materiały udostępniane w serwisie mogą posiadać określone
-                        zasady wykorzystania. Należy zapoznać się z informacjami
-                        znajdującymi się przy konkretnym materiale.
-                    </p>
-                </div>
-
-                <div class="document-section">
-                    <h2>§5. Kontakt</h2>
-                    <p>
-                        W przypadku problemów użytkownik może skorzystać
-                        z Centrum Pomocy lub kontaktu społecznościowego ShadowTale.
-                    </p>
-                </div>
+                <h2>3. Odpowiedzialność</h2>
+                <p>
+                    Użytkownik ponosi odpowiedzialność za swoje działania
+                    wykonywane za pośrednictwem konta.
+                </p>
 
             </article>
-
         </section>
 
 
-        <!-- ================= REG STORE ================= -->
+        <!-- ================= REGULAMIN SKLEPU ================= -->
+
         <section class="view" data-page="reg-store">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="regulations">← Regulaminy</button>
-                <span class="section-label">REGULAMIN SKLEPU</span>
+
+                <span class="eyebrow">DOKUMENT</span>
                 <h1>Regulamin sklepu</h1>
             </div>
 
             <article class="document-card">
 
-                <div class="document-section">
-                    <h2>§1. Produkty</h2>
-                    <p>
-                        Sklep może oferować produkty cyfrowe, w szczególności
-                        skrypty, konfiguracje, mapy i inne materiały.
-                    </p>
-                </div>
+                <h2>1. Zamówienia</h2>
+                <p>
+                    Zamówienie zostaje złożone po wykonaniu wszystkich
+                    wymaganych kroków procesu zakupowego.
+                </p>
 
-                <div class="document-section">
-                    <h2>§2. Zamówienia</h2>
-                    <p>
-                        Złożenie zamówienia powinno oznaczać akceptację warunków
-                        obowiązujących przy danym produkcie.
-                    </p>
-                </div>
+                <h2>2. Produkty cyfrowe</h2>
+                <p>
+                    Produkty cyfrowe mogą być udostępniane użytkownikowi
+                    po potwierdzeniu prawidłowego zamówienia.
+                </p>
 
-                <div class="document-section">
-                    <h2>§3. Płatności</h2>
-                    <p>
-                        Dostępne metody płatności oraz ich szczegółowe warunki
-                        powinny być przedstawione użytkownikowi przed finalizacją zakupu.
-                    </p>
-                </div>
-
-                <div class="document-section">
-                    <h2>§4. Dostarczenie produktu</h2>
-                    <p>
-                        Produkty cyfrowe mogą być udostępniane po prawidłowym
-                        zakończeniu procesu zamówienia i płatności.
-                    </p>
-                </div>
-
-                <div class="document-section">
-                    <h2>§5. Reklamacje</h2>
-                    <p>
-                        Problemy z zakupionym produktem należy zgłaszać poprzez
-                        dostępny kanał kontaktu. Zgłoszenie powinno zawierać
-                        informacje pozwalające zidentyfikować problem.
-                    </p>
-                </div>
+                <h2>3. Kontakt</h2>
+                <p>
+                    W przypadku problemów z zamówieniem należy skontaktować
+                    się z administracją serwisu.
+                </p>
 
             </article>
-
         </section>
 
 
-        <!-- ================= REG PRIVACY ================= -->
+        <!-- ================= PRYWATNOŚĆ ================= -->
+
         <section class="view" data-page="reg-privacy">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="regulations">← Regulaminy</button>
-                <span class="section-label">PRYWATNOŚĆ</span>
+
+                <span class="eyebrow">DOKUMENT</span>
                 <h1>Polityka prywatności</h1>
             </div>
 
             <article class="document-card">
 
-                <div class="document-section">
-                    <h2>§1. Dane użytkowników</h2>
-                    <p>
-                        Serwis może przetwarzać dane przekazane podczas korzystania
-                        z konta lub innych funkcji strony.
-                    </p>
-                </div>
+                <h2>1. Dane</h2>
+                <p>
+                    Serwis może przetwarzać dane niezbędne do działania
+                    funkcji konta oraz obsługi zamówień.
+                </p>
 
-                <div class="document-section">
-                    <h2>§2. Cel przetwarzania</h2>
-                    <p>
-                        Dane mogą być wykorzystywane między innymi do obsługi kont,
-                        zamówień oraz kontaktu z użytkownikiem.
-                    </p>
-                </div>
+                <h2>2. Bezpieczeństwo</h2>
+                <p>
+                    ShadowTale powinno stosować odpowiednie środki
+                    techniczne i organizacyjne w celu ochrony danych.
+                </p>
 
-                <div class="document-section">
-                    <h2>§3. Bezpieczeństwo</h2>
-                    <p>
-                        Dane powinny być przechowywane i przetwarzane z zastosowaniem
-                        odpowiednich środków bezpieczeństwa.
-                    </p>
-                </div>
-
-                <div class="document-section">
-                    <h2>§4. Kontakt</h2>
-                    <p>
-                        W sprawach związanych z prywatnością użytkownik może
-                        skontaktować się z administracją ShadowTale.
-                    </p>
-                </div>
+                <h2>3. Kontakt</h2>
+                <p>
+                    W sprawach dotyczących prywatności użytkownik może
+                    skontaktować się z administracją serwisu.
+                </p>
 
             </article>
-
         </section>
 
 
         <!-- ================= MEDIA ================= -->
+
         <section class="view" data-page="media">
 
-            <div class="page-header">
+            <div class="page-head">
                 <button class="back-btn" data-route="home">← Wróć</button>
-                <span class="section-label">MEDIA</span>
-                <h1>Media</h1>
-                <p>Materiały pomagające korzystać z ShadowTale.</p>
+
+                <span class="eyebrow">MEDIA</span>
+                <h1>Media ShadowTale</h1>
+                <p>Poradnik korzystania ze strony.</p>
             </div>
 
-            <article class="media-card">
+            <div class="media-card">
+
                 <div class="media-icon">▶</div>
+
                 <div>
-                    <span class="card-tag">PORADNIK</span>
                     <h2>Jak korzystać z ShadowTale?</h2>
                     <p>
-                        Jeden wspólny poradnik dotyczący korzystania ze strony,
-                        zamawiania produktów oraz pobierania materiałów.
+                        Jeden wspólny poradnik pokazujący,
+                        jak poruszać się po stronie oraz korzystać
+                        z zamówień.
                     </p>
 
                     <button class="btn btn-primary" data-action="tutorial">
                         Otwórz poradnik
                     </button>
                 </div>
-            </article>
+
+            </div>
 
         </section>
 
     </main>
 
 
-    <!-- FOOTER -->
+    <!-- ================= FOOTER ================= -->
+
     <footer class="footer">
 
         <div class="footer-inner">
 
             <div class="footer-brand">
-                <strong>SHADOW<span>TALE</span></strong>
-                <p>Minecraft • Undertale • Community</p>
+                <button class="logo footer-logo" data-route="home">
+                    <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span>
+                    <small>.PL</small>
+                </button>
+
+                <p>
+                    Twój świat w jednym miejscu.
+                </p>
             </div>
 
             <div class="footer-links">
 
-                <button data-route="home">Start</button>
                 <button data-route="minecraft">Minecraft</button>
                 <button data-route="undertale">Undertale</button>
                 <button data-route="help">Pomoc</button>
                 <button data-route="regulations">Regulaminy</button>
-                <button data-route="account">Konto</button>
+                <button data-route="media">Media</button>
 
             </div>
 
@@ -1131,10 +1014,11 @@
     <div id="toast" class="toast"></div>
 
 
+    <!-- ================= JAVASCRIPT ================= -->
+
     <script>
-        /* ==========================================
-           SHADOWTALE — KONFIGURACJA
-        ========================================== */
+
+        console.log("SHADOWTALE JS DZIAŁA");
 
         const CONFIG = {
             discordUrl: "",
@@ -1142,32 +1026,34 @@
         };
 
 
-        /* ==========================================
-           ROUTER
-        ========================================== */
+        /* ================= ROUTER ================= */
 
         const views = document.querySelectorAll(".view");
 
         function showPage(page) {
 
-            const target = document.querySelector(
+            let target = document.querySelector(
                 `.view[data-page="${page}"]`
             );
 
             if (!target) {
+                console.warn("Nie znaleziono strony:", page);
+
                 page = "home";
+
+                target = document.querySelector(
+                    `.view[data-page="home"]`
+                );
             }
 
             views.forEach(view => {
                 view.classList.remove("active");
+                view.style.display = "none";
             });
 
-            const activeView = document.querySelector(
-                `.view[data-page="${page}"]`
-            );
-
-            if (activeView) {
-                activeView.classList.add("active");
+            if (target) {
+                target.classList.add("active");
+                target.style.display = "block";
             }
 
             window.scrollTo({
@@ -1182,361 +1068,422 @@
 
 
         function navigate(page) {
-            if (location.hash !== "#" + page) {
-                location.hash = page;
-            } else {
-                showPage(page);
+
+            if (!page) return;
+
+            const target = document.querySelector(
+                `.view[data-page="${page}"]`
+            );
+
+            if (!target) {
+                console.warn("Nie znaleziono strony:", page);
+                return;
             }
+
+            if (window.location.hash !== "#" + page) {
+                history.pushState(
+                    { page },
+                    "",
+                    "#" + page
+                );
+            }
+
+            showPage(page);
         }
 
 
         function handleRoute() {
 
-            const page = location.hash.replace("#", "") || "home";
+            let page = window.location.hash.substring(1);
+
+            if (!page) {
+                page = "home";
+            }
 
             showPage(page);
         }
 
 
         window.addEventListener("hashchange", handleRoute);
+        window.addEventListener("popstate", handleRoute);
 
+
+        /* ================= CLICK HANDLER ================= */
 
         document.addEventListener("click", function(event) {
 
             const routeButton = event.target.closest("[data-route]");
 
             if (routeButton) {
-                const route = routeButton.dataset.route;
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const route = routeButton.getAttribute("data-route");
+
+                console.log("Przejście do:", route);
+
                 navigate(route);
+
                 return;
             }
 
+
             const actionButton = event.target.closest("[data-action]");
 
-            if (actionButton) {
+            if (!actionButton) return;
 
-                const action = actionButton.dataset.action;
+            event.preventDefault();
+            event.stopPropagation();
 
-                if (action === "discord") {
+            const action =
+                actionButton.getAttribute("data-action");
 
-                    if (CONFIG.discordUrl) {
-                        window.open(
-                            CONFIG.discordUrl,
-                            "_blank",
-                            "noopener,noreferrer"
-                        );
-                    } else {
-                        showToast("Link do Discorda nie został jeszcze dodany.");
-                    }
 
+            /* DISCORD */
+
+            if (action === "discord") {
+
+                if (CONFIG.discordUrl) {
+                    window.open(
+                        CONFIG.discordUrl,
+                        "_blank",
+                        "noopener,noreferrer"
+                    );
+                } else {
+                    showToast(
+                        "Link do Discorda nie został jeszcze ustawiony."
+                    );
                 }
 
-                if (action === "tutorial") {
+                return;
+            }
 
-                    if (CONFIG.tutorialUrl) {
-                        window.open(
-                            CONFIG.tutorialUrl,
-                            "_blank",
-                            "noopener,noreferrer"
-                        );
-                    } else {
-                        showToast("Link do poradnika nie został jeszcze dodany.");
-                    }
 
+            /* TUTORIAL */
+
+            if (action === "tutorial") {
+
+                if (CONFIG.tutorialUrl) {
+                    window.open(
+                        CONFIG.tutorialUrl,
+                        "_blank",
+                        "noopener,noreferrer"
+                    );
+                } else {
+                    showToast(
+                        "Link do poradnika nie został jeszcze ustawiony."
+                    );
                 }
 
-                if (action === "download") {
-                    showToast("Plik będzie dostępny po zakupie.");
-                }
+                return;
+            }
 
+
+            /* DOWNLOAD */
+
+            if (action === "download") {
+
+                showToast(
+                    "Plik będzie dostępny po zakupie."
+                );
+
+                return;
             }
 
         });
 
 
-        /* ==========================================
-           TOAST
-        ========================================== */
+        /* ================= TOAST ================= */
+
+        let toastTimer;
 
         function showToast(message) {
 
-            const toast = document.getElementById("toast");
+            const toast =
+                document.getElementById("toast");
 
             toast.textContent = message;
+
             toast.classList.add("show");
 
-            clearTimeout(window.toastTimer);
+            clearTimeout(toastTimer);
 
-            window.toastTimer = setTimeout(() => {
+            toastTimer = setTimeout(() => {
                 toast.classList.remove("show");
-            }, 3000);
+            }, 3500);
         }
 
 
-        /* ==========================================
-           KONTA — DEMO FRONTEND
-        ========================================== */
-
-        const ACCOUNTS_KEY = "shadowtale_accounts_v1";
-        const SESSION_KEY = "shadowtale_session_v1";
-
+        /* ================= KONTA ================= */
 
         function getAccounts() {
 
             try {
-                return JSON.parse(
-                    localStorage.getItem(ACCOUNTS_KEY)
-                ) || [];
-            } catch {
-                return [];
-            }
 
+                return JSON.parse(
+                    localStorage.getItem("shadowtale_accounts")
+                ) || [];
+
+            } catch {
+
+                return [];
+
+            }
         }
 
 
         function saveAccounts(accounts) {
 
             localStorage.setItem(
-                ACCOUNTS_KEY,
+                "shadowtale_accounts",
                 JSON.stringify(accounts)
             );
-
         }
 
 
         async function hashPassword(password) {
 
-            const data = new TextEncoder().encode(password);
+            const data =
+                new TextEncoder().encode(password);
 
-            const hash = await crypto.subtle.digest(
-                "SHA-256",
-                data
-            );
+            const hash =
+                await crypto.subtle.digest(
+                    "SHA-256",
+                    data
+                );
 
-            return Array.from(
-                new Uint8Array(hash)
-            )
-            .map(byte => byte.toString(16).padStart(2, "0"))
-            .join("");
-
+            return Array
+                .from(new Uint8Array(hash))
+                .map(
+                    byte =>
+                        byte
+                            .toString(16)
+                            .padStart(2, "0")
+                )
+                .join("");
         }
 
 
         function getSession() {
-            return localStorage.getItem(SESSION_KEY);
+
+            return localStorage.getItem(
+                "shadowtale_session"
+            );
         }
 
 
-        function setSession(email) {
-            localStorage.setItem(SESSION_KEY, email);
+        function setSession(username) {
+
+            localStorage.setItem(
+                "shadowtale_session",
+                username
+            );
         }
 
 
         function logout() {
 
-            localStorage.removeItem(SESSION_KEY);
+            localStorage.removeItem(
+                "shadowtale_session"
+            );
 
             renderAccount();
 
-            showToast("Wylogowano z konta.");
+            showToast("Wylogowano.");
+
+        }
+
+
+        function escapeHtml(text) {
+
+            return String(text)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
         }
 
 
         function renderAccount() {
 
-            const area = document.getElementById("account-area");
+            const container =
+                document.getElementById("account-content");
 
-            if (!area) return;
+            if (!container) return;
 
             const session = getSession();
-            const accounts = getAccounts();
 
-            const user = accounts.find(
-                account => account.email === session
-            );
+            if (session) {
 
+                container.innerHTML = `
 
-            if (user) {
+                    <div class="account-card logged">
 
-                area.innerHTML = `
-                    <div class="account-profile">
-
-                        <div class="profile-avatar">
-                            ${escapeHtml(user.username.charAt(0).toUpperCase())}
+                        <div class="account-avatar">
+                            ${escapeHtml(
+                                session
+                                    .charAt(0)
+                                    .toUpperCase()
+                            )}
                         </div>
 
-                        <div class="profile-info">
-                            <span class="section-label">ZALOGOWANO</span>
-                            <h2>${escapeHtml(user.username)}</h2>
-                            <p>${escapeHtml(user.email)}</p>
+                        <div class="account-info">
+
+                            <span class="eyebrow">
+                                ZALOGOWANO
+                            </span>
+
+                            <h2>
+                                Witaj, ${escapeHtml(session)}!
+                            </h2>
+
+                            <p>
+                                To jest panel Twojego konta ShadowTale.
+                            </p>
+
                         </div>
 
-                        <button class="btn btn-danger" id="logout-btn">
+                        <button
+                            class="btn btn-danger"
+                            id="logout-button"
+                        >
                             Wyloguj się
                         </button>
 
                     </div>
-
-                    <div class="demo-warning">
-                        <strong>ℹ️ Wersja demonstracyjna</strong>
-                        <p>
-                            Ten system kont działa lokalnie w przeglądarce.
-                            Do prawdziwego sklepu potrzebny będzie backend,
-                            baza danych i bezpieczne uwierzytelnianie.
-                        </p>
-                    </div>
                 `;
 
-                document
-                    .getElementById("logout-btn")
-                    .addEventListener("click", logout);
+                const logoutButton =
+                    document.getElementById("logout-button");
+
+                logoutButton.addEventListener(
+                    "click",
+                    logout
+                );
 
                 return;
             }
 
 
-            area.innerHTML = `
+            container.innerHTML = `
 
-                <div class="auth-layout">
+                <div class="auth-grid">
 
-                    <div class="auth-card">
+                    <form
+                        class="auth-card"
+                        id="login-form"
+                    >
 
-                        <div class="auth-heading">
-                            <span class="auth-icon">↪</span>
-                            <div>
-                                <span class="section-label">KONTO</span>
-                                <h2>Logowanie</h2>
-                            </div>
-                        </div>
+                        <div class="auth-icon">→</div>
 
-                        <form id="login-form">
+                        <h2>Logowanie</h2>
 
-                            <label>
-                                E-mail
-                                <input
-                                    type="email"
-                                    id="login-email"
-                                    autocomplete="email"
-                                    required
-                                    placeholder="twoj@email.pl"
-                                >
-                            </label>
+                        <p>
+                            Zaloguj się na swoje konto.
+                        </p>
 
-                            <label>
-                                Hasło
-                                <input
-                                    type="password"
-                                    id="login-password"
-                                    autocomplete="current-password"
-                                    required
-                                    placeholder="••••••••"
-                                >
-                            </label>
-
-                            <button
-                                type="submit"
-                                class="btn btn-primary btn-full"
+                        <label>
+                            Nazwa użytkownika
+                            <input
+                                id="login-username"
+                                type="text"
+                                autocomplete="username"
+                                required
                             >
-                                Zaloguj się
-                            </button>
+                        </label>
 
-                        </form>
-
-                    </div>
-
-
-                    <div class="auth-card">
-
-                        <div class="auth-heading">
-                            <span class="auth-icon">+</span>
-                            <div>
-                                <span class="section-label">NOWY UŻYTKOWNIK</span>
-                                <h2>Rejestracja</h2>
-                            </div>
-                        </div>
-
-                        <form id="register-form">
-
-                            <label>
-                                Nick
-                                <input
-                                    type="text"
-                                    id="register-username"
-                                    autocomplete="username"
-                                    minlength="3"
-                                    maxlength="24"
-                                    required
-                                    placeholder="ShadowPlayer"
-                                >
-                            </label>
-
-                            <label>
-                                E-mail
-                                <input
-                                    type="email"
-                                    id="register-email"
-                                    autocomplete="email"
-                                    required
-                                    placeholder="twoj@email.pl"
-                                >
-                            </label>
-
-                            <label>
-                                Hasło
-                                <input
-                                    type="password"
-                                    id="register-password"
-                                    autocomplete="new-password"
-                                    minlength="6"
-                                    required
-                                    placeholder="Minimum 6 znaków"
-                                >
-                            </label>
-
-                            <label>
-                                Powtórz hasło
-                                <input
-                                    type="password"
-                                    id="register-password-confirm"
-                                    autocomplete="new-password"
-                                    minlength="6"
-                                    required
-                                    placeholder="Powtórz hasło"
-                                >
-                            </label>
-
-                            <button
-                                type="submit"
-                                class="btn btn-primary btn-full"
+                        <label>
+                            Hasło
+                            <input
+                                id="login-password"
+                                type="password"
+                                autocomplete="current-password"
+                                required
                             >
-                                Utwórz konto
-                            </button>
+                        </label>
 
-                        </form>
+                        <button
+                            class="btn btn-primary"
+                            type="submit"
+                        >
+                            Zaloguj się
+                        </button>
 
-                    </div>
+                    </form>
+
+
+                    <form
+                        class="auth-card"
+                        id="register-form"
+                    >
+
+                        <div class="auth-icon">+</div>
+
+                        <h2>Rejestracja</h2>
+
+                        <p>
+                            Utwórz nowe konto ShadowTale.
+                        </p>
+
+                        <label>
+                            Nazwa użytkownika
+                            <input
+                                id="register-username"
+                                type="text"
+                                autocomplete="username"
+                                minlength="3"
+                                maxlength="24"
+                                required
+                            >
+                        </label>
+
+                        <label>
+                            Hasło
+                            <input
+                                id="register-password"
+                                type="password"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                        </label>
+
+                        <button
+                            class="btn btn-secondary"
+                            type="submit"
+                        >
+                            Utwórz konto
+                        </button>
+
+                    </form>
 
                 </div>
 
                 <div class="demo-warning">
-                    <strong>ℹ️ Informacja</strong>
-                    <p>
-                        Konta w tej wersji są demonstracyjne i przechowywane
-                        lokalnie w tej przeglądarce. Nie używaj tutaj prawdziwego
-                        hasła używanego w innych serwisach.
-                    </p>
+                    <strong>Ważne:</strong>
+                    obecny system kont działa lokalnie w przeglądarce.
+                    Do prawdziwych kont produkcyjnych potrzebny jest
+                    backend, baza danych i bezpieczny system uwierzytelniania.
                 </div>
             `;
 
 
             document
                 .getElementById("login-form")
-                .addEventListener("submit", handleLogin);
+                .addEventListener(
+                    "submit",
+                    handleLogin
+                );
+
 
             document
                 .getElementById("register-form")
-                .addEventListener("submit", handleRegister);
-
+                .addEventListener(
+                    "submit",
+                    handleRegister
+                );
         }
 
 
@@ -1545,30 +1492,53 @@
             event.preventDefault();
 
             const username =
-                document.getElementById("register-username").value.trim();
-
-            const email =
-                document.getElementById("register-email").value.trim().toLowerCase();
+                document
+                    .getElementById("register-username")
+                    .value
+                    .trim();
 
             const password =
-                document.getElementById("register-password").value;
+                document
+                    .getElementById("register-password")
+                    .value;
 
-            const confirm =
-                document.getElementById("register-password-confirm").value;
+
+            if (username.length < 3) {
+
+                showToast(
+                    "Nazwa użytkownika musi mieć minimum 3 znaki."
+                );
+
+                return;
+            }
 
 
-            if (password !== confirm) {
-                showToast("Hasła nie są takie same.");
+            if (password.length < 6) {
+
+                showToast(
+                    "Hasło musi mieć minimum 6 znaków."
+                );
+
                 return;
             }
 
 
             const accounts = getAccounts();
 
-            if (
-                accounts.some(account => account.email === email)
-            ) {
-                showToast("Konto z tym adresem e-mail już istnieje.");
+            const exists =
+                accounts.some(
+                    account =>
+                        account.username.toLowerCase() ===
+                        username.toLowerCase()
+                );
+
+
+            if (exists) {
+
+                showToast(
+                    "Takie konto już istnieje."
+                );
+
                 return;
             }
 
@@ -1579,19 +1549,19 @@
 
             accounts.push({
                 username,
-                email,
-                passwordHash,
-                createdAt: new Date().toISOString()
+                passwordHash
             });
 
 
             saveAccounts(accounts);
-            setSession(email);
+
+            setSession(username);
+
+            showToast(
+                "Konto zostało utworzone."
+            );
 
             renderAccount();
-
-            showToast("Konto zostało utworzone!");
-
         }
 
 
@@ -1599,22 +1569,34 @@
 
             event.preventDefault();
 
-            const email =
-                document.getElementById("login-email").value.trim().toLowerCase();
+            const username =
+                document
+                    .getElementById("login-username")
+                    .value
+                    .trim();
 
             const password =
-                document.getElementById("login-password").value;
+                document
+                    .getElementById("login-password")
+                    .value;
 
 
             const accounts = getAccounts();
 
-            const user = accounts.find(
-                account => account.email === email
-            );
+            const account =
+                accounts.find(
+                    item =>
+                        item.username.toLowerCase() ===
+                        username.toLowerCase()
+                );
 
 
-            if (!user) {
-                showToast("Nieprawidłowy e-mail lub hasło.");
+            if (!account) {
+
+                showToast(
+                    "Nieprawidłowa nazwa użytkownika lub hasło."
+                );
+
                 return;
             }
 
@@ -1623,36 +1605,28 @@
                 await hashPassword(password);
 
 
-            if (passwordHash !== user.passwordHash) {
-                showToast("Nieprawidłowy e-mail lub hasło.");
+            if (
+                passwordHash !==
+                account.passwordHash
+            ) {
+
+                showToast(
+                    "Nieprawidłowa nazwa użytkownika lub hasło."
+                );
+
                 return;
             }
 
 
-            setSession(email);
+            setSession(account.username);
+
+            showToast("Zalogowano.");
 
             renderAccount();
-
-            showToast("Zalogowano pomyślnie!");
-
         }
 
 
-        function escapeHtml(value) {
-
-            return String(value)
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-
-        }
-
-
-        /* ==========================================
-           START
-        ========================================== */
+        /* ================= START ================= */
 
         handleRoute();
 
