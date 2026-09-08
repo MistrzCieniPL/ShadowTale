@@ -11,74 +11,58 @@
 
 <body>
 
-<!-- =========================
-     NAVBAR
-========================= -->
-
 <header class="navbar">
 
     <a href="#home" class="logo">
         Shadow<span>Tale</span>
     </a>
 
-    <a href="#konto" class="nav-account">
-        Konto
-    </a>
+    <nav>
+        <a href="#konto" class="nav-button">
+            Konto
+        </a>
+    </nav>
 
 </header>
 
 
+<main>
+
 <!-- =========================
-     GŁÓWNA
+     STRONA GŁÓWNA
 ========================= -->
 
-<main id="home">
+<section id="home" class="page">
 
-    <section class="hero">
+    <div class="hero">
 
-        <div class="hero-content">
+        <span class="label">
+            SHADOWTALE.PL
+        </span>
 
-            <p class="eyebrow">
-                SHADOWTALE.PL
-            </p>
+        <h1>
+            Minecraft <span>×</span> Undertale
+        </h1>
 
-            <h1>
-                Minecraft <span>×</span> Undertale
-            </h1>
+        <p>
+            Skrypty, mapy, configi i materiały stworzone dla społeczności.
+        </p>
 
-            <p>
-                Skrypty, mapy, configi, materiały i wiele więcej.
-            </p>
-
-        </div>
-
-    </section>
+    </div>
 
 
-    <!-- =========================
-         GŁÓWNE KATEGORIE
-    ========================= -->
+    <div class="container">
 
-    <section class="section">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                SKLEP
-            </p>
-
-            <h2>
-                Wybierz kategorię
-            </h2>
-
-        </div>
+        <h2 class="section-heading">
+            Sklep
+        </h2>
 
 
-        <div class="main-categories">
+        <div class="main-grid">
 
-            <a href="#minecraft" class="main-category">
+            <a href="#minecraft" class="main-card">
 
-                <div class="category-icon">
+                <div class="card-symbol">
                     ⛏
                 </div>
 
@@ -90,16 +74,16 @@
                     Skrypty, mapy, configi, TXT, skiny i save'y.
                 </p>
 
-                <span class="category-link">
-                    Przejdź →
+                <span class="arrow">
+                    Otwórz kategorię →
                 </span>
 
             </a>
 
 
-            <a href="#undertale" class="main-category">
+            <a href="#undertale" class="main-card">
 
-                <div class="category-icon">
+                <div class="card-symbol">
                     ♥
                 </div>
 
@@ -108,162 +92,248 @@
                 </h3>
 
                 <p>
-                    Lore postaci, przedmiotów, dane i materiały.
+                    Lore postaci, itemów oraz dane i wykresy.
                 </p>
 
-                <span class="category-link">
-                    Przejdź →
+                <span class="arrow">
+                    Otwórz kategorię →
                 </span>
 
             </a>
 
         </div>
 
-    </section>
 
+        <!-- MEDIA -->
 
-    <!-- =========================
-         MINECRAFT
-    ========================= -->
-
-    <section id="minecraft" class="section category-page">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                MINECRAFT
-            </p>
+        <div class="single-section">
 
             <h2>
-                Wybierz kategorię
+                Media
             </h2>
+
+            <a href="#" class="media-card">
+
+                <div class="media-preview">
+                    ▶
+                </div>
+
+                <div>
+                    <span class="label">
+                        PORADNIK
+                    </span>
+
+                    <h3>
+                        Jak korzystać z ShadowTale?
+                    </h3>
+
+                    <p>
+                        Krótki poradnik dotyczący korzystania ze strony,
+                        zamawiania i pobierania plików.
+                    </p>
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- DISCORD -->
+
+        <div class="simple-section">
+
+            <span class="label">
+                SPOŁECZNOŚĆ
+            </span>
+
+            <h2>
+                Discord
+            </h2>
+
+            <p>
+                Dołącz do naszej społeczności.
+            </p>
+
+            <a href="#" class="primary-button">
+                Dołącz do Discorda
+            </a>
+
+        </div>
+
+
+        <!-- TIPPLY -->
+
+        <div class="simple-section">
+
+            <span class="label">
+                WSPARCIE
+            </span>
+
+            <h2>
+                Wesprzyj ShadowTale
+            </h2>
+
+            <p>
+                Jeśli podoba Ci się projekt, możesz go wesprzeć.
+            </p>
+
+            <a href="#" class="primary-button">
+                Wesprzyj nas
+            </a>
+
+        </div>
+
+
+        <!-- POMOC -->
+
+        <div class="simple-section">
+
+            <span class="label">
+                POMOC
+            </span>
+
+            <h2>
+                Centrum pomocy
+            </h2>
+
+            <p>
+                Potrzebujesz pomocy lub masz pytanie?
+            </p>
+
+            <a href="#pomoc" class="primary-button">
+                Centrum pomocy
+            </a>
+
+        </div>
+
+
+        <!-- REGULAMINY -->
+
+        <div class="simple-section">
+
+            <span class="label">
+                INFORMACJE
+            </span>
+
+            <h2>
+                Regulaminy
+            </h2>
+
+            <p>
+                Zapoznaj się z zasadami korzystania z ShadowTale.
+            </p>
+
+            <a href="#regulaminy" class="primary-button">
+                Zobacz regulaminy
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MINECRAFT
+========================= -->
+
+<section id="minecraft" class="page">
+
+    <div class="container">
+
+        <a href="#home" class="back-button">
+            ← Wróć
+        </a>
+
+        <div class="page-heading">
+
+            <span class="label">
+                MINECRAFT
+            </span>
+
+            <h1>
+                Minecraft
+            </h1>
+
+            <p>
+                Wybierz kategorię.
+            </p>
 
         </div>
 
 
         <div class="category-grid">
 
-            <a href="#minecraft-skrypty" class="small-category">
-
-                <h3>
-                    Skrypty
-                </h3>
-
-                <p>
-                    Gotowe systemy i rozwiązania Skript.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#minecraft-skrypty" class="category-card">
+                <h3>Skrypty</h3>
+                <p>Gotowe systemy i rozwiązania.</p>
+                <span>Otwórz →</span>
             </a>
 
 
-            <a href="#minecraft-mapy" class="small-category">
-
-                <h3>
-                    Mapy
-                </h3>
-
-                <p>
-                    Gotowe mapy do Minecraft.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#minecraft-mapy" class="category-card">
+                <h3>Mapy</h3>
+                <p>Gotowe mapy do Minecraft.</p>
+                <span>Otwórz →</span>
             </a>
 
 
-            <a href="#minecraft-configi" class="small-category">
-
-                <h3>
-                    Configi
-                </h3>
-
-                <p>
-                    Konfiguracje i ustawienia serwerowe.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#minecraft-configi" class="category-card">
+                <h3>Configi</h3>
+                <p>Konfiguracje serwerowe.</p>
+                <span>Otwórz →</span>
             </a>
 
 
-            <a href="#minecraft-txt" class="small-category">
-
-                <h3>
-                    TXT
-                </h3>
-
-                <p>
-                    Paczki tekstur i materiały graficzne.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#minecraft-txt" class="category-card">
+                <h3>TXT</h3>
+                <p>Paczki tekstur.</p>
+                <span>Otwórz →</span>
             </a>
 
 
-            <a href="#minecraft-skiny" class="small-category">
-
-                <h3>
-                    Skiny
-                </h3>
-
-                <p>
-                    Skiny do Minecraft.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#minecraft-skiny" class="category-card">
+                <h3>Skiny</h3>
+                <p>Skiny do Minecraft.</p>
+                <span>Otwórz →</span>
             </a>
 
 
-            <a href="#minecraft-save" class="small-category">
-
-                <h3>
-                    Save
-                </h3>
-
-                <p>
-                    Gotowe zapisy światów i projektów.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#minecraft-save" class="category-card">
+                <h3>Save</h3>
+                <p>Zapisy światów.</p>
+                <span>Otwórz →</span>
             </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- =========================
-         SKRYPTY MINECRAFT
-    ========================= -->
+<!-- =========================
+     SKRYPTY
+========================= -->
 
-    <section id="minecraft-skrypty" class="section subpage">
+<section id="minecraft-skrypty" class="page">
 
-        <div class="section-title">
+    <div class="container">
 
-            <p class="eyebrow">
+        <a href="#minecraft" class="back-button">
+            ← Minecraft
+        </a>
+
+        <div class="page-heading">
+
+            <span class="label">
                 MINECRAFT / SKRYPTY
-            </p>
+            </span>
 
-            <h2>
+            <h1>
                 Skrypty
-            </h2>
+            </h1>
 
             <p>
                 Wybierz interesujący Cię skrypt.
@@ -288,7 +358,7 @@
                     System zarządzania regionami.
                 </p>
 
-                <span class="file-open">
+                <span>
                     Szczegóły →
                 </span>
 
@@ -309,7 +379,7 @@
                     System codziennych zadań.
                 </p>
 
-                <span class="file-open">
+                <span>
                     Szczegóły →
                 </span>
 
@@ -328,39 +398,47 @@
                 Nadal możesz go zamówić!
             </p>
 
-            <a href="#pomoc" class="button">
+            <a href="#pomoc" class="primary-button">
                 Zamów skrypt
             </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- =========================
-         REGION
-    ========================= -->
+<!-- =========================
+     REGION
+========================= -->
 
-    <section id="region" class="section product-page">
+<section id="region" class="page">
 
-        <div class="product-content">
+    <div class="container">
 
-            <p class="eyebrow">
-                MINECRAFT / SKRYPTY / REGION
-            </p>
+        <a href="#minecraft-skrypty" class="back-button">
+            ← Skrypty
+        </a>
 
-            <h2>
+        <div class="product">
+
+            <span class="label">
+                MINECRAFT / SKRYPTY
+            </span>
+
+            <h1>
                 Region
-            </h2>
+            </h1>
 
             <p class="product-description">
-                System regionów do Minecraft. Tutaj w przyszłości
-                znajdzie się pełny opis działania skryptu, wymagania,
-                wersja Minecraft oraz informacje o pliku.
+                System regionów do Minecraft.
+                Tutaj znajdzie się dokładny opis produktu,
+                wymagania oraz informacje dotyczące pliku.
             </p>
 
 
-            <div class="info-box">
+            <div class="details">
 
                 <div>
                     <span>Typ</span>
@@ -373,46 +451,52 @@
                 </div>
 
                 <div>
-                    <span>Format</span>
+                    <span>Plik</span>
                     <strong>.sk</strong>
                 </div>
 
             </div>
 
 
-            <a href="#" class="button">
+            <a href="#" class="primary-button">
                 Pobierz plik
             </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- =========================
-         DAILY
-    ========================= -->
+<!-- =========================
+     DAILY
+========================= -->
 
-    <section id="daily" class="section product-page">
+<section id="daily" class="page">
 
-        <div class="product-content">
+    <div class="container">
 
-            <p class="eyebrow">
-                MINECRAFT / SKRYPTY / DAILY
-            </p>
+        <a href="#minecraft-skrypty" class="back-button">
+            ← Skrypty
+        </a>
 
-            <h2>
+        <div class="product">
+
+            <span class="label">
+                MINECRAFT / SKRYPTY
+            </span>
+
+            <h1>
                 Daily
-            </h2>
+            </h1>
 
             <p class="product-description">
                 System codziennych zadań do Minecraft.
-                W tym miejscu znajdzie się dokładny opis,
-                informacje o wymaganiach oraz wersji.
             </p>
 
 
-            <div class="info-box">
+            <div class="details">
 
                 <div>
                     <span>Typ</span>
@@ -425,389 +509,262 @@
                 </div>
 
                 <div>
-                    <span>Format</span>
+                    <span>Plik</span>
                     <strong>.sk</strong>
                 </div>
 
             </div>
 
 
-            <a href="#" class="button">
+            <a href="#" class="primary-button">
                 Pobierz plik
             </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- =========================
-         POZOSTAŁE MINECRAFT
-    ========================= -->
+<!-- =========================
+     PUSTE KATEGORIE MINECRAFT
+========================= -->
 
-    <section id="minecraft-mapy" class="section subpage">
+<section id="minecraft-mapy" class="page">
+    <div class="container">
+        <a href="#minecraft" class="back-button">← Minecraft</a>
 
-        <div class="section-title">
-
-            <p class="eyebrow">
-                MINECRAFT / MAPY
-            </p>
-
-            <h2>
-                Mapy
-            </h2>
-
-            <p>
-                Tutaj pojawią się dostępne mapy.
-            </p>
-
+        <div class="page-heading">
+            <span class="label">MINECRAFT</span>
+            <h1>Mapy</h1>
+            <p>Materiały pojawią się tutaj.</p>
         </div>
+    </div>
+</section>
 
-    </section>
 
+<section id="minecraft-configi" class="page">
+    <div class="container">
+        <a href="#minecraft" class="back-button">← Minecraft</a>
 
-    <section id="minecraft-configi" class="section subpage">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                MINECRAFT / CONFIGI
-            </p>
-
-            <h2>
-                Configi
-            </h2>
-
-            <p>
-                Tutaj pojawią się dostępne konfiguracje.
-            </p>
-
+        <div class="page-heading">
+            <span class="label">MINECRAFT</span>
+            <h1>Configi</h1>
+            <p>Materiały pojawią się tutaj.</p>
         </div>
+    </div>
+</section>
 
-    </section>
 
+<section id="minecraft-txt" class="page">
+    <div class="container">
+        <a href="#minecraft" class="back-button">← Minecraft</a>
 
-    <section id="minecraft-txt" class="section subpage">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                MINECRAFT / TXT
-            </p>
-
-            <h2>
-                TXT
-            </h2>
-
-            <p>
-                Tutaj pojawią się paczki tekstur.
-            </p>
-
+        <div class="page-heading">
+            <span class="label">MINECRAFT</span>
+            <h1>TXT</h1>
+            <p>Materiały pojawią się tutaj.</p>
         </div>
+    </div>
+</section>
 
-    </section>
 
+<section id="minecraft-skiny" class="page">
+    <div class="container">
+        <a href="#minecraft" class="back-button">← Minecraft</a>
 
-    <section id="minecraft-skiny" class="section subpage">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                MINECRAFT / SKINY
-            </p>
-
-            <h2>
-                Skiny
-            </h2>
-
-            <p>
-                Tutaj pojawią się dostępne skiny.
-            </p>
-
+        <div class="page-heading">
+            <span class="label">MINECRAFT</span>
+            <h1>Skiny</h1>
+            <p>Materiały pojawią się tutaj.</p>
         </div>
+    </div>
+</section>
 
-    </section>
 
+<section id="minecraft-save" class="page">
+    <div class="container">
+        <a href="#minecraft" class="back-button">← Minecraft</a>
 
-    <section id="minecraft-save" class="section subpage">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                MINECRAFT / SAVE
-            </p>
-
-            <h2>
-                Save
-            </h2>
-
-            <p>
-                Tutaj pojawią się dostępne save'y.
-            </p>
-
+        <div class="page-heading">
+            <span class="label">MINECRAFT</span>
+            <h1>Save</h1>
+            <p>Materiały pojawią się tutaj.</p>
         </div>
+    </div>
+</section>
 
-    </section>
 
+<!-- =========================
+     UNDERTALE
+========================= -->
 
-    <!-- =========================
-         UNDERTALE
-    ========================= -->
+<section id="undertale" class="page">
 
-    <section id="undertale" class="section category-page">
+    <div class="container">
 
-        <div class="section-title">
+        <a href="#home" class="back-button">
+            ← Wróć
+        </a>
 
-            <p class="eyebrow">
+        <div class="page-heading">
+
+            <span class="label">
                 UNDERTALE
-            </p>
+            </span>
 
-            <h2>
-                Wybierz kategorię
-            </h2>
+            <h1>
+                Undertale
+            </h1>
+
+            <p>
+                Wybierz kategorię.
+            </p>
 
         </div>
 
 
         <div class="category-grid">
 
-            <a href="#undertale-postacie" class="small-category">
-
-                <h3>
-                    Lore postaci
-                </h3>
-
-                <p>
-                    Informacje i historie bohaterów.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#undertale-postacie" class="category-card">
+                <h3>Lore postaci</h3>
+                <p>Historie i informacje o postaciach.</p>
+                <span>Otwórz →</span>
             </a>
 
 
-            <a href="#undertale-itemy" class="small-category">
-
-                <h3>
-                    Lore itemów
-                </h3>
-
-                <p>
-                    Informacje o przedmiotach.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#undertale-itemy" class="category-card">
+                <h3>Lore itemów</h3>
+                <p>Informacje o przedmiotach.</p>
+                <span>Otwórz →</span>
             </a>
 
 
-            <a href="#undertale-dane" class="small-category">
-
-                <h3>
-                    Dane / wykresy
-                </h3>
-
-                <p>
-                    Dane, statystyki i zestawienia.
-                </p>
-
-                <span>
-                    Otwórz →
-                </span>
-
+            <a href="#undertale-dane" class="category-card">
+                <h3>Dane / wykresy</h3>
+                <p>Zestawienia i informacje.</p>
+                <span>Otwórz →</span>
             </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <section id="undertale-postacie" class="section subpage">
+<section id="undertale-postacie" class="page">
 
-        <div class="section-title">
+    <div class="container">
 
-            <p class="eyebrow">
-                UNDERTALE / LORE
-            </p>
-
-            <h2>
-                Lore postaci
-            </h2>
-
-            <p>
-                Tutaj pojawią się materiały dotyczące postaci.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <section id="undertale-itemy" class="section subpage">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                UNDERTALE / ITEMY
-            </p>
-
-            <h2>
-                Lore itemów
-            </h2>
-
-            <p>
-                Tutaj pojawią się informacje o przedmiotach.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <section id="undertale-dane" class="section subpage">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                UNDERTALE / DANE
-            </p>
-
-            <h2>
-                Dane / wykresy
-            </h2>
-
-            <p>
-                Tutaj pojawią się zestawienia i wykresy.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         MEDIA
-    ========================= -->
-
-    <section class="section">
-
-        <div class="section-title">
-
-            <p class="eyebrow">
-                MEDIA
-            </p>
-
-            <h2>
-                Poradnik ShadowTale
-            </h2>
-
-        </div>
-
-
-        <a href="#" class="media-card">
-
-            <div class="media-thumbnail">
-                ▶
-            </div>
-
-            <div class="media-info">
-
-                <h3>
-                    Jak korzystać ze strony?
-                </h3>
-
-                <p>
-                    Poradnik pokazujący działanie ShadowTale.pl,
-                    zamawianie oraz pobieranie plików.
-                </p>
-
-            </div>
-
+        <a href="#undertale" class="back-button">
+            ← Undertale
         </a>
 
-    </section>
+        <div class="page-heading">
 
+            <span class="label">
+                UNDERTALE
+            </span>
 
-    <!-- =========================
-         DISCORD
-    ========================= -->
-
-    <section class="section">
-
-        <div class="simple-card">
-
-            <p class="eyebrow">
-                SPOŁECZNOŚĆ
-            </p>
-
-            <h2>
-                Discord
-            </h2>
+            <h1>
+                Lore postaci
+            </h1>
 
             <p>
-                Dołącz do naszej społeczności ShadowTale.
+                Materiały pojawią się tutaj.
             </p>
-
-            <a href="#" class="button">
-                Dołącz do Discorda
-            </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- =========================
-         TIPPLY
-    ========================= -->
+<section id="undertale-itemy" class="page">
 
-    <section class="section">
+    <div class="container">
 
-        <div class="simple-card">
+        <a href="#undertale" class="back-button">
+            ← Undertale
+        </a>
 
-            <p class="eyebrow">
-                WSPARCIE
-            </p>
+        <div class="page-heading">
 
-            <h2>
-                Wesprzyj ShadowTale
-            </h2>
+            <span class="label">
+                UNDERTALE
+            </span>
+
+            <h1>
+                Lore itemów
+            </h1>
 
             <p>
-                Jeśli podoba Ci się projekt, możesz nas wesprzeć.
+                Materiały pojawią się tutaj.
             </p>
-
-            <a href="#" class="button">
-                Wesprzyj nas
-            </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- =========================
-         CENTRUM POMOCY
-    ========================= -->
+<section id="undertale-dane" class="page">
 
-    <section id="pomoc" class="section help-section">
+    <div class="container">
 
-        <div class="section-title">
+        <a href="#undertale" class="back-button">
+            ← Undertale
+        </a>
 
-            <p class="eyebrow">
+        <div class="page-heading">
+
+            <span class="label">
+                UNDERTALE
+            </span>
+
+            <h1>
+                Dane / wykresy
+            </h1>
+
+            <p>
+                Materiały pojawią się tutaj.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     POMOC
+========================= -->
+
+<section id="pomoc" class="page">
+
+    <div class="container">
+
+        <a href="#home" class="back-button">
+            ← Wróć
+        </a>
+
+        <div class="page-heading">
+
+            <span class="label">
                 POMOC
-            </p>
+            </span>
 
-            <h2>
+            <h1>
                 Centrum pomocy
-            </h2>
+            </h1>
 
             <p>
-                Masz problem, pytanie albo potrzebujesz pomocy?
+                Wybierz temat, z którym potrzebujesz pomocy.
             </p>
 
         </div>
@@ -815,73 +772,238 @@
 
         <div class="help-grid">
 
-            <a href="#" class="help-card">
-
-                <h3>
-                    Problemy z pobieraniem
-                </h3>
-
-                <p>
-                    Nie możesz pobrać zakupionego pliku?
-                </p>
-
+            <a href="#" class="category-card">
+                <h3>Problemy z pobieraniem</h3>
+                <p>Pomoc dotycząca plików.</p>
+                <span>Otwórz →</span>
             </a>
 
-
-            <a href="#" class="help-card">
-
-                <h3>
-                    Zamówienie
-                </h3>
-
-                <p>
-                    Potrzebujesz własnego skryptu lub projektu?
-                </p>
-
+            <a href="#" class="category-card">
+                <h3>Zamówienia</h3>
+                <p>Informacje o zamawianiu.</p>
+                <span>Otwórz →</span>
             </a>
 
-
-            <a href="#" class="help-card">
-
-                <h3>
-                    Inny problem
-                </h3>
-
-                <p>
-                    Nie znalazłeś odpowiedzi?
-                </p>
-
+            <a href="#" class="category-card">
+                <h3>Inny problem</h3>
+                <p>Potrzebujesz innej pomocy?</p>
+                <span>Otwórz →</span>
             </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- =========================
-         KONTO — NA SAMYM DOLE
-    ========================= -->
+<!-- =========================
+     REGULAMINY
+========================= -->
 
-    <section id="konto" class="section account-section">
+<section id="regulaminy" class="page">
 
-        <div class="section-title">
+    <div class="container">
 
-            <p class="eyebrow">
-                KONTO
-            </p>
+        <a href="#home" class="back-button">
+            ← Wróć
+        </a>
 
-            <h2>
-                Twoje konto
-            </h2>
+        <div class="page-heading">
+
+            <span class="label">
+                INFORMACJE
+            </span>
+
+            <h1>
+                Regulaminy
+            </h1>
 
             <p>
-                Zaloguj się lub utwórz konto ShadowTale.
+                Dokumenty i zasady obowiązujące na ShadowTale.pl.
             </p>
 
         </div>
 
 
-        <div class="account-box">
+        <div class="rules-grid">
+
+            <a href="#regulamin-serwisu" class="category-card">
+                <h3>
+                    Regulamin serwisu
+                </h3>
+
+                <p>
+                    Zasady korzystania ze strony.
+                </p>
+
+                <span>
+                    Otwórz →
+                </span>
+            </a>
+
+
+            <a href="#regulamin-sklepu" class="category-card">
+                <h3>
+                    Regulamin sklepu
+                </h3>
+
+                <p>
+                    Zasady dotyczące zakupów i plików.
+                </p>
+
+                <span>
+                    Otwórz →
+                </span>
+            </a>
+
+
+            <a href="#polityka-prywatnosci" class="category-card">
+                <h3>
+                    Polityka prywatności
+                </h3>
+
+                <p>
+                    Informacje dotyczące danych użytkowników.
+                </p>
+
+                <span>
+                    Otwórz →
+                </span>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     REGULAMIN SERWISU
+========================= -->
+
+<section id="regulamin-serwisu" class="page">
+
+    <div class="container">
+
+        <a href="#regulaminy" class="back-button">
+            ← Regulaminy
+        </a>
+
+        <article class="document">
+
+            <span class="label">
+                REGULAMIN
+            </span>
+
+            <h1>
+                Regulamin serwisu
+            </h1>
+
+            <p>
+                Treść regulaminu zostanie dodana tutaj.
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     REGULAMIN SKLEPU
+========================= -->
+
+<section id="regulamin-sklepu" class="page">
+
+    <div class="container">
+
+        <a href="#regulaminy" class="back-button">
+            ← Regulaminy
+        </a>
+
+        <article class="document">
+
+            <span class="label">
+                REGULAMIN
+            </span>
+
+            <h1>
+                Regulamin sklepu
+            </h1>
+
+            <p>
+                Treść regulaminu sklepu zostanie dodana tutaj.
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     POLITYKA PRYWATNOŚCI
+========================= -->
+
+<section id="polityka-prywatnosci" class="page">
+
+    <div class="container">
+
+        <a href="#regulaminy" class="back-button">
+            ← Regulaminy
+        </a>
+
+        <article class="document">
+
+            <span class="label">
+                INFORMACJE
+            </span>
+
+            <h1>
+                Polityka prywatności
+            </h1>
+
+            <p>
+                Treść polityki prywatności zostanie dodana tutaj.
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     KONTO
+========================= -->
+
+<section id="konto" class="page">
+
+    <div class="container">
+
+        <a href="#home" class="back-button">
+            ← Wróć
+        </a>
+
+        <div class="account">
+
+            <span class="label">
+                SHADOWTALE
+            </span>
+
+            <h1>
+                Konto
+            </h1>
+
+            <p>
+                Zaloguj się do swojego konta.
+            </p>
+
 
             <form id="loginForm">
 
@@ -897,84 +1019,20 @@
                     required
                 >
 
-                <button type="submit" class="button">
+                <button type="submit" class="primary-button">
                     Zaloguj się
                 </button>
 
             </form>
 
 
-            <div class="account-divider">
+            <div class="separator">
                 lub
             </div>
 
 
-            <button
-                class="button secondary"
-                id="registerButton"
-            >
-                Utwórz konto
-            </button>
-
-        </div>
-
-    </section>
-
-</main>
+            
 
 
-<!-- =========================
-     STOPKA
-========================= -->
-
-<footer class="footer">
-
-    <div class="footer-logo">
-        Shadow<span>Tale</span>
-    </div>
-
-    <p>
-        © 2026 ShadowTale.pl
-    </p>
-
-    <p>
-        Minecraft × Undertale
-    </p>
-
-</footer>
-
-
-<script>
-
-    /* =========================
-       LOGOWANIE
-    ========================= */
-
-    const loginForm = document.getElementById("loginForm");
-
-    loginForm.addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        alert("Logowanie zostanie podłączone w późniejszym etapie.");
-
-    });
-
-
-    /* =========================
-       REJESTRACJA
-    ========================= */
-
-    const registerButton =
-        document.getElementById("registerButton");
-
-    registerButton.addEventListener("click", function() {
-
-        alert("Rejestracja zostanie podłączona w późniejszym etapie.");
-
-    });
-
-</script>
-
-</body>
-                </html>
+                
+                         
