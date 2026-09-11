@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Konto — ShadowTale.pl</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+
+<header class="site-header">
+
+    <a
+        href="index.html"
+        class="site-logo"
+    >
+
+        <img
+            src="assets/logo.png"
+            alt="ShadowTale"
+        >
+
+        <span>
+            ShadowTale.pl
+        </span>
+
+    </a>
+
+
+    <div class="header-search">
+
+        <input
+            type="search"
+            id="site-search"
+            placeholder="Szukaj na ShadowTale..."
+            autocomplete="off"
+        >
+
+        <div id="search-results"></div>
+
+    </div>
+
+
+    <a
+        href="konto.html"
+        class="account-button"
+        id="account-button"
+    >
+
+        <span class="account-icon">
+            👤
+        </span>
+
+        <span>
+            Konto
+        </span>
+
+    </a>
+
+</header>
+
+
+<main>
+
+    <section class="account-hero">
+
+        <div class="section-container">
+
+            <span>
+                ✦ TWOJE KONTO
+            </span>
+
+            <h1>
+                Centrum konta
+            </h1>
+
+            <p>
+                Zarządzaj swoim profilem, ustawieniami
+                i aktywnością na ShadowTale.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="account-dashboard">
+
+        <div class="account-dashboard-grid">
+
+
+            <!-- PROFIL -->
+
+            <div class="profile-main-card">
+
+                <div class="profile-top">
+
+                    <div class="profile-avatar-wrapper">
+
+                        <!-- JEDEN avatar -->
+
+                        <img
+                            id="profile-avatar"
+                            class="profile-avatar-large"
+                            src=""
+                            alt="Avatar"
+                            style="display:none;"
+                        >
+
+                        <div
+                            id="profile-avatar-placeholder"
+                            class="profile-avatar-placeholder-large"
+                        >
+                            👤
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-main-info">
+
+                        <span class="profile-label">
+                            TWÓJ PROFIL
+                        </span>
+
+                        <h2 id="profile-username">
+                            Ładowanie...
+                        </h2>
+
+                        <p id="profile-email">
+                            Ładowanie...
+                        </p>
+
+                        <div
+                            id="profile-role"
+                            class="profile-role role-user"
+                        >
+                            Ładowanie rangi...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-status-box">
+
+                    <div>
+
+                        <span>
+                            Status konta
+                        </span>
+
+                        <strong>
+                            ● Aktywne
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ShadowTale
+                        </span>
+
+                        <strong>
+                            Członek społeczności
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-actions">
+
+                    <a
+                        href="ustawienia.html"
+                        class="primary-button"
+                    >
+                        ⚙ Ustawienia profilu
+                    </a>
+
+                    <button
+                        type="button"
+                        id="logout-account"
+                        class="secondary-button"
+                    >
+                        Wyloguj się
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="profile-status"
+                    class="account-status"
+                ></div>
+
+            </div>
+
+
+            <!-- INFORMACJE -->
+
+            <div class="account-welcome-card">
+
+                <div class="account-welcome-icon">
+                    ✦
+                </div>
+
+                <span>
+                    WITAJ W SHADOWTALE
+                </span>
+
+                <h2>
+                    Dobrze Cię widzieć!
+                </h2>
+
+                <p>
+                    Z tego miejsca możesz przejść
+                    do wszystkich najważniejszych
+                    funkcji swojego konta.
+                </p>
+
+                <div class="welcome-list">
+
+                    <div>
+                        <span>✓</span>
+                        Zarządzaj profilem
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Sprawdzaj statystyki
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Przeglądaj historię
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Zarządzaj płatnościami
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CENTRUM KONTA -->
+
+        <div class="account-section-heading">
+
+            <span>
+                ✦ CENTRUM KONTA
+            </span>
+
+            <h2>
+                Zarządzaj swoim kontem
+            </h2>
+
+        </div>
+
+
+        <div class="account-menu-grid">
+
+
+            <a
+                href="ustawienia.html"
+                class="account-menu-card"
+            >
+
+                <div class="account-menu-icon">
+                    ⚙
+                </div>
+
+                <div>
+
+                    <h3>
+                        Ustawienia
+                    </h3>
+
+                    <p>
+                        Nick, avatar, e-mail,
+                        hasło i bezpieczeństwo.
+                    </p>
+
+                </div>
+
+                <span>
+                    Otwórz →
+                </span>
+
+            </a>
+
+
+            <a
+                href="statystyki.html"
+                class="account-menu-card"
+            >
+
+                <div class="account-menu-icon">
+                    📊
+                </div>
+
+                <div>
+
+                    <h3>
+                        Statystyki
+                    </h3>
+
+                    <p>
+                        Sprawdź swoją aktywność
+                        i statystyki.
+                    </p>
+
+                </div>
+
+                <span>
+                    Otwórz →
+                </span>
+
+            </a>
+
+
+            <a
+                href="historia.html"
+                class="account-menu-card"
+            >
+
+                <div class="account-menu-icon">
+                    🕐
+                </div>
+
+                <div>
+
+                    <h3>
+                        Historia
+                    </h3>
+
+                    <p>
+                        Historia zakupów,
+                        pobrań i aktywności.
+                    </p>
+
+                </div>
+
+                <span>
+                    Otwórz →
+                </span>
+
+            </a>
+
+
+            <a
+                href="platnosci.html"
+                class="account-menu-card"
+            >
+
+                <div class="account-menu-icon">
+                    💳
+                </div>
+
+                <div>
+
+                    <h3>
+                        Płatności
+                    </h3>
+
+                    <p>
+                        Zarządzaj metodami
+                        płatności.
+                    </p>
+
+                </div>
+
+                <span>
+                    Otwórz →
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <!-- DODATKOWE -->
+
+        <div class="account-bottom-grid">
+
+
+            <div class="account-small-card">
+
+                <span class="small-card-icon">
+                    🛠️
+                </span>
+
+                <div>
+
+                    <h3>
+                        Potrzebujesz projektu?
+                    </h3>
+
+                    <p>
+                        Zamów własny projekt
+                        przygotowany specjalnie dla Ciebie.
+                    </p>
+
+                </div>
+
+                <a
+                    href="custom.html"
+                    class="secondary-button"
+                >
+                    Zamów Custom
+                </a>
+
+            </div>
+
+
+            <div class="account-small-card">
+
+                <span class="small-card-icon">
+                    💬
+                </span>
+
+                <div>
+
+                    <h3>
+                        Potrzebujesz pomocy?
+                    </h3>
+
+                    <p>
+                        Dołącz do Discorda ShadowTale,
+                        aby uzyskać pomoc.
+                    </p>
+
+                </div>
+
+                <a
+                    href="discord.html"
+                    class="secondary-button"
+                >
+                    Discord
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="footer-container">
+
+        <div class="footer-brand">
+
+            <a
+                href="index.html"
+                class="footer-logo"
+            >
+
+                <img
+                    src="assets/logo.png"
+                    alt="ShadowTale"
+                >
+
+                <strong>
+                    ShadowTale.pl
+                </strong>
+
+            </a>
+
+            <p>
+                Minecraft, Undertale i własne projekty
+                w jednym kosmicznym miejscu.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Projekty
+            </h3>
+
+            <a href="minecraft.html">
+                Minecraft
+            </a>
+
+            <a href="undertale.html">
+                Undertale
+            </a>
+
+            <a href="custom.html">
+                Custom
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Informacje
+            </h3>
+
+            <a href="discord.html">
+                Discord
+            </a>
+
+            <a href="regulamin.html">
+                Regulaminy
+            </a>
+
+            <a href="donate.html">
+                Donate
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Konto
+            </h3>
+
+            <a href="ustawienia.html">
+                Ustawienia
+            </a>
+
+            <a href="historia.html">
+                Historia
+            </a>
+
+            <a href="platnosci.html">
+                Płatności
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        © 2026 ShadowTale.pl · Wszystkie prawa zastrzeżone.
+
+    </div>
+
+</footer>
+
+
+<div
+    id="cookie-banner"
+    class="cookie-banner"
+>
+
+    <div class="cookie-content">
+
+        <strong>
+            🍪 ShadowTale używa cookies
+        </strong>
+
+        <p>
+            Używamy plików cookies oraz pamięci lokalnej,
+            aby strona działała poprawnie i zapamiętywała
+            podstawowe ustawienia.
+        </p>
+
+    </div>
+
+
+    <div class="cookie-buttons">
+
+        <button
+            type="button"
+            class="secondary-button"
+            id="cookie-reject"
+        >
+            Odrzuć
+        </button>
+
+        <button
+            type="button"
+            class="primary-button"
+            id="cookie-accept"
+        >
+            Akceptuję
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
