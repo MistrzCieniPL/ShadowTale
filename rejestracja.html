@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Rejestracja — ShadowTale.pl</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<header class="site-header">
+
+<a class="site-logo" href="index.html">
+
+    <img
+        src="assets/logo.png"
+        alt="ShadowTale.pl"
+    >
+
+    <span>
+        ShadowTale.pl
+    </span>
+
+</a>
+
+<div class="header-search">
+
+    <input
+        id="site-search"
+        type="search"
+        placeholder="Szukaj..."
+        autocomplete="off"
+    >
+
+    <div
+        id="search-results"
+        class="search-results"
+    ></div>
+
+</div>
+
+<button
+    id="account-button"
+    class="account-button"
+    type="button"
+>
+    Konto
+</button>
+
+</header>
+
+<main class="container">
+
+<section class="form-card card">
+
+<h1>✨ Utwórz konto</h1>
+
+<p>
+Stwórz swoje konto ShadowTale.
+</p>
+
+
+<form id="register-form">
+
+
+<div class="form-group">
+
+<label for="username">
+Nazwa użytkownika
+</label>
+
+<input
+    id="username"
+    type="text"
+    required
+    minlength="3"
+    maxlength="24"
+    autocomplete="username"
+    placeholder="Np. ShadowPlayer"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="email">
+E-mail
+</label>
+
+<input
+    id="email"
+    type="email"
+    required
+    autocomplete="email"
+    placeholder="twoj@email.pl"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="password">
+Hasło
+</label>
+
+<input
+    id="password"
+    type="password"
+    required
+    minlength="6"
+    autocomplete="new-password"
+    placeholder="Minimum 6 znaków"
+>
+
+</div>
+
+
+<button
+    class="btn primary"
+    type="submit"
+>
+Utwórz konto
+</button>
+
+
+</form>
+
+
+<div
+    id="register-status"
+    class="status"
+></div>
+
+
+<div class="btn-row">
+
+<a
+    class="btn"
+    href="login.html"
+>
+Mam już konto
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+<script src="app.js"></script>
+
+<script>
+
+const form =
+    document.getElementById(
+        "register-form"
+    );
+
+
+const status =
+    document.getElementById(
+        "register-status"
+    );
+
+
+form?.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+
+        status.textContent =
+            "Tworzenie konta...";
+
+
+        const username =
+            document
+                .getElementById(
+                    "username"
+                )
+                .value
+                .trim();
+
+
+        const email =
+            document
+                .getElementById(
+                    "email"
+                )
+                .value
+                .trim();
+
+
+        const password =
+            document
+                .getElementById(
+                    "password"
+                )
+                .value;
+
+
+        if(username.length < 3){
+
+            status.textContent =
+                "Nazwa użytkownika musi mieć minimum 3 znaki.";
+
+            return;
+
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signUp({
+
+                    email,
+
+                    password,
+
+                    options:{
+                        data:{
+                            username:username
+                        }
+                    }
+
+                });
+
+
+        if(error){
+
+            status.textContent =
+                error.message;
+
+            return;
+
+        }
+
+
+        if(data.session){
+
+            status.textContent =
+                "Konto zostało utworzone.";
+
+            window.location.href =
+                "konto.html";
+
+            return;
+
+        }
+
+
+        status.textContent =
+            "Konto utworzone. Jeśli wymagane jest potwierdzenie e-mail, sprawdź swoją skrzynkę.";
+
+    }
+
+);
+
+</script>
+
+</body>
+</html>
