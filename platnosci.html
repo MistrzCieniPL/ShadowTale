@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Metody płatności — ShadowTale.pl</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .payment-page {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .payment-info {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .payment-info h2 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .payment-info p {
+            opacity: .65;
+            line-height: 1.6;
+        }
+
+        .payment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 18px 20px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 16px;
+            transition: .2s ease;
+        }
+
+        .payment-option:hover {
+            background: rgba(255,255,255,0.07);
+            transform: translateY(-1px);
+        }
+
+        .payment-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: rgba(255,255,255,0.07);
+            font-size: 25px;
+            flex-shrink: 0;
+        }
+
+        .payment-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .payment-description {
+            margin-top: 4px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .payment-connect {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 100px;
+            min-height: 42px;
+
+            padding: 10px 18px !important;
+
+            border-radius: 10px !important;
+            border: 1px solid rgba(255,255,255,0.22) !important;
+
+            background: rgba(255,255,255,0.10) !important;
+            color: #fff !important;
+
+            font-family: inherit;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+
+            line-height: 1.2 !important;
+            text-align: center;
+
+            cursor: pointer;
+            opacity: 1 !important;
+            visibility: visible !important;
+
+            transition: .2s ease;
+            flex-shrink: 0;
+        }
+
+        .payment-connect:hover {
+            background: rgba(255,255,255,0.18) !important;
+            border-color: rgba(255,255,255,0.35) !important;
+            transform: translateY(-1px);
+        }
+
+        .payment-connect:disabled {
+            opacity: .65 !important;
+            cursor: default;
+            transform: none;
+        }
+
+        .payment-message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,.05);
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .payment-bottom {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 11px 18px;
+
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.14);
+
+            background: rgba(255,255,255,.07);
+            color: #fff !important;
+
+            text-decoration: none;
+            font-weight: 600;
+
+            transition: .2s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,.13);
+            transform: translateY(-1px);
+        }
+
+        @media(max-width:600px) {
+            .payment-page {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .payment-option {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .payment-left {
+                width: 100%;
+            }
+
+            .payment-connect {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="space-background">
+    <div class="stars"></div>
+</div>
+
+<header class="header">
+    <div class="header-inner">
+
+        <a href="index.html" class="logo">
+            <span class="logo-shadow">Shadow</span>
+            <span class="logo-tale">Tale</span>
+        </a>
+
+    </div>
+</header>
+
+<main>
+
+<section class="hero">
+
+    <p class="eyebrow">
+        TWOJE KONTO
+    </p>
+
+    <h1>
+        Metody płatności
+    </h1>
+
+    <p class="hero-description">
+        Zarządzaj metodami płatności używanymi w ShadowTale.
+    </p>
+
+</section>
+
+<div class="payment-page">
+
+    <div class="payment-info">
+
+        <h2>
+            💳 Dodaj metodę płatności
+        </h2>
+
+        <p>
+            Wybierz usługę, którą chcesz podłączyć.
+            ShadowTale nie przechowuje haseł,
+            danych kart ani danych logowania
+            do zewnętrznych usług płatniczych.
+        </p>
+
+    </div>
+
+    <div class="payment-list">
+
+        <!-- PAYPAL -->
+        <div class="payment-option">
+
+            <div class="payment-left">
+
+                <div class="payment-icon">
+                    🅿️
+                </div>
+
+                <div>
+
+                    <div class="payment-name">
+                        PayPal
+                    </div>
+
+                    <div class="payment-description">
+                        Płatności przez PayPal
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="payment-connect"
+                data-provider="paypal"
+            >
+                Podłącz
+            </button>
+
+        </div>
+
+
+        <!-- PSC -->
+        <div class="payment-option">
+
+            <div class="payment-left">
+
+                <div class="payment-icon">
+                    🎫
+                </div>
+
+                <div>
+
+                    <div class="payment-name">
+                        PSC
+                    </div>
+
+                    <div class="payment-description">
+                        Paysafecard
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="payment-connect"
+                data-provider="psc"
+            >
+                Podłącz
+            </button>
+
+        </div>
+
+
+        <!-- CASH APP -->
+        <div class="payment-option">
+
+            <div class="payment-left">
+
+                <div class="payment-icon">
+                    💵
+                </div>
+
+                <div>
+
+                    <div class="payment-name">
+                        Cash App
+                    </div>
+
+                    <div class="payment-description">
+                        Płatności Cash App
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="payment-connect"
+                data-provider="cashapp"
+            >
+                Podłącz
+            </button>
+
+        </div>
+
+
+        <!-- BANK -->
+        <div class="payment-option">
+
+            <div class="payment-left">
+
+                <div class="payment-icon">
+                    🏦
+                </div>
+
+                <div>
+
+                    <div class="payment-name">
+                        Konto bankowe
+                    </div>
+
+                    <div class="payment-description">
+                        Płatności przelewem bankowym
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="payment-connect"
+                data-provider="bank"
+            >
+                Podłącz
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="payment-message"
+        class="payment-message"
+    ></div>
+
+
+    <div class="payment-bottom">
+
+        <a
+            href="ustawienia.html"
+            class="back-button"
+        >
+            ← Wróć do ustawień
+        </a>
+
+    </div>
+
+</div>
+
+</main>
+
+
+<footer class="footer">
+
+    <p class="footer-bottom">
+        © 2026 ShadowTale.pl
+    </p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL =
+    "https://vbxyshxmnsfnlwuihzse.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_XszGm5td2PP0Tso0ZEX0-g_dfVQEILw";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+const buttons =
+    document.querySelectorAll(".payment-connect");
+
+const message =
+    document.getElementById("payment-message");
+
+
+function showMessage(text) {
+
+    message.textContent = text;
+    message.style.display = "block";
+
+}
+
+
+async function loadConnectedMethods() {
+
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient
+            .from("payment_methods")
+            .select("provider")
+            .eq("user_id", user.id);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const connected =
+        data || [];
+
+    buttons.forEach(button => {
+
+        const provider =
+            button.dataset.provider;
+
+        if (
+            connected.some(
+                item =>
+                    item.provider === provider
+            )
+        ) {
+
+            button.textContent =
+                "Podłączona ✓";
+
+            button.disabled = true;
+
+        }
+
+    });
+
+}
+
+
+buttons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        async () => {
+
+            const provider =
+                button.dataset.provider;
+
+            button.disabled = true;
+
+            button.textContent =
+                "Sprawdzanie...";
+
+            message.style.display =
+                "none";
+
+            try {
+
+                const {
+                    data: { user },
+                    error: authError
+                } =
+                    await supabaseClient.auth.getUser();
+
+
+                if (
+                    authError ||
+                    !user
+                ) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                const {
+                    data: existing,
+                    error
+                } =
+                    await supabaseClient
+                        .from("payment_methods")
+                        .select("id, provider")
+                        .eq(
+                            "user_id",
+                            user.id
+                        );
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                if (
+                    existing &&
+                    existing.length >= 3
+                ) {
+
+                    showMessage(
+                        "Masz już 3 podłączone metody płatności."
+                    );
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        "Podłącz";
+
+                    return;
+
+                }
+
+
+                if (
+                    existing &&
+                    existing.some(
+                        item =>
+                            item.provider ===
+                            provider
+                    )
+                ) {
+
+                    showMessage(
+                        "Ta metoda płatności jest już podłączona."
+                    );
+
+                    button.disabled =
+                        true;
+
+                    button.textContent =
+                        "Podłączona ✓";
+
+                    return;
+
+                }
+
+
+                const {
+                    error: insertError
+                } =
+                    await supabaseClient
+                        .from("payment_methods")
+                        .insert({
+                            user_id: user.id,
+                            provider: provider
+                        });
+
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+
+                showMessage(
+                    "✓ Metoda płatności została dodana."
+                );
+
+                button.textContent =
+                    "Podłączona ✓";
+
+                button.disabled =
+                    true;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Błąd płatności:",
+                    error
+                );
+
+                showMessage(
+                    "Nie udało się dodać metody: " +
+                    error.message
+                );
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    "Podłącz";
+
+            }
+
+        }
+    );
+
+});
+
+
+loadConnectedMethods();
+</script>
+
+</body>
+</html>
