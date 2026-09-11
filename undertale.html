@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Undertale — ShadowTale.pl</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<header class="site-header">
+
+    <a class="site-logo" href="index.html">
+        <img src="assets/logo.png" alt="ShadowTale.pl">
+        <span>ShadowTale.pl</span>
+    </a>
+
+    <div class="header-search">
+        <input
+            id="site-search"
+            type="search"
+            placeholder="Szukaj w ShadowTale..."
+            autocomplete="off"
+        >
+        <div id="search-results" class="search-results"></div>
+    </div>
+
+    <button id="account-button" class="account-button" type="button">
+        Konto
+    </button>
+
+</header>
+
+
+<main class="category-page">
+
+    <!-- HERO -->
+
+    <section class="category-hero undertale-hero">
+
+        <div class="category-hero-content">
+
+            <div class="category-badge">
+                ❤️ UNDERTALE
+            </div>
+
+            <h1>
+                Undertale
+            </h1>
+
+            <p>
+                Save'y, postacie, przedmioty, dane i mody
+                związane ze światem Undertale.
+            </p>
+
+        </div>
+
+        <div class="category-hero-icon">
+            ❤️
+        </div>
+
+    </section>
+
+
+    <!-- KATEGORIE -->
+
+    <section class="category-section">
+
+        <div class="category-section-heading">
+
+            <div>
+                <span class="section-label">
+                    SHADOWTALE • UNDERTALE
+                </span>
+
+                <h2>
+                    Wybierz kategorię
+                </h2>
+            </div>
+
+            <p>
+                Odkrywaj materiały i projekty
+                związane ze światem Undertale.
+            </p>
+
+        </div>
+
+
+        <div class="large-category-grid">
+
+
+            <a class="large-category-card undertale-save-card"
+               href="ut-save.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">💾</span>
+                    <span class="large-card-number">01</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        UNDERTALE • SAVE
+                    </span>
+
+                    <h3>
+                        Save
+                    </h3>
+
+                    <p>
+                        Gotowe save'y oraz stany gry
+                        przygotowane do wykorzystania w Undertale.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card undertale-character-card"
+               href="ut-postacie.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">👤</span>
+                    <span class="large-card-number">02</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        UNDERTALE • CHARACTERS
+                    </span>
+
+                    <h3>
+                        Postacie
+                    </h3>
+
+                    <p>
+                        Materiały dotyczące postaci,
+                        ich danych oraz projektów.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card undertale-items-card"
+               href="ut-przedmioty.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">🎒</span>
+                    <span class="large-card-number">03</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        UNDERTALE • ITEMS
+                    </span>
+
+                    <h3>
+                        Przedmioty
+                    </h3>
+
+                    <p>
+                        Przedmioty oraz elementy wykorzystywane
+                        w projektach Undertale.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card undertale-data-card"
+               href="ut-dane.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">📦</span>
+                    <span class="large-card-number">04</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        UNDERTALE • DATA
+                    </span>
+
+                    <h3>
+                        Dane
+                    </h3>
+
+                    <p>
+                        Dane i pliki projektów związanych
+                        z Undertale.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card undertale-mods-card"
+               href="ut-mody.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">🧩</span>
+                    <span class="large-card-number">05</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        UNDERTALE • MODS
+                    </span>
+
+                    <h3>
+                        Mody
+                    </h3>
+
+                    <p>
+                        Modyfikacje oraz projekty
+                        rozszerzające świat Undertale.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- DOLNY BLOK -->
+
+    <section class="category-bottom undertale-bottom">
+
+        <div>
+            <span class="section-label">
+                MASZ WŁASNY POMYSŁ?
+            </span>
+
+            <h2>
+                Stwórzmy coś razem.
+            </h2>
+
+            <p>
+                Możesz zamówić własny projekt Undertale,
+                system, save albo inny materiał.
+            </p>
+        </div>
+
+        <a href="custom.html" class="category-bottom-button">
+            Zamów Custom →
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-links">
+        <a href="index.html">Start</a>
+        <a href="minecraft.html">Minecraft</a>
+        <a href="undertale.html">Undertale</a>
+        <a href="custom.html">Custom</a>
+        <a href="discord.html">Discord</a>
+        <a href="regulamin.html">Regulamin</a>
+    </div>
+
+    ShadowTale © 2026
+
+</footer>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
