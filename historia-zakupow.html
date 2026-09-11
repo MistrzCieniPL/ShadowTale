@@ -1,0 +1,176 @@
+<html lang="pl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+
+
+
+<title>Historia zakupów — ShadowTale.pl</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <header class="site-header">
+
+    <a href="index.html" class="site-logo">
+        <img
+            src="assets/logo.png"
+            alt="ShadowTale"
+        >
+    </a>
+
+    <div class="header-search">
+
+        <span class="search-icon">
+            🔎
+        </span>
+
+        <input
+            id="shadow-search"
+            type="search"
+            autocomplete="off"
+            placeholder="Szukaj plików, skryptów, map..."
+            aria-label="Wyszukiwarka ShadowTale"
+        >
+
+        <button
+            id="shadow-search-button"
+            type="button"
+        >
+            Szukaj
+        </button>
+
+        <div
+            id="search-results"
+            class="search-results"
+        ></div>
+
+    </div>
+
+    <button
+        id="account-button"
+        class="account-button"
+        type="button"
+    >
+        Konto
+    </button>
+
+</header>
+
+<div class="space-background"> <div class="stars"></div> </div>
+
+<header class="header">
+
+<div class="header-inner">
+
+    <a href="index.html" class="logo">
+        <span class="logo-shadow">Shadow</span><span class="logo-tale">Tale</span>
+    </a>
+
+</div>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+    <p class="eyebrow">
+        TWOJE KONTO
+    </p>
+
+    <h1>
+        Historia zakupów
+    </h1>
+
+    <p class="hero-description">
+        Tutaj znajdziesz swoje zakupione produkty ShadowTale.
+    </p>
+
+    <div class="hero-account-buttons">
+
+        <a
+            href="konto.html"
+            class="button secondary"
+        >
+            ← Wróć do konta
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="account-section">
+
+    <div class="section-heading">
+
+        <p class="eyebrow">
+            ZAMÓWIENIA
+        </p>
+
+        <h2>
+            Twoje zakupy
+        </h2>
+
+        <p>
+            Historia zakupów pojawi się tutaj po uruchomieniu sklepu.
+        </p>
+
+    </div>
+
+
+    <div class="product-grid">
+
+        <div class="product-card">
+
+            <div class="product-icon">
+                🛒
+            </div>
+
+            <h3>
+                Brak zakupów
+            </h3>
+
+            <p>
+                Nie masz jeszcze żadnych zakupionych produktów.
+            </p>
+
+            <a
+                href="index.html"
+                class="account-action-button"
+            >
+                Przejdź do ShadowTale →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+<footer class="footer">
+
+<p class="footer-bottom">
+    © 2026 ShadowTale.pl
+</p>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
