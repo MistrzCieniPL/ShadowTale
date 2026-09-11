@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Minecraft — ShadowTale.pl</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<header class="site-header">
+
+    <a class="site-logo" href="index.html">
+        <img src="assets/logo.png" alt="ShadowTale.pl">
+        <span>ShadowTale.pl</span>
+    </a>
+
+    <div class="header-search">
+        <input
+            id="site-search"
+            type="search"
+            placeholder="Szukaj w ShadowTale..."
+            autocomplete="off"
+        >
+        <div id="search-results" class="search-results"></div>
+    </div>
+
+    <button id="account-button" class="account-button" type="button">
+        Konto
+    </button>
+
+</header>
+
+
+<main class="category-page">
+
+    <!-- HERO -->
+
+    <section class="category-hero minecraft-hero">
+
+        <div class="category-hero-content">
+
+            <div class="category-badge">
+                ⛏️ MINECRAFT
+            </div>
+
+            <h1>
+                Minecraft
+            </h1>
+
+            <p>
+                Skrypty, mapy, konfiguracje, tekstury i skiny
+                stworzone dla Twoich projektów Minecraft.
+            </p>
+
+        </div>
+
+        <div class="category-hero-icon">
+            ⛏️
+        </div>
+
+    </section>
+
+
+    <!-- KATEGORIE -->
+
+    <section class="category-section">
+
+        <div class="category-section-heading">
+
+            <div>
+                <span class="section-label">
+                    SHADOWTALE • MINECRAFT
+                </span>
+
+                <h2>
+                    Wybierz kategorię
+                </h2>
+            </div>
+
+            <p>
+                Znajdź materiały, które możesz wykorzystać
+                w swoim projekcie.
+            </p>
+
+        </div>
+
+
+        <div class="large-category-grid">
+
+
+            <a class="large-category-card scripts-card" href="mc-skrypty.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">⚙️</span>
+                    <span class="large-card-number">01</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        MINECRAFT • DEVELOPMENT
+                    </span>
+
+                    <h3>
+                        Skrypty
+                    </h3>
+
+                    <p>
+                        Gotowe skrypty do serwerów Minecraft.
+                        Systemy, mechaniki i rozwiązania dla Twojego serwera.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card maps-card" href="mc-mapy.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">🗺️</span>
+                    <span class="large-card-number">02</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        MINECRAFT • BUILDING
+                    </span>
+
+                    <h3>
+                        Mapy
+                    </h3>
+
+                    <p>
+                        Gotowe mapy, światy oraz schematy
+                        budowli do wykorzystania w Minecraft.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card config-card" href="mc-configi.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">🛠️</span>
+                    <span class="large-card-number">03</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        MINECRAFT • CONFIG
+                    </span>
+
+                    <h3>
+                        Configi
+                    </h3>
+
+                    <p>
+                        Gotowe konfiguracje pluginów i systemów
+                        ułatwiające tworzenie serwera.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card textures-card" href="mc-txt.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">🖼️</span>
+                    <span class="large-card-number">04</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        MINECRAFT • VISUAL
+                    </span>
+
+                    <h3>
+                        Tekstury
+                    </h3>
+
+                    <p>
+                        Tekstury i elementy graficzne
+                        do Minecraft oraz własnych projektów.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+
+            <a class="large-category-card skins-card" href="mc-skiny.html">
+
+                <div class="large-card-top">
+                    <span class="large-card-icon">🧍</span>
+                    <span class="large-card-number">05</span>
+                </div>
+
+                <div class="large-card-content">
+
+                    <span class="large-card-tag">
+                        MINECRAFT • CHARACTER
+                    </span>
+
+                    <h3>
+                        Skiny
+                    </h3>
+
+                    <p>
+                        Skiny Minecraft dla graczy,
+                        projektów oraz własnych postaci.
+                    </p>
+
+                </div>
+
+                <div class="large-card-footer">
+                    <span>Przejdź do kategorii</span>
+                    <span class="card-arrow">→</span>
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- DOLNY BLOK -->
+
+    <section class="category-bottom">
+
+        <div>
+            <span class="section-label">
+                NIE WIDZISZ TEGO, CZEGO SZUKASZ?
+            </span>
+
+            <h2>
+                Zamów własny projekt.
+            </h2>
+
+            <p>
+                Potrzebujesz konkretnego skryptu, mapy,
+                konfiguracji albo innego materiału?
+                Możesz zamówić własny projekt.
+            </p>
+        </div>
+
+        <a href="custom.html" class="category-bottom-button">
+            Zamów Custom →
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-links">
+        <a href="index.html">Start</a>
+        <a href="minecraft.html">Minecraft</a>
+        <a href="undertale.html">Undertale</a>
+        <a href="custom.html">Custom</a>
+        <a href="discord.html">Discord</a>
+        <a href="regulamin.html">Regulamin</a>
+    </div>
+
+    ShadowTale © 2026
+
+</footer>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
