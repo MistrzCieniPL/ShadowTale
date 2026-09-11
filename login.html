@@ -2,16 +2,14 @@
 <html lang="pl">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Zaloguj się — ShadowTale.pl</title>
 
-<title>Zaloguj się — ShadowTale.pl</title>
+    <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -20,159 +18,208 @@
 
 <header class="site-header">
 
-<a class="site-logo" href="index.html">
-<img src="assets/logo.png" alt="ShadowTale.pl">
-<span>ShadowTale.pl</span>
-</a>
+    <a class="site-logo" href="index.html">
+        <img src="assets/logo.png" alt="ShadowTale.pl">
+        <span>ShadowTale.pl</span>
+    </a>
 
-<div class="header-search">
+    <div class="header-search">
 
-<input
-id="site-search"
-type="search"
-placeholder="Szukaj..."
-autocomplete="off"
->
+        <input
+            id="site-search"
+            type="search"
+            placeholder="Szukaj w ShadowTale..."
+            autocomplete="off"
+        >
 
-<div
-id="search-results"
-class="search-results"
-></div>
+        <div id="search-results" class="search-results"></div>
 
-</div>
+    </div>
 
-<button
-id="account-button"
-class="account-button"
-type="button"
->
-Konto
-</button>
+    <button
+        id="account-button"
+        class="account-button"
+        type="button"
+    >
+        Konto
+    </button>
 
 </header>
 
-<main class="container">
 
-<section class="form-card card">
+<main class="auth-page">
 
-<h1>🔐 Logowanie</h1>
+    <section class="auth-card">
 
-<p>
-Zaloguj się do swojego konta ShadowTale.
-</p>
+        <div class="auth-logo">
+            <img src="assets/logo.png" alt="ShadowTale">
+        </div>
 
-<form id="login-form">
+        <span class="auth-label">
+            SHADOWTALE • KONTO
+        </span>
 
-<div class="form-group">
+        <h1>
+            Witaj ponownie
+        </h1>
 
-<label for="email">
-E-mail
-</label>
+        <p class="auth-description">
+            Zaloguj się, aby przejść do swojego konta ShadowTale.
+        </p>
 
-<input
-id="email"
-type="email"
-required
-autocomplete="email"
->
 
-</div>
+        <form id="login-form" class="auth-form">
 
-<div class="form-group">
+            <div class="auth-field">
 
-<label for="password">
-Hasło
-</label>
+                <label for="email">
+                    E-mail
+                </label>
 
-<input
-id="password"
-type="password"
-required
-autocomplete="current-password"
->
+                <div class="auth-input-wrapper">
+                    <span>✉</span>
 
-</div>
+                    <input
+                        id="email"
+                        type="email"
+                        required
+                        autocomplete="email"
+                        placeholder="twoj@email.pl"
+                    >
+                </div>
 
-<button
-class="btn primary"
-type="submit"
->
-Zaloguj się
-</button>
+            </div>
 
-</form>
 
-<div
-id="login-status"
-class="status"
-></div>
+            <div class="auth-field">
 
-<div class="btn-row">
+                <label for="password">
+                    Hasło
+                </label>
 
-<a
-class="btn"
-href="rejestracja.html"
->
-Utwórz konto
-</a>
+                <div class="auth-input-wrapper">
+                    <span>🔒</span>
 
-</div>
+                    <input
+                        id="password"
+                        type="password"
+                        required
+                        autocomplete="current-password"
+                        placeholder="Wpisz swoje hasło"
+                    >
+                </div>
 
-</section>
+            </div>
+
+
+            <button
+                class="auth-submit"
+                type="submit"
+            >
+                Zaloguj się
+                <span>→</span>
+            </button>
+
+        </form>
+
+
+        <div
+            id="login-status"
+            class="auth-status"
+        ></div>
+
+
+        <div class="auth-divider">
+            <span>lub</span>
+        </div>
+
+
+        <div class="auth-switch">
+
+            <span>
+                Nie masz jeszcze konta?
+            </span>
+
+            <a href="rejestracja.html">
+                Utwórz konto
+            </a>
+
+        </div>
+
+    </section>
 
 </main>
+
+
+<footer class="footer auth-footer">
+
+    <div class="footer-links">
+        <a href="index.html">Start</a>
+        <a href="minecraft.html">Minecraft</a>
+        <a href="undertale.html">Undertale</a>
+        <a href="custom.html">Custom</a>
+        <a href="discord.html">Discord</a>
+        <a href="regulamin.html">Regulamin</a>
+    </div>
+
+    ShadowTale © 2026
+
+</footer>
+
 
 <script src="app.js"></script>
 
 <script>
 
-const form =
-document.getElementById("login-form");
+const form = document.getElementById("login-form");
+const status = document.getElementById("login-status");
 
-const status =
-document.getElementById("login-status");
+form?.addEventListener("submit", async event => {
 
-form?.addEventListener(
-"submit",
-async event => {
+    event.preventDefault();
 
-event.preventDefault();
+    status.textContent = "Logowanie...";
+    status.className = "auth-status loading";
 
-status.textContent =
-"Logowanie...";
+    const email = document
+        .getElementById("email")
+        .value
+        .trim();
 
-const email =
-document.getElementById("email").value;
+    const password = document
+        .getElementById("password")
+        .value;
 
-const password =
-document.getElementById("password").value;
+    try {
 
-const {
-data,
-error
-} =
-await supabaseClient.auth.signInWithPassword({
-email,
-password
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
+
+        if (error) {
+            status.textContent = error.message;
+            status.className = "auth-status error";
+            return;
+        }
+
+        status.textContent = "Zalogowano.";
+        status.className = "auth-status success";
+
+        window.location.href = "konto.html";
+
+    } catch (error) {
+
+        status.textContent =
+            "Wystąpił błąd podczas logowania.";
+
+        status.className = "auth-status error";
+
+        console.error(error);
+    }
+
 });
-
-if(error){
-
-status.textContent =
-error.message;
-
-return;
-
-}
-
-status.textContent =
-"Zalogowano.";
-
-window.location.href =
-"konto.html";
-
-}
-);
 
 </script>
 
