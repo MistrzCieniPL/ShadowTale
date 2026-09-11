@@ -2,16 +2,14 @@
 <html lang="pl">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Rejestracja — ShadowTale.pl</title>
 
-<title>Rejestracja — ShadowTale.pl</title>
+    <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -20,258 +18,276 @@
 
 <header class="site-header">
 
-<a class="site-logo" href="index.html">
+    <a class="site-logo" href="index.html">
+        <img src="assets/logo.png" alt="ShadowTale.pl">
+        <span>ShadowTale.pl</span>
+    </a>
 
-    <img
-        src="assets/logo.png"
-        alt="ShadowTale.pl"
+    <div class="header-search">
+
+        <input
+            id="site-search"
+            type="search"
+            placeholder="Szukaj w ShadowTale..."
+            autocomplete="off"
+        >
+
+        <div id="search-results" class="search-results"></div>
+
+    </div>
+
+    <button
+        id="account-button"
+        class="account-button"
+        type="button"
     >
-
-    <span>
-        ShadowTale.pl
-    </span>
-
-</a>
-
-<div class="header-search">
-
-    <input
-        id="site-search"
-        type="search"
-        placeholder="Szukaj..."
-        autocomplete="off"
-    >
-
-    <div
-        id="search-results"
-        class="search-results"
-    ></div>
-
-</div>
-
-<button
-    id="account-button"
-    class="account-button"
-    type="button"
->
-    Konto
-</button>
+        Konto
+    </button>
 
 </header>
 
-<main class="container">
 
-<section class="form-card card">
+<main class="auth-page">
 
-<h1>✨ Utwórz konto</h1>
+    <section class="auth-card register-card">
 
-<p>
-Stwórz swoje konto ShadowTale.
-</p>
+        <div class="auth-logo">
+            <img src="assets/logo.png" alt="ShadowTale">
+        </div>
 
+        <span class="auth-label">
+            SHADOWTALE • REJESTRACJA
+        </span>
 
-<form id="register-form">
+        <h1>
+            Stwórz konto
+        </h1>
 
-
-<div class="form-group">
-
-<label for="username">
-Nazwa użytkownika
-</label>
-
-<input
-    id="username"
-    type="text"
-    required
-    minlength="3"
-    maxlength="24"
-    autocomplete="username"
-    placeholder="Np. ShadowPlayer"
->
-
-</div>
+        <p class="auth-description">
+            Dołącz do ShadowTale i korzystaj ze swojego profilu.
+        </p>
 
 
-<div class="form-group">
-
-<label for="email">
-E-mail
-</label>
-
-<input
-    id="email"
-    type="email"
-    required
-    autocomplete="email"
-    placeholder="twoj@email.pl"
->
-
-</div>
+        <form id="register-form" class="auth-form">
 
 
-<div class="form-group">
+            <div class="auth-field">
 
-<label for="password">
-Hasło
-</label>
+                <label for="username">
+                    Nazwa użytkownika
+                </label>
 
-<input
-    id="password"
-    type="password"
-    required
-    minlength="6"
-    autocomplete="new-password"
-    placeholder="Minimum 6 znaków"
->
+                <div class="auth-input-wrapper">
+                    <span>👤</span>
 
-</div>
+                    <input
+                        id="username"
+                        type="text"
+                        required
+                        minlength="3"
+                        maxlength="24"
+                        autocomplete="username"
+                        placeholder="Np. ShadowPlayer"
+                    >
+                </div>
 
-
-<button
-    class="btn primary"
-    type="submit"
->
-Utwórz konto
-</button>
+            </div>
 
 
-</form>
+            <div class="auth-field">
+
+                <label for="email">
+                    E-mail
+                </label>
+
+                <div class="auth-input-wrapper">
+                    <span>✉</span>
+
+                    <input
+                        id="email"
+                        type="email"
+                        required
+                        autocomplete="email"
+                        placeholder="twoj@email.pl"
+                    >
+                </div>
+
+            </div>
 
 
-<div
-    id="register-status"
-    class="status"
-></div>
+            <div class="auth-field">
+
+                <label for="password">
+                    Hasło
+                </label>
+
+                <div class="auth-input-wrapper">
+                    <span>🔒</span>
+
+                    <input
+                        id="password"
+                        type="password"
+                        required
+                        minlength="6"
+                        autocomplete="new-password"
+                        placeholder="Minimum 6 znaków"
+                    >
+                </div>
+
+            </div>
 
 
-<div class="btn-row">
+            <button
+                class="auth-submit"
+                type="submit"
+            >
+                Utwórz konto
+                <span>→</span>
+            </button>
 
-<a
-    class="btn"
-    href="login.html"
->
-Mam już konto
-</a>
+        </form>
 
-</div>
 
-</section>
+        <div
+            id="register-status"
+            class="auth-status"
+        ></div>
+
+
+        <div class="auth-divider">
+            <span>lub</span>
+        </div>
+
+
+        <div class="auth-switch">
+
+            <span>
+                Masz już konto?
+            </span>
+
+            <a href="login.html">
+                Zaloguj się
+            </a>
+
+        </div>
+
+    </section>
 
 </main>
+
+
+<footer class="footer auth-footer">
+
+    <div class="footer-links">
+        <a href="index.html">Start</a>
+        <a href="minecraft.html">Minecraft</a>
+        <a href="undertale.html">Undertale</a>
+        <a href="custom.html">Custom</a>
+        <a href="discord.html">Discord</a>
+        <a href="regulamin.html">Regulamin</a>
+    </div>
+
+    ShadowTale © 2026
+
+</footer>
+
 
 <script src="app.js"></script>
 
 <script>
 
-const form =
-    document.getElementById(
-        "register-form"
-    );
+const form = document.getElementById("register-form");
+const status = document.getElementById("register-status");
+
+form?.addEventListener("submit", async event => {
+
+    event.preventDefault();
+
+    status.textContent = "Tworzenie konta...";
+    status.className = "auth-status loading";
+
+    const username = document
+        .getElementById("username")
+        .value
+        .trim();
+
+    const email = document
+        .getElementById("email")
+        .value
+        .trim();
+
+    const password = document
+        .getElementById("password")
+        .value;
 
 
-const status =
-    document.getElementById(
-        "register-status"
-    );
-
-
-form?.addEventListener(
-    "submit",
-    async event => {
-
-        event.preventDefault();
-
+    if (username.length < 3) {
 
         status.textContent =
-            "Tworzenie konta...";
+            "Nazwa użytkownika musi mieć minimum 3 znaki.";
+
+        status.className = "auth-status error";
+
+        return;
+    }
 
 
-        const username =
-            document
-                .getElementById(
-                    "username"
-                )
-                .value
-                .trim();
+    try {
 
+        const { data, error } =
+            await supabaseClient.auth.signUp({
 
-        const email =
-            document
-                .getElementById(
-                    "email"
-                )
-                .value
-                .trim();
+                email,
+                password,
 
-
-        const password =
-            document
-                .getElementById(
-                    "password"
-                )
-                .value;
-
-
-        if(username.length < 3){
-
-            status.textContent =
-                "Nazwa użytkownika musi mieć minimum 3 znaki.";
-
-            return;
-
-        }
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signUp({
-
-                    email,
-
-                    password,
-
-                    options:{
-                        data:{
-                            username:username
-                        }
+                options: {
+                    data: {
+                        username: username
                     }
+                }
 
-                });
+            });
 
 
-        if(error){
+        if (error) {
 
-            status.textContent =
-                error.message;
+            status.textContent = error.message;
+            status.className = "auth-status error";
 
             return;
-
         }
 
 
-        if(data.session){
+        if (data.session) {
 
             status.textContent =
                 "Konto zostało utworzone.";
 
-            window.location.href =
-                "konto.html";
+            status.className = "auth-status success";
+
+            window.location.href = "konto.html";
 
             return;
-
         }
 
 
         status.textContent =
             "Konto utworzone. Jeśli wymagane jest potwierdzenie e-mail, sprawdź swoją skrzynkę.";
 
+        status.className = "auth-status success";
+
+
+    } catch (error) {
+
+        status.textContent =
+            "Wystąpił błąd podczas tworzenia konta.";
+
+        status.className = "auth-status error";
+
+        console.error(error);
     }
 
-);
+});
 
 </script>
 
