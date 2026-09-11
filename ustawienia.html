@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Ustawienia — ShadowTale</title>
+
+    <meta
+        name="description"
+        content="Zarządzaj swoim kontem ShadowTale."
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+
+<header class="site-header">
+
+    <a
+        href="index.html"
+        class="site-logo"
+    >
+
+        <img
+            src="assets/logo.png"
+            alt="ShadowTale"
+        >
+
+        <span>
+            ShadowTale.pl
+        </span>
+
+    </a>
+
+
+    <div class="header-search">
+
+        <input
+            type="search"
+            id="site-search"
+            placeholder="Szukaj na ShadowTale..."
+            autocomplete="off"
+        >
+
+        <div id="search-results"></div>
+
+    </div>
+
+
+    <a
+        href="konto.html"
+        class="account-button"
+        id="account-button"
+    >
+
+        <span class="account-icon">
+            👤
+        </span>
+
+        <span>
+            Konto
+        </span>
+
+    </a>
+
+</header>
+
+
+<main class="settings-page">
+
+
+    <section class="account-hero">
+
+        <div class="section-container">
+
+            <span>
+                ✦ TWOJE KONTO
+            </span>
+
+            <h1>
+                Ustawienia
+            </h1>
+
+            <p>
+                Zarządzaj profilem, avatarem,
+                bezpieczeństwem oraz płatnościami.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="settings-dashboard">
+
+
+        <!-- PROFIL -->
+
+        <section class="settings-card">
+
+            <div class="settings-card-header">
+
+                <div>
+
+                    <span class="settings-icon">
+                        👤
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Profil
+                        </h2>
+
+                        <p>
+                            Zmień informacje widoczne
+                            na Twoim koncie.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label for="new-username">
+                Nick
+            </label>
+
+            <div class="settings-input-row">
+
+                <input
+                    type="text"
+                    id="new-username"
+                    maxlength="24"
+                    placeholder="Twój nick"
+                    autocomplete="off"
+                >
+
+                <button
+                    id="save-username"
+                    type="button"
+                >
+                    Zapisz
+                </button>
+
+            </div>
+
+
+            <div
+                id="username-message"
+                class="settings-message"
+            ></div>
+
+        </section>
+
+
+        <!-- AVATAR -->
+
+        <section class="settings-card">
+
+            <div class="settings-card-header">
+
+                <div>
+
+                    <span class="settings-icon">
+                        🖼️
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Avatar
+                        </h2>
+
+                        <p>
+                            Ustaw zdjęcie profilowe.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="avatar-settings">
+
+                <div class="settings-avatar-preview">
+
+                    <img
+                        id="avatar-preview"
+                        src=""
+                        alt="Avatar"
+                        style="display:none;"
+                    >
+
+                    <div
+                        id="avatar-placeholder"
+                    >
+                        👤
+                    </div>
+
+                </div>
+
+
+                <div class="avatar-settings-content">
+
+                    <input
+                        type="file"
+                        id="avatar-file"
+                        accept="image/png,image/jpeg,image/webp"
+                    >
+
+
+                    <div class="settings-buttons">
+
+                        <button
+                            id="upload-avatar"
+                            type="button"
+                        >
+                            Ustaw avatar
+                        </button>
+
+                        <button
+                            id="remove-avatar"
+                            type="button"
+                            class="secondary-button"
+                        >
+                            Usuń avatar
+                        </button>
+
+                    </div>
+
+
+                    <small>
+                        PNG, JPG lub WEBP.
+                        Maksymalnie 2 MB.
+                    </small>
+
+
+                    <div
+                        id="avatar-message"
+                        class="settings-message"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- E-MAIL -->
+
+        <section class="settings-card">
+
+            <div class="settings-card-header">
+
+                <div>
+
+                    <span class="settings-icon">
+                        📧
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Adres e-mail
+                        </h2>
+
+                        <p>
+                            Zmień adres przypisany
+                            do konta.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label for="current-email">
+                Obecny e-mail
+            </label>
+
+            <input
+                type="email"
+                id="current-email"
+                disabled
+            >
+
+
+            <label for="new-email">
+                Nowy adres e-mail
+            </label>
+
+            <input
+                type="email"
+                id="new-email"
+                placeholder="nowy@email.pl"
+                autocomplete="email"
+            >
+
+
+            <button
+                id="change-email"
+                type="button"
+            >
+                Zmień e-mail
+            </button>
+
+
+            <div
+                id="email-message"
+                class="settings-message"
+            ></div>
+
+        </section>
+
+
+        <!-- HASŁO -->
+
+        <section class="settings-card">
+
+            <div class="settings-card-header">
+
+                <div>
+
+                    <span class="settings-icon">
+                        🔐
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Hasło i bezpieczeństwo
+                        </h2>
+
+                        <p>
+                            Zarządzaj zabezpieczeniem
+                            swojego konta.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label for="old-password">
+                Obecne hasło
+            </label>
+
+            <input
+                type="password"
+                id="old-password"
+                placeholder="Obecne hasło"
+                autocomplete="current-password"
+            >
+
+
+            <label for="new-password">
+                Nowe hasło
+            </label>
+
+            <input
+                type="password"
+                id="new-password"
+                placeholder="Nowe hasło"
+                autocomplete="new-password"
+            >
+
+
+            <label for="new-password-repeat">
+                Powtórz nowe hasło
+            </label>
+
+            <input
+                type="password"
+                id="new-password-repeat"
+                placeholder="Powtórz nowe hasło"
+                autocomplete="new-password"
+            >
+
+
+            <button
+                id="change-password"
+                type="button"
+            >
+                Zmień hasło
+            </button>
+
+
+            <div
+                id="password-message"
+                class="settings-message"
+            ></div>
+
+
+            <div class="settings-divider"></div>
+
+
+            <h3>
+                Nie pamiętasz hasła?
+            </h3>
+
+            <p>
+                Wyślij link pozwalający ustawić
+                nowe hasło.
+            </p>
+
+
+            <button
+                id="reset-password"
+                type="button"
+                class="secondary-button"
+            >
+                Wyślij link resetujący
+            </button>
+
+        </section>
+
+
+        <!-- PŁATNOŚCI -->
+
+        <section class="settings-card">
+
+            <div class="settings-card-header">
+
+                <div>
+
+                    <span class="settings-icon">
+                        💳
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Metody płatności
+                        </h2>
+
+                        <p>
+                            Zarządzaj zapisanymi
+                            metodami płatności.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="payment-settings-info">
+
+                <span>
+                    Zapisane metody
+                </span>
+
+                <strong id="payment-count">
+                    0 / 3
+                </strong>
+
+            </div>
+
+
+            <a
+                href="platnosci.html"
+                class="settings-link-button"
+            >
+                Zarządzaj metodami płatności
+            </a>
+
+        </section>
+
+
+        <!-- KONTO -->
+
+        <section class="settings-card danger-card">
+
+            <div class="settings-card-header">
+
+                <div>
+
+                    <span class="settings-icon">
+                        ⚙️
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Konto
+                        </h2>
+
+                        <p>
+                            Opcje dotyczące całego konta.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="logout-settings"
+                type="button"
+                class="secondary-button"
+            >
+                Wyloguj się
+            </button>
+
+
+            <div class="settings-divider"></div>
+
+
+            <h3>
+                Usunięcie konta
+            </h3>
+
+            <p>
+                Usunięcie konta jest operacją trwałą.
+            </p>
+
+
+            <button
+                id="delete-account"
+                type="button"
+                class="danger-button"
+            >
+                Usuń konto
+            </button>
+
+
+            <div
+                id="account-message"
+                class="settings-message"
+            ></div>
+
+        </section>
+
+    </section>
+
+
+    <div class="settings-back">
+
+        <a href="konto.html">
+            ← Wróć do profilu
+        </a>
+
+    </div>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="footer-container">
+
+        <div class="footer-brand">
+
+            <a
+                href="index.html"
+                class="footer-logo"
+            >
+
+                <img
+                    src="assets/logo.png"
+                    alt="ShadowTale"
+                >
+
+                <strong>
+                    ShadowTale.pl
+                </strong>
+
+            </a>
+
+            <p>
+                Minecraft, Undertale i własne projekty
+                w jednym kosmicznym miejscu.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Projekty
+            </h3>
+
+            <a href="minecraft.html">
+                Minecraft
+            </a>
+
+            <a href="undertale.html">
+                Undertale
+            </a>
+
+            <a href="custom.html">
+                Custom
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Informacje
+            </h3>
+
+            <a href="discord.html">
+                Discord
+            </a>
+
+            <a href="regulamin.html">
+                Regulaminy
+            </a>
+
+            <a href="donate.html">
+                Donate
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Konto
+            </h3>
+
+            <a href="konto.html">
+                Profil
+            </a>
+
+            <a href="ustawienia.html">
+                Ustawienia
+            </a>
+
+            <a href="historia.html">
+                Historia
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        © 2026 ShadowTale.pl · Wszystkie prawa zastrzeżone.
+
+    </div>
+
+</footer>
+
+
+<!-- COOKIES -->
+
+<div
+    id="cookie-banner"
+    class="cookie-banner"
+>
+
+    <div class="cookie-content">
+
+        <strong>
+            🍪 ShadowTale używa cookies
+        </strong>
+
+        <p>
+            Cookies pomagają zapamiętać podstawowe
+            ustawienia strony.
+        </p>
+
+    </div>
+
+
+    <div class="cookie-buttons">
+
+        <button
+            id="cookie-reject"
+            type="button"
+            class="secondary-button"
+        >
+            Odrzuć
+        </button>
+
+        <button
+            id="cookie-accept"
+            type="button"
+            class="primary-button"
+        >
+            Akceptuję
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
