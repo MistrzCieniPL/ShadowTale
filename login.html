@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Zaloguj się — ShadowTale.pl</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<header class="site-header">
+
+<a class="site-logo" href="index.html">
+<img src="assets/logo.png" alt="ShadowTale.pl">
+<span>ShadowTale.pl</span>
+</a>
+
+<div class="header-search">
+
+<input
+id="site-search"
+type="search"
+placeholder="Szukaj..."
+autocomplete="off"
+>
+
+<div
+id="search-results"
+class="search-results"
+></div>
+
+</div>
+
+<button
+id="account-button"
+class="account-button"
+type="button"
+>
+Konto
+</button>
+
+</header>
+
+<main class="container">
+
+<section class="form-card card">
+
+<h1>🔐 Logowanie</h1>
+
+<p>
+Zaloguj się do swojego konta ShadowTale.
+</p>
+
+<form id="login-form">
+
+<div class="form-group">
+
+<label for="email">
+E-mail
+</label>
+
+<input
+id="email"
+type="email"
+required
+autocomplete="email"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="password">
+Hasło
+</label>
+
+<input
+id="password"
+type="password"
+required
+autocomplete="current-password"
+>
+
+</div>
+
+<button
+class="btn primary"
+type="submit"
+>
+Zaloguj się
+</button>
+
+</form>
+
+<div
+id="login-status"
+class="status"
+></div>
+
+<div class="btn-row">
+
+<a
+class="btn"
+href="rejestracja.html"
+>
+Utwórz konto
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+<script src="app.js"></script>
+
+<script>
+
+const form =
+document.getElementById("login-form");
+
+const status =
+document.getElementById("login-status");
+
+form?.addEventListener(
+"submit",
+async event => {
+
+event.preventDefault();
+
+status.textContent =
+"Logowanie...";
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+const {
+data,
+error
+} =
+await supabaseClient.auth.signInWithPassword({
+email,
+password
+});
+
+if(error){
+
+status.textContent =
+error.message;
+
+return;
+
+}
+
+status.textContent =
+"Zalogowano.";
+
+window.location.href =
+"konto.html";
+
+}
+);
+
+</script>
+
+</body>
+</html>
