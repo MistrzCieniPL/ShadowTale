@@ -1,2 +1,0 @@
-# ShadowTale
-Sklep
