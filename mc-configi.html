@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Configi Minecraft — ShadowTale</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<header class="site-header">
+
+    <a class="site-logo" href="index.html">
+        <img src="assets/logo.png" alt="ShadowTale">
+        <span class="logo-fallback">ShadowTale</span>
+    </a>
+
+    <div class="header-search">
+        <input id="site-search" type="search"
+            placeholder="Szukaj: skrypty, mapy, Save, Undertale..."
+            autocomplete="off">
+        <div id="search-results" class="search-results"></div>
+    </div>
+
+    <button id="account-button" class="account-button" type="button">
+        Konto
+    </button>
+
+</header>
+
+<main class="container">
+
+    <section class="hero">
+
+        <h1>Configi Minecraft</h1>
+
+        <p>
+            Pliki konfiguracyjne i ustawienia.
+        </p>
+
+        <div class="btn-row" style="justify-content:center">
+            <a class="btn" href="minecraft.html">← Minecraft</a>
+
+            <a class="btn primary"
+               href="custom.html?category=configi">
+                Zamów Custom
+            </a>
+        </div>
+
+    </section>
+
+    <section class="section">
+
+        <div class="card">
+
+            <span class="tag">CONFIGI</span>
+
+            <h2>Pliki konfiguracyjne</h2>
+
+            <p>
+                Gotowe konfiguracje do projektów
+                i serwerów Minecraft.
+            </p>
+
+            <div class="notice">
+                Zawartość będzie dodawana stopniowo.
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    ShadowTale © 2026
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>

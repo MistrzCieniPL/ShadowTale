@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Skrypty Minecraft — ShadowTale.pl</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --neon-purple: #8b5cf6;
+            --neon-blue: #5865f2;
+            --neon-violet: #a855f7;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 15% 15%, rgba(139, 92, 246, .08), transparent 28%),
+                radial-gradient(circle at 85% 25%, rgba(88, 101, 242, .07), transparent 28%),
+                #050712;
+        }
+
+        /* =========================
+           GÓRNY PASEK
+        ========================= */
+
+        .scripts-header {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+
+            width: 100%;
+
+            background: rgba(5, 7, 18, .92);
+            border-bottom: 1px solid rgba(139, 92, 246, .22);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 8px 35px rgba(0, 0, 0, .35),
+                0 0 25px rgba(139, 92, 246, .05);
+        }
+
+        .scripts-header-inner {
+            width: min(1400px, calc(100% - 32px));
+            min-height: 76px;
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .scripts-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            min-width: max-content;
+
+            color: white;
+            text-decoration: none;
+        }
+
+        .scripts-logo img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 0 9px rgba(139, 92, 246, .75))
+                drop-shadow(0 0 22px rgba(88, 101, 242, .3));
+        }
+
+        .scripts-logo-text {
+            font-size: 20px;
+            font-weight: 950;
+            letter-spacing: .5px;
+        }
+
+        .scripts-logo-shadow {
+            color: #fff;
+        }
+
+        .scripts-logo-tale {
+            color: #8b5cf6;
+
+            text-shadow:
+                0 0 8px rgba(139, 92, 246, .8),
+                0 0 20px rgba(139, 92, 246, .4);
+        }
+
+        .scripts-logo-pl {
+            color: #5865f2;
+            font-size: 12px;
+        }
+
+        .scripts-search {
+            flex: 1;
+            max-width: 650px;
+            margin: 0 auto;
+
+            position: relative;
+
+            display: flex;
+            align-items: center;
+        }
+
+        .scripts-search-icon {
+            position: absolute;
+            left: 15px;
+            z-index: 2;
+
+            pointer-events: none;
+            opacity: .8;
+        }
+
+        .scripts-search input {
+            width: 100%;
+            height: 45px;
+
+            padding: 0 45px;
+
+            color: #fff;
+
+            background: rgba(15, 20, 42, .9);
+
+            border: 1px solid rgba(139, 92, 246, .22);
+            border-radius: 12px;
+
+            outline: none;
+
+            transition: .2s ease;
+        }
+
+        .scripts-search input::placeholder {
+            color: #68738f;
+        }
+
+        .scripts-search input:focus {
+            border-color: rgba(139, 92, 246, .65);
+
+            box-shadow:
+                0 0 20px rgba(139, 92, 246, .13);
+        }
+
+        .scripts-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .scripts-discord {
+            min-height: 43px;
+            padding: 0 14px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+
+            color: #fff;
+            text-decoration: none;
+
+            background: rgba(12, 16, 34, .9);
+
+            border: 1px solid rgba(88, 101, 242, .3);
+            border-radius: 12px;
+
+            font-weight: 800;
+
+            transition: .2s ease;
+        }
+
+        .scripts-discord:hover {
+            transform: translateY(-2px);
+
+            border-color: rgba(88, 101, 242, .7);
+
+            background: rgba(88, 101, 242, .12);
+
+            box-shadow:
+                0 0 22px rgba(88, 101, 242, .18);
+        }
+
+        .scripts-account {
+            min-height: 43px;
+            padding: 5px 11px 5px 7px;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            color: #fff;
+            text-decoration: none;
+
+            background: rgba(12, 16, 34, .9);
+
+            border: 1px solid rgba(139, 92, 246, .25);
+            border-radius: 12px;
+
+            transition: .2s ease;
+        }
+
+        .scripts-account:hover {
+            transform: translateY(-2px);
+
+            border-color: rgba(139, 92, 246, .65);
+
+            background: rgba(139, 92, 246, .11);
+
+            box-shadow:
+                0 0 22px rgba(139, 92, 246, .17);
+        }
+
+        .scripts-account-avatar {
+            width: 32px;
+            height: 32px;
+
+            border-radius: 50%;
+            object-fit: cover;
+
+            border: 1px solid rgba(139, 92, 246, .4);
+            background: #080b18;
+        }
+
+        .scripts-account-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .scripts-account-info strong {
+            font-size: 13px;
+            line-height: 1.1;
+        }
+
+        .scripts-account-info small {
+            color: #71809d;
+            font-size: 10px;
+        }
+
+        .scripts-account-arrow {
+            color: #8b5cf6;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        @media (max-width: 850px) {
+            .scripts-header-inner {
+                flex-wrap: wrap;
+                padding: 11px 0;
+            }
+
+            .scripts-search {
+                order: 3;
+                flex-basis: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .scripts-header-inner {
+                width: calc(100% - 20px);
+            }
+
+            .scripts-logo-text {
+                font-size: 17px;
+            }
+
+            .scripts-logo img {
+                width: 39px;
+                height: 39px;
+            }
+
+            .scripts-discord {
+                padding: 0 10px;
+            }
+
+            .scripts-discord span {
+                display: none;
+            }
+
+            .scripts-account-info,
+            .scripts-account-arrow {
+                display: none;
+            }
+
+            .scripts-account {
+                padding: 5px;
+            }
+        }
+
+        /* =========================
+           GŁÓWNA STRONA
+        ========================= */
+
+        .scripts-page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 55px 0 80px;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .scripts-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 38px;
+            margin-bottom: 35px;
+            border-radius: 24px;
+
+            background:
+                radial-gradient(circle at 10% 0%, rgba(139,92,246,.22), transparent 35%),
+                radial-gradient(circle at 90% 100%, rgba(88,101,242,.18), transparent 35%),
+                rgba(10,12,25,.88);
+
+            border: 1px solid rgba(139,92,246,.38);
+
+            box-shadow:
+                0 0 15px rgba(139,92,246,.12),
+                0 0 40px rgba(139,92,246,.08),
+                inset 0 0 35px rgba(139,92,246,.035);
+
+            transition: .25s ease;
+        }
+
+        .scripts-hero:hover {
+            border-color: rgba(139,92,246,.65);
+
+            box-shadow:
+                0 0 18px rgba(139,92,246,.2),
+                0 0 55px rgba(139,92,246,.12),
+                inset 0 0 40px rgba(139,92,246,.05);
+        }
+
+        .scripts-hero::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            top: -130px;
+            right: -80px;
+
+            background: var(--neon-purple);
+            border-radius: 50%;
+
+            filter: blur(100px);
+            opacity: .15;
+
+            pointer-events: none;
+        }
+
+        .scripts-label {
+            position: relative;
+            margin-bottom: 10px;
+
+            color: #b89cff;
+
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+
+            text-shadow:
+                0 0 6px rgba(139,92,246,.8),
+                0 0 18px rgba(139,92,246,.45);
+        }
+
+        .scripts-hero h1 {
+            position: relative;
+
+            margin: 0 0 12px;
+
+            font-size: clamp(30px, 5vw, 48px);
+
+            color: #fff;
+
+            text-shadow:
+                0 0 8px rgba(139,92,246,.7),
+                0 0 25px rgba(139,92,246,.35),
+                0 0 50px rgba(88,101,242,.18);
+        }
+
+        .scripts-hero p {
+            position: relative;
+
+            max-width: 720px;
+            margin: 0;
+
+            color: #929bb8;
+
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .scripts-section-title {
+            margin: 0 0 18px;
+
+            font-size: 24px;
+            color: #fff;
+
+            text-shadow:
+                0 0 7px rgba(139,92,246,.55),
+                0 0 20px rgba(139,92,246,.2);
+        }
+
+        .scripts-products {
+            min-height: 170px;
+        }
+
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .script-card {
+            position: relative;
+            overflow: hidden;
+
+            display: flex;
+            flex-direction: column;
+
+            min-height: 230px;
+            padding: 22px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(145deg, rgba(139,92,246,.07), rgba(88,101,242,.025)),
+                rgba(255,255,255,.025);
+
+            border: 1px solid rgba(139,92,246,.18);
+
+            box-shadow:
+                0 0 12px rgba(139,92,246,.04),
+                inset 0 0 20px rgba(139,92,246,.02);
+
+            transition: .25s ease;
+        }
+
+        .script-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139,92,246,.65);
+
+            box-shadow:
+                0 0 10px rgba(139,92,246,.18),
+                0 0 30px rgba(139,92,246,.12),
+                0 18px 45px rgba(0,0,0,.3);
+        }
+
+        .script-card h3 {
+            margin: 0 0 10px;
+            color: #fff;
+        }
+
+        .script-card p {
+            margin: 0 0 18px;
+            color: #929bb8;
+            line-height: 1.55;
+        }
+
+        .script-card-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .script-price {
+            color: #b89cff;
+            font-weight: 900;
+        }
+
+        .script-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 40px;
+            padding: 0 15px;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            background: linear-gradient(135deg, #8b5cf6, #5865f2);
+
+            font-weight: 800;
+            border: 1px solid rgba(255,255,255,.12);
+
+            transition: .2s ease;
+        }
+
+        .script-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            position: relative;
+            overflow: hidden;
+
+            padding: 42px 25px;
+            text-align: center;
+
+            border-radius: 20px;
+
+            background:
+                radial-gradient(circle at center, rgba(139,92,246,.07), transparent 65%),
+                rgba(255,255,255,.025);
+
+            border: 1px solid rgba(139,92,246,.2);
+        }
+
+        .empty-state h3 {
+            margin: 0 0 8px;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: #929bb8;
+        }
+
+        /* =========================
+           CUSTOM — ZABLOKOWANY
+        ========================= */
+
+        .scripts-custom {
+            position: relative;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 25px;
+            margin-top: 35px;
+            padding: 27px 30px;
+
+            border-radius: 20px;
+
+            background:
+                radial-gradient(circle at 0% 50%, rgba(139,92,246,.14), transparent 40%),
+                radial-gradient(circle at 100% 50%, rgba(88,101,242,.12), transparent 40%),
+                rgba(10,12,25,.9);
+
+            border: 1px solid rgba(139,92,246,.4);
+
+            box-shadow:
+                0 0 12px rgba(139,92,246,.1),
+                0 0 35px rgba(139,92,246,.08);
+        }
+
+        .scripts-custom-content {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .scripts-custom-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+
+            border-radius: 16px;
+
+            background: rgba(139,92,246,.12);
+            border: 1px solid rgba(139,92,246,.4);
+
+            font-size: 27px;
+        }
+
+        .scripts-custom-label {
+            margin-bottom: 4px;
+
+            color: #b89cff;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+        }
+
+        .scripts-custom h2 {
+            margin: 0 0 6px;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .scripts-custom p {
+            margin: 0;
+            color: #929bb8;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .scripts-custom-button {
+            min-height: 47px;
+            padding: 0 21px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            color: #94a3b8;
+            text-decoration: none;
+
+            border-radius: 12px;
+
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.1);
+
+            font-weight: 900;
+
+            cursor: not-allowed;
+
+            opacity: .65;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .site-footer {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .scripts-page {
+                width: min(100% - 20px, 1180px);
+                padding-top: 30px;
+            }
+
+            .scripts-hero {
+                padding: 25px;
+            }
+
+            .scripts-custom {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .scripts-custom-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="scripts-header">
+
+    <div class="scripts-header-inner">
+
+        <a href="index.html" class="scripts-logo">
+
+            <img src="assets/logo.png" alt="ShadowTale.pl">
+
+            <div class="scripts-logo-text">
+                <span class="scripts-logo-shadow">Shadow</span><span class="scripts-logo-tale">Tale</span><span class="scripts-logo-pl">.pl</span>
+            </div>
+
+        </a>
+
+        <form class="scripts-search" id="site-search-form">
+
+            <span class="scripts-search-icon">🔍</span>
+
+            <input
+                id="site-search"
+                type="search"
+                placeholder="Szukaj na ShadowTale..."
+                autocomplete="off"
+            >
+
+        </form>
+
+        <div class="scripts-header-actions">
+
+            <a
+                class="scripts-discord"
+                href="https://discord.gg/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Discord"
+            >
+                💬 <span>Discord</span>
+            </a>
+
+            <a
+                href="konto.html"
+                class="scripts-account"
+            >
+
+                <img
+                    id="account-avatar"
+                    class="scripts-account-avatar"
+                    src="assets/logo.png"
+                    alt="Avatar"
+                >
+
+                <div class="scripts-account-info">
+
+                    <strong id="account-name">
+                        Konto
+                    </strong>
+
+                    <small>
+                        Moje konto
+                    </small>
+
+                </div>
+
+                <span class="scripts-account-arrow">
+                    ›
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="scripts-page">
+
+    <section class="scripts-hero">
+
+        <div class="scripts-label">
+            MINECRAFT / SKRYPTY
+        </div>
+
+        <h1>
+            Skrypty Minecraft
+        </h1>
+
+        <p>
+            Gotowe skrypty do Minecrafta przygotowane dla serwerów
+            i różnych trybów rozgrywki.
+        </p>
+
+    </section>
+
+
+    <section>
+
+        <h2 class="scripts-section-title">
+            Dostępne skrypty
+        </h2>
+
+        <div id="mc-products-grid" class="scripts-products">
+
+            <div class="empty-state">
+
+                <h3>
+                    Brak skryptów
+                </h3>
+
+                <p>
+                    Aktualnie nie ma jeszcze aktywnych skryptów Minecraft.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CUSTOM — ZABLOKOWANY -->
+
+    <section class="scripts-custom">
+
+        <div class="scripts-custom-content">
+
+            <div class="scripts-custom-icon">
+                🔒
+            </div>
+
+            <div>
+
+                <div class="scripts-custom-label">
+                    CUSTOM
+                </div>
+
+                <h2>
+                    Custom jest obecnie niedostępny
+                </h2>
+
+                <p>
+                    Zamówienia Custom są aktualnie wstrzymane.
+                    Wróć później, aby sprawdzić dostępność.
+                </p>
+
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="scripts-custom-button"
+            disabled
+        >
+            🔒 Niedostępne
+        </button>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-main">
+
+            <div class="footer-brand">
+
+                <a href="index.html" class="site-logo">
+
+                    <img src="assets/logo.png" alt="ShadowTale">
+
+                    <div class="site-logo-text">
+
+                        <span class="logo-shadow">SHADOW</span>
+                        <span class="logo-tale">TALE</span>
+                        <span class="logo-pl">.PL</span>
+
+                    </div>
+
+                </a>
+
+                <p>
+                    ShadowTale.pl — Twój świat, twoje zasady.
+                </p>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>Minecraft</h3>
+
+                <a href="mc-skrypty.html">Skrypty</a>
+
+                <a href="minecraft.html">
+                    TXT
+                </a>
+
+                <a href="minecraft.html">
+                    Mapy
+                </a>
+
+                <a href="minecraft.html">
+                    Configi
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>Materiały</h3>
+
+                <a href="minecraft.html">
+                    Tekstury
+                </a>
+
+                <a href="minecraft.html">
+                    Skiny
+                </a>
+
+                <a href="minecraft.html">
+                    Custom
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>ShadowTale</h3>
+
+                <a href="index.html">
+                    Strona główna
+                </a>
+
+                <a href="propozycje.html">
+                    Propozycje
+                </a>
+
+                <a href="konto.html">
+                    Moje konto
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 ShadowTale.pl
+            </span>
+
+            <span>
+                Twój świat. Twoje zasady.
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+<script>
+    const searchForm = document.getElementById("site-search-form");
+    const searchInput = document.getElementById("site-search");
+
+    if (searchForm && searchInput) {
+        searchForm.addEventListener("submit", event => {
+            event.preventDefault();
+
+            const value = searchInput.value.trim();
+
+            if (!value) return;
+
+            window.location.href =
+                `index.html?search=${encodeURIComponent(value)}`;
+        });
+    }
+</script>
+
+</body>
+</html>

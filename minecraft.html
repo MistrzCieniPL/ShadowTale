@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShadowTale.pl — Minecraft</title>
+
+    <meta
+        name="description"
+        content="ShadowTale.pl — Minecraft: skrypty, TXT, mapy, configi, tekstury, skiny i Custom."
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+        :root {
+            --bg: #050712;
+            --bg2: #080b18;
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --blue: #5865f2;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #ffd166;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: rgba(139, 92, 246, .22);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text);
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(88, 101, 242, .18),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 10% 30%,
+                    rgba(139, 92, 246, .10),
+                    transparent 30%
+                ),
+                var(--bg);
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           GWIAZDY
+           ========================= */
+
+        .mc-stars {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .mc-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: #fff;
+            opacity: .3;
+            animation: mcTwinkle 3s ease-in-out infinite alternate;
+        }
+
+        .mc-star:nth-child(3n) {
+            animation-duration: 4.5s;
+        }
+
+        .mc-star:nth-child(4n) {
+            width: 3px;
+            height: 3px;
+            opacity: .5;
+        }
+
+        @keyframes mcTwinkle {
+            from {
+                opacity: .12;
+                transform: scale(.75);
+            }
+
+            to {
+                opacity: .85;
+                transform: scale(1.25);
+            }
+        }
+
+        /* =========================
+           HEADER
+           ========================= */
+
+        .mc-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            background: rgba(5, 7, 18, .88);
+            border-bottom: 1px solid rgba(139, 92, 246, .18);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 45px rgba(0, 0, 0, .28);
+        }
+
+        .mc-header-inner {
+            width: min(1400px, calc(100% - 32px));
+            min-height: 76px;
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .mc-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: max-content;
+
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: .4px;
+        }
+
+        .mc-logo img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 0 9px rgba(139, 92, 246, .7))
+                drop-shadow(0 0 22px rgba(88, 101, 242, .35));
+        }
+
+        .mc-logo-shadow {
+            color: #fff;
+        }
+
+        .mc-logo-tale {
+            color: var(--purple);
+            text-shadow:
+                0 0 10px rgba(139, 92, 246, .75),
+                0 0 25px rgba(139, 92, 246, .35);
+        }
+
+        .mc-logo-pl {
+            color: var(--blue);
+            font-size: 13px;
+        }
+
+        .mc-search {
+            position: relative;
+            flex: 1;
+            max-width: 650px;
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mc-search input {
+            width: 100%;
+            height: 45px;
+            padding: 0 16px;
+
+            color: #fff;
+            background: rgba(15, 20, 42, .88);
+            border: 1px solid rgba(139, 92, 246, .22);
+            border-radius: 12px;
+            outline: none;
+
+            transition: .2s ease;
+        }
+
+        .mc-search input::placeholder {
+            color: #68738f;
+        }
+
+        .mc-search input:focus {
+            border-color: rgba(139, 92, 246, .65);
+            box-shadow: 0 0 22px rgba(139, 92, 246, .15);
+        }
+
+        .mc-search button {
+            width: 45px;
+            height: 45px;
+            flex: 0 0 45px;
+
+            border: 1px solid rgba(139, 92, 246, .3);
+            border-radius: 12px;
+
+            color: #fff;
+            background: rgba(139, 92, 246, .11);
+        }
+
+        .mc-search button:hover {
+            background: rgba(139, 92, 246, .23);
+            border-color: rgba(139, 92, 246, .6);
+        }
+
+        .mc-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .mc-header-button {
+            min-height: 43px;
+            padding: 0 14px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            border: 1px solid rgba(139, 92, 246, .25);
+            border-radius: 12px;
+
+            background: rgba(12, 16, 34, .88);
+            color: #fff;
+
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .mc-header-button:hover {
+            transform: translateY(-2px);
+            border-color: rgba(139, 92, 246, .65);
+            background: rgba(139, 92, 246, .12);
+            box-shadow: 0 0 20px rgba(139, 92, 246, .17);
+        }
+
+        #mc-account-avatar {
+            width: 29px;
+            height: 29px;
+            border-radius: 50%;
+            object-fit: cover;
+
+            border: 1px solid rgba(139, 92, 246, .38);
+            background: var(--bg2);
+        }
+
+        /* =========================
+           HERO
+           ========================= */
+
+        .mc-hero {
+            position: relative;
+            width: min(1200px, calc(100% - 32px));
+            min-height: 560px;
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .mc-hero-content {
+            max-width: 900px;
+            padding: 90px 20px;
+        }
+
+        .mc-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 15px;
+            margin-bottom: 23px;
+
+            border: 1px solid rgba(139, 92, 246, .3);
+            border-radius: 999px;
+
+            background: rgba(139, 92, 246, .08);
+            color: #c4b5fd;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .mc-hero h1 {
+            margin: 0 0 22px;
+
+            font-size: clamp(48px, 8vw, 90px);
+            line-height: .95;
+            font-weight: 950;
+            letter-spacing: -4px;
+        }
+
+        .mc-hero h1 span {
+            display: block;
+        }
+
+        .mc-title-purple {
+            color: var(--purple);
+            text-shadow:
+                0 0 18px rgba(139, 92, 246, .6),
+                0 0 45px rgba(139, 92, 246, .25);
+        }
+
+        .mc-hero p {
+            max-width: 720px;
+            margin: 0 auto;
+
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.75;
+        }
+
+        .mc-hero-actions {
+            margin-top: 35px;
+
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .mc-hero-button {
+            min-width: 175px;
+            min-height: 48px;
+            padding: 0 23px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(139, 92, 246, .3);
+            border-radius: 12px;
+
+            background: rgba(139, 92, 246, .09);
+            color: #fff;
+
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .mc-hero-button:hover {
+            transform: translateY(-3px);
+            border-color: rgba(139, 92, 246, .65);
+            box-shadow: 0 0 30px rgba(139, 92, 246, .2);
+        }
+
+        .mc-hero-button.primary {
+            border-color: transparent;
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+        }
+
+        /* =========================
+           SEKCJE
+           ========================= */
+
+        .mc-section {
+            width: min(1200px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 70px 0;
+        }
+
+        .mc-section-heading {
+            margin-bottom: 38px;
+            text-align: center;
+        }
+
+        .mc-section-heading h2 {
+            margin: 0 0 10px;
+            font-size: clamp(30px, 5vw, 46px);
+        }
+
+        .mc-section-heading p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* =========================
+           INFO
+           ========================= */
+
+        .mc-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .mc-info-card {
+            padding: 26px;
+
+            border: 1px solid rgba(139, 92, 246, .18);
+            border-radius: 18px;
+
+            background: rgba(12, 16, 34, .72);
+
+            transition: .25s ease;
+        }
+
+        .mc-info-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139, 92, 246, .48);
+            box-shadow: 0 0 30px rgba(139, 92, 246, .1);
+        }
+
+        .mc-info-icon {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 32px;
+        }
+
+        .mc-info-card h3 {
+            margin: 0 0 8px;
+        }
+
+        .mc-info-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* =========================
+           KATEGORIE
+           ========================= */
+
+        .mc-category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .mc-category {
+            position: relative;
+            min-height: 270px;
+            padding: 28px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(139, 92, 246, .20);
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15, 20, 42, .94),
+                    rgba(8, 11, 24, .97)
+                );
+
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .22);
+
+            transition:
+                transform .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .mc-category::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            z-index: -1;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(139, 92, 246, .13),
+                    transparent 55%
+                );
+
+            opacity: 0;
+            transition: .3s ease;
+        }
+
+        .mc-category:hover {
+            transform: translateY(-7px);
+            border-color: rgba(139, 92, 246, .52);
+            box-shadow:
+                0 28px 80px rgba(0, 0, 0, .4),
+                0 0 40px rgba(139, 92, 246, .09);
+        }
+
+        .mc-category:hover::before {
+            opacity: 1;
+        }
+
+        .mc-category-icon {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 20px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid rgba(139, 92, 246, .2);
+            border-radius: 18px;
+
+            background: rgba(5, 7, 18, .78);
+            font-size: 36px;
+
+            filter:
+                drop-shadow(
+                    0 0 10px rgba(139, 92, 246, .25)
+                );
+        }
+
+        .mc-category h3 {
+            margin: 0 0 9px;
+            font-size: 25px;
+        }
+
+        .mc-category p {
+            margin: 0 0 20px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .mc-category-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .category-status {
+            min-height: 30px;
+            padding: 0 11px;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            border-radius: 999px;
+
+            color: #86efac;
+            background: rgba(34, 197, 94, .08);
+            border: 1px solid rgba(34, 197, 94, .22);
+
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .5px;
+        }
+
+        .category-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 10px rgba(34, 197, 94, .85);
+        }
+
+        /* PRACE TECHNICZNE */
+
+        .category-status.status-technical {
+            color: #c4b5fd;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139, 92, 246, .12),
+                    rgba(88, 101, 242, .08)
+                );
+            border: 1px solid rgba(139, 92, 246, .32);
+            box-shadow: 0 0 18px rgba(139, 92, 246, .08);
+        }
+
+        .category-status.status-technical .category-status-dot {
+            background: #a78bfa;
+            box-shadow: 0 0 10px rgba(167, 139, 250, .9);
+            animation: technicalPulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes technicalPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .55;
+                transform: scale(.82);
+            }
+        }
+
+        .category-status.status-locked {
+            color: #fca5a5;
+            background: rgba(239, 68, 68, .08);
+            border-color: rgba(239, 68, 68, .22);
+        }
+
+        .category-status.status-locked .category-status-dot {
+            background: var(--red);
+            box-shadow: 0 0 10px rgba(239, 68, 68, .85);
+        }
+
+        .mc-category-button {
+            min-height: 40px;
+            padding: 0 15px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(139, 92, 246, .28);
+            border-radius: 10px;
+
+            background: rgba(139, 92, 246, .09);
+            color: #fff;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            transition: .2s ease;
+        }
+
+        .mc-category-button:hover {
+            border-color: rgba(139, 92, 246, .65);
+            background: rgba(139, 92, 246, .16);
+        }
+
+        .mc-category-button.disabled {
+            cursor: pointer;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, .035);
+            border-color: rgba(255, 255, 255, .08);
+        }
+
+        .mc-category-button.disabled:hover {
+            color: #fff;
+            border-color: rgba(139, 92, 246, .35);
+            background: rgba(139, 92, 246, .08);
+        }
+
+        /* =========================
+           PROPOZYCJA
+           ========================= */
+
+        .mc-proposal {
+            padding: 35px;
+
+            text-align: center;
+
+            border: 1px solid rgba(139, 92, 246, .22);
+            border-radius: 22px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(139, 92, 246, .12),
+                    transparent 65%
+                ),
+                rgba(12, 16, 34, .78);
+
+            box-shadow: 0 25px 80px rgba(0, 0, 0, .25);
+        }
+
+        .mc-proposal h2 {
+            margin: 0 0 12px;
+            font-size: 32px;
+        }
+
+        .mc-proposal p {
+            max-width: 720px;
+            margin: 0 auto 22px;
+
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .mc-proposal-button {
+            min-height: 46px;
+            padding: 0 20px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+            border: 1px solid rgba(139, 92, 246, .3);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139, 92, 246, .2),
+                    rgba(88, 101, 242, .16)
+                );
+
+            font-weight: 800;
+        }
+
+        /* =========================
+           FOOTER
+           ========================= */
+
+        .mc-footer {
+            margin-top: 60px;
+            padding: 55px 0 25px;
+
+            border-top: 1px solid rgba(139, 92, 246, .16);
+            background: rgba(3, 5, 13, .82);
+        }
+
+        .mc-footer-inner {
+            width: min(1200px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .mc-footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 35px;
+        }
+
+        .mc-footer-column h3 {
+            margin: 0 0 14px;
+        }
+
+        .mc-footer-column p,
+        .mc-footer-column a {
+            display: block;
+
+            color: #7f8aa4;
+            font-size: 14px;
+            line-height: 1.8;
+
+            transition: .2s ease;
+        }
+
+        .mc-footer-column a:hover {
+            color: #fff;
+        }
+
+        .mc-footer-bottom {
+            margin-top: 40px;
+            padding-top: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+
+            border-top: 1px solid rgba(255, 255, 255, .06);
+
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* =========================
+           CHAT / STAI
+           ========================= */
+
+        #mc-chat-button,
+        #mc-stai-button {
+            position: fixed;
+            bottom: 22px;
+            z-index: 1200;
+
+            width: 58px;
+            height: 58px;
+
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        #mc-chat-button {
+            left: 22px;
+
+            border: 1px solid rgba(139, 92, 246, .45);
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+        }
+
+        #mc-stai-button {
+            right: 22px;
+
+            border: 1px solid rgba(88, 101, 242, .45);
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--blue),
+                    var(--purple)
+                );
+        }
+
+        /* =========================
+           MODAL BLOKADY
+           ========================= */
+
+        #review-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(2, 4, 12, .78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        #review-modal.active {
+            display: flex;
+        }
+
+        .review-card {
+            width: min(500px, 100%);
+            padding: 40px 30px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15, 20, 42, .99),
+                    rgba(7, 10, 24, .99)
+                );
+
+            border: 1px solid rgba(139, 92, 246, .42);
+            border-radius: 24px;
+
+            box-shadow:
+                0 30px 100px rgba(0, 0, 0, .7),
+                0 0 50px rgba(139, 92, 246, .12);
+
+            animation: reviewAppear .2s ease;
+        }
+
+        @keyframes reviewAppear {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .review-icon {
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 20px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 22px;
+
+            background: rgba(139, 92, 246, .12);
+            border: 1px solid rgba(139, 92, 246, .3);
+
+            font-size: 38px;
+        }
+
+        .review-card h2 {
+            margin: 0 0 12px;
+            font-size: 29px;
+        }
+
+        .review-card p {
+            max-width: 390px;
+            margin: 0 auto 25px;
+
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        #review-close {
+            min-width: 150px;
+            min-height: 45px;
+            padding: 0 20px;
+
+            border: 0;
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+
+            color: #fff;
+            font-weight: 800;
+
+            transition: .2s ease;
+        }
+
+        #review-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(139, 92, 246, .25);
+        }
+
+        /* =========================
+           RESPONSIVE
+           ========================= */
+
+        @media (max-width: 1000px) {
+            .mc-header-inner {
+                flex-wrap: wrap;
+                padding: 12px 0;
+            }
+
+            .mc-search {
+                order: 3;
+                flex-basis: 100%;
+                max-width: none;
+            }
+
+            .mc-category-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .mc-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mc-footer-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .mc-header-inner {
+                width: calc(100% - 22px);
+            }
+
+            .mc-logo {
+                font-size: 18px;
+            }
+
+            .mc-logo img {
+                width: 39px;
+                height: 39px;
+            }
+
+            .mc-header-actions {
+                margin-left: auto;
+            }
+
+            .mc-header-button {
+                padding: 0 10px;
+            }
+
+            .mc-header-button span {
+                display: none;
+            }
+
+            .mc-hero {
+                width: calc(100% - 22px);
+                min-height: 500px;
+            }
+
+            .mc-hero-content {
+                padding: 70px 10px;
+            }
+
+            .mc-hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .mc-section {
+                width: calc(100% - 22px);
+                padding: 50px 0;
+            }
+
+            .mc-category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mc-footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mc-footer-bottom {
+                flex-direction: column;
+            }
+
+            #mc-chat-button {
+                left: 14px;
+                bottom: 14px;
+            }
+
+            #mc-stai-button {
+                right: 14px;
+                bottom: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="mc-stars" aria-hidden="true">
+    <span class="mc-star" style="left:4%;top:8%"></span>
+    <span class="mc-star" style="left:12%;top:25%"></span>
+    <span class="mc-star" style="left:19%;top:12%"></span>
+    <span class="mc-star" style="left:27%;top:38%"></span>
+    <span class="mc-star" style="left:35%;top:18%"></span>
+    <span class="mc-star" style="left:43%;top:8%"></span>
+    <span class="mc-star" style="left:51%;top:31%"></span>
+    <span class="mc-star" style="left:59%;top:14%"></span>
+    <span class="mc-star" style="left:67%;top:42%"></span>
+    <span class="mc-star" style="left:75%;top:11%"></span>
+    <span class="mc-star" style="left:83%;top:28%"></span>
+    <span class="mc-star" style="left:91%;top:7%"></span>
+    <span class="mc-star" style="left:7%;top:62%"></span>
+    <span class="mc-star" style="left:16%;top:78%"></span>
+    <span class="mc-star" style="left:29%;top:66%"></span>
+    <span class="mc-star" style="left:38%;top:88%"></span>
+    <span class="mc-star" style="left:49%;top:71%"></span>
+    <span class="mc-star" style="left:61%;top:83%"></span>
+    <span class="mc-star" style="left:72%;top:65%"></span>
+    <span class="mc-star" style="left:86%;top:76%"></span>
+    <span class="mc-star" style="left:96%;top:58%"></span>
+</div>
+
+<header class="mc-header">
+    <div class="mc-header-inner">
+
+        <a href="index.html" class="mc-logo">
+            <img src="assets/logo.png" alt="ShadowTale.pl">
+
+            <span>
+                <span class="mc-logo-shadow">Shadow</span><span class="mc-logo-tale">Tale</span><span class="mc-logo-pl">.pl</span>
+            </span>
+        </a>
+
+        <form class="mc-search" id="mc-search-form">
+            <input
+                id="mc-search-input"
+                type="search"
+                placeholder="Szukaj na ShadowTale..."
+                autocomplete="off"
+            >
+
+            <button type="submit" aria-label="Szukaj">
+                🔎
+            </button>
+        </form>
+
+        <div class="mc-header-actions">
+
+            <a
+                href="https://discord.gg/"
+                class="mc-header-button"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                💬 <span>Discord</span>
+            </a>
+
+            <a
+                href="konto.html"
+                class="mc-header-button"
+                id="mc-account-button"
+            >
+                <img
+                    id="mc-account-avatar"
+                    src="assets/logo.png"
+                    alt="Avatar"
+                >
+
+                <span id="mc-account-name">
+                    Konto
+                </span>
+            </a>
+
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <section class="mc-hero">
+
+        <div class="mc-hero-content">
+
+            <div class="mc-hero-badge">
+                ⛏️ ShadowTale Minecraft
+            </div>
+
+            <h1>
+                <span>MINECRAFT</span>
+                <span class="mc-title-purple">∞</span>
+            </h1>
+
+            <p>
+                Skrypty, TXT, mapy, configi, tekstury, skiny
+                i zamówienia Custom — wszystko związane
+                z Minecraftem w jednym miejscu.
+            </p>
+
+            <div class="mc-hero-actions">
+
+                <a
+                    href="#kategorie"
+                    class="mc-hero-button primary"
+                >
+                    ⛏️ Przeglądaj kategorie
+                </a>
+
+                <a
+                    href="index.html"
+                    class="mc-hero-button"
+                >
+                    ← Strona główna
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="mc-section">
+
+        <div class="mc-section-heading">
+            <h2>Centrum Minecraft</h2>
+
+            <p>
+                Wybierz kategorię, której potrzebujesz.
+            </p>
+        </div>
+
+        <div class="mc-info-grid">
+
+            <article class="mc-info-card">
+                <span class="mc-info-icon">📦</span>
+
+                <h3>Gotowe pliki</h3>
+
+                <p>
+                    Pobieraj przygotowane materiały
+                    do swoich serwerów Minecraft.
+                </p>
+            </article>
+
+            <article class="mc-info-card">
+                <span class="mc-info-icon">⚙️</span>
+
+                <h3>Prosta konfiguracja</h3>
+
+                <p>
+                    Pliki są przygotowywane tak,
+                    aby można było łatwo z nich korzystać.
+                </p>
+            </article>
+
+            <article class="mc-info-card">
+                <span class="mc-info-icon">🌌</span>
+
+                <h3>ShadowTale</h3>
+
+                <p>
+                    Minecraft i Undertale w jednym
+                    kosmicznym świecie ShadowTale.
+                </p>
+            </article>
+
+        </div>
+
+    </section>
+
+    <section class="mc-section" id="kategorie">
+
+        <div class="mc-section-heading">
+
+            <h2>Kategorie Minecraft</h2>
+
+            <p>
+                Aktualnie otwarte są tylko dostępne kategorie.
+                Pozostałe są w trakcie prac technicznych.
+            </p>
+
+        </div>
+
+        <div class="mc-category-grid">
+
+            <!-- SKRYPTY -->
+            <a
+                href="mc-skrypty.html"
+                class="mc-category"
+            >
+
+                <div>
+                    <div class="mc-category-icon">
+                        📜
+                    </div>
+
+                    <h3>Skrypty</h3>
+
+                    <p>
+                        Gotowe skrypty Minecraft,
+                        które możesz wykorzystać
+                        na swoim serwerze.
+                    </p>
+                </div>
+
+                <div class="mc-category-footer">
+
+                    <span class="category-status">
+                        <span class="category-status-dot"></span>
+                        AKTYWNE
+                    </span>
+
+                    <span class="mc-category-button">
+                        Otwórz →
+                    </span>
+
+                </div>
+
+            </a>
+
+            <!-- TXT -->
+            <a
+                href="#"
+                class="mc-category review-blocked"
+                data-review-category="TXT"
+            >
+
+                <div>
+                    <div class="mc-category-icon">
+                        📄
+                    </div>
+
+                    <h3>TXT</h3>
+
+                    <p>
+                        Pliki tekstowe i materiały
+                        pomocnicze do Minecrafta.
+                    </p>
+                </div>
+
+                <div class="mc-category-footer">
+
+                    <span class="category-status status-technical">
+                        <span class="category-status-dot"></span>
+                        PRACE TECHNICZNE
+                    </span>
+
+                    <span class="mc-category-button disabled">
+                        Prace techniczne
+                    </span>
+
+                </div>
+
+            </a>
+
+            <!-- MAPY -->
+            <a
+                href="#"
+                class="mc-category review-blocked"
+                data-review-category="Mapy"
+            >
+
+                <div>
+                    <div class="mc-category-icon">
+                        🗺️
+                    </div>
+
+                    <h3>Mapy</h3>
+
+                    <p>
+                        Gotowe mapy i światy Minecraft
+                        przygotowane przez ShadowTale.
+                    </p>
+                </div>
+
+                <div class="mc-category-footer">
+
+                    <span class="category-status status-technical">
+                        <span class="category-status-dot"></span>
+                        PRACE TECHNICZNE
+                    </span>
+
+                    <span class="mc-category-button disabled">
+                        Prace techniczne
+                    </span>
+
+                </div>
+
+            </a>
+
+            <!-- CONFIGI -->
+            <a
+                href="#"
+                class="mc-category review-blocked"
+                data-review-category="Configi"
+            >
+
+                <div>
+                    <div class="mc-category-icon">
+                        ⚙️
+                    </div>
+
+                    <h3>Configi</h3>
+
+                    <p>
+                        Konfiguracje pluginów i innych
+                        elementów serwerów Minecraft.
+                    </p>
+                </div>
+
+                <div class="mc-category-footer">
+
+                    <span class="category-status status-technical">
+                        <span class="category-status-dot"></span>
+                        PRACE TECHNICZNE
+                    </span>
+
+                    <span class="mc-category-button disabled">
+                        Prace techniczne
+                    </span>
+
+                </div>
+
+            </a>
+
+            <!-- TEKSTURY -->
+            <a
+                href="#"
+                class="mc-category review-blocked"
+                data-review-category="Tekstury"
+            >
+
+                <div>
+                    <div class="mc-category-icon">
+                        🎨
+                    </div>
+
+                    <h3>Tekstury</h3>
+
+                    <p>
+                        Tekstury i materiały graficzne
+                        do Minecrafta.
+                    </p>
+                </div>
+
+                <div class="mc-category-footer">
+
+                    <span class="category-status status-technical">
+                        <span class="category-status-dot"></span>
+                        PRACE TECHNICZNE
+                    </span>
+
+                    <span class="mc-category-button disabled">
+                        Prace techniczne
+                    </span>
+
+                </div>
+
+            </a>
+
+            <!-- SKINY -->
+            <a
+                href="#"
+                class="mc-category review-blocked"
+                data-review-category="Skiny"
+            >
+
+                <div>
+                    <div class="mc-category-icon">
+                        🧑‍🎨
+                    </div>
+
+                    <h3>Skiny</h3>
+
+                    <p>
+                        Skiny Minecraft przygotowane
+                        dla społeczności ShadowTale.
+                    </p>
+                </div>
+
+                <div class="mc-category-footer">
+
+                    <span class="category-status status-technical">
+                        <span class="category-status-dot"></span>
+                        PRACE TECHNICZNE
+                    </span>
+
+                    <span class="mc-category-button disabled">
+                        Prace techniczne
+                    </span>
+
+                </div>
+
+            </a>
+
+            <!-- CUSTOM -->
+            <a
+                href="#"
+                class="mc-category review-blocked"
+                data-review-category="Custom"
+            >
+
+                <div>
+                    <div class="mc-category-icon">
+                        🛠️
+                    </div>
+
+                    <h3>Zamów Custom</h3>
+
+                    <p>
+                        Zamów własny projekt Minecraft
+                        przygotowany specjalnie dla Ciebie.
+                    </p>
+                </div>
+
+                <div class="mc-category-footer">
+
+                    <span class="category-status status-technical">
+                        <span class="category-status-dot"></span>
+                        PRACE TECHNICZNE
+                    </span>
+
+                    <span class="mc-category-button disabled">
+                        Prace techniczne
+                    </span>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <section class="mc-section">
+
+        <div class="mc-proposal">
+
+            <h2>💡 Masz propozycję?</h2>
+
+            <p>
+                Masz pomysł na plik, skrypt, mapę albo
+                coś innego do Minecrafta? Napisz nam,
+                czego brakuje na ShadowTale.
+            </p>
+
+            <a
+                href="propozycje.html"
+                class="mc-proposal-button"
+            >
+                💜 Prześlij propozycję
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="mc-footer">
+
+    <div class="mc-footer-inner">
+
+        <div class="mc-footer-grid">
+
+            <div class="mc-footer-column">
+
+                <h3>
+                    <span style="color:#fff;">Shadow</span><span style="color:#8b5cf6;">Tale</span><span style="color:#5865f2;font-size:13px;">.pl</span>
+                </h3>
+
+                <p>
+                    Minecraft, Undertale, pliki,
+                    poradniki i społeczność.
+                </p>
+
+            </div>
+
+            <div class="mc-footer-column">
+
+                <h3>Minecraft</h3>
+
+                <a href="mc-skrypty.html">
+                    Skrypty
+                </a>
+
+                <a href="#" class="review-blocked">
+                    TXT
+                </a>
+
+                <a href="#" class="review-blocked">
+                    Mapy
+                </a>
+
+                <a href="#" class="review-blocked">
+                    Configi
+                </a>
+
+            </div>
+
+            <div class="mc-footer-column">
+
+                <h3>Materiały</h3>
+
+                <a href="#" class="review-blocked">
+                    Tekstury
+                </a>
+
+                <a href="#" class="review-blocked">
+                    Skiny
+                </a>
+
+                <a href="#" class="review-blocked">
+                    Custom
+                </a>
+
+            </div>
+
+            <div class="mc-footer-column">
+
+                <h3>ShadowTale</h3>
+
+                <a href="index.html">
+                    Strona główna
+                </a>
+
+                <a href="konto.html">
+                    Konto
+                </a>
+
+                <a href="propozycje.html">
+                    Propozycje
+                </a>
+
+                <a
+                    href="https://discord.gg/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Discord
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="mc-footer-bottom">
+
+            <span>
+                © 2026 ShadowTale.pl
+            </span>
+
+            <span>
+                Minecraft × Undertale × ShadowTale
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<button
+    id="mc-chat-button"
+    type="button"
+    aria-label="ShadowChat"
+    title="ShadowChat"
+>
+    💬
+</button>
+
+<button
+    id="mc-stai-button"
+    type="button"
+    aria-label="STAI"
+    title="STAI"
+>
+    🤖
+</button>
+
+<div id="review-modal">
+
+    <div
+        class="review-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="review-title"
+    >
+
+        <div class="review-icon">
+            ⏳
+        </div>
+
+        <h2 id="review-title">
+            Jeszcze chwilę
+        </h2>
+
+        <p>
+            Rozpatrujemy to! Daj nam troszkę więcej czasu.
+            Ta kategoria nie jest jeszcze dostępna.
+        </p>
+
+        <button
+            id="review-close"
+            type="button"
+        >
+            Rozumiem
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+    const stars = document.querySelectorAll(".mc-star");
+
+    stars.forEach((star, index) => {
+        star.style.animationDelay =
+            `${(index % 10) * 0.23}s`;
+    });
+
+    const reviewModal =
+        document.getElementById("review-modal");
+
+    const reviewClose =
+        document.getElementById("review-close");
+
+    const blockedCategories =
+        document.querySelectorAll(".review-blocked");
+
+    function openReviewModal(category) {
+        if (!reviewModal) {
+            return;
+        }
+
+        const title =
+            document.getElementById("review-title");
+
+        if (title && category) {
+            title.textContent =
+                "Jeszcze chwilę";
+        }
+
+        reviewModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeReviewModal() {
+        if (!reviewModal) {
+            return;
+        }
+
+        reviewModal.classList.remove("active");
+        document.body.style.overflow = "";
+    }
+
+    blockedCategories.forEach(card => {
+
+        card.addEventListener("click", event => {
+
+            event.preventDefault();
+
+            const category =
+                card.dataset.reviewCategory || "";
+
+            openReviewModal(category);
+        });
+
+    });
+
+    if (reviewClose) {
+        reviewClose.addEventListener(
+            "click",
+            closeReviewModal
+        );
+    }
+
+    if (reviewModal) {
+        reviewModal.addEventListener(
+            "click",
+            event => {
+
+                if (event.target === reviewModal) {
+                    closeReviewModal();
+                }
+
+            }
+        );
+    }
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+                closeReviewModal();
+            }
+
+        }
+    );
+
+    const searchForm =
+        document.getElementById("mc-search-form");
+
+    const searchInput =
+        document.getElementById("mc-search-input");
+
+    if (searchForm && searchInput) {
+
+        searchForm.addEventListener(
+            "submit",
+            event => {
+
+                event.preventDefault();
+
+                const value =
+                    searchInput.value.trim();
+
+                if (!value) {
+                    return;
+                }
+
+                window.location.href =
+                    `index.html?search=${encodeURIComponent(value)}`;
+            }
+        );
+
+    }
+
+    async function loadMinecraftAccount() {
+
+        const avatar =
+            document.getElementById("mc-account-avatar");
+
+        const name =
+            document.getElementById("mc-account-name");
+
+        if (!avatar || !name) {
+            return;
+        }
+
+        try {
+
+            if (
+                !window.CONFIG ||
+                !window.CONFIG.supabaseUrl ||
+                !window.CONFIG.supabaseKey
+            ) {
+                return;
+            }
+
+            const supabaseClient =
+                window.supabase.createClient(
+                    window.CONFIG.supabaseUrl,
+                    window.CONFIG.supabaseKey,
+                    {
+                        auth: {
+                            persistSession: true,
+                            autoRefreshToken: true,
+                            detectSessionInUrl: true
+                        }
+                    }
+                );
+
+            const {
+                data: sessionData
+            } =
+                await supabaseClient.auth.getSession();
+
+            const user =
+                sessionData?.session?.user;
+
+            if (!user) {
+                name.textContent = "Konto";
+                avatar.src = "assets/logo.png";
+                return;
+            }
+
+            const {
+                data: profile
+            } =
+                await supabaseClient
+                    .from("profiles")
+                    .select(
+                        "username, avatar_url, role"
+                    )
+                    .eq("id", user.id)
+                    .maybeSingle();
+
+            const role =
+                String(
+                    profile?.role || ""
+                )
+                    .trim()
+                    .toLowerCase();
+
+            const username =
+                String(
+                    profile?.username ||
+                    user.user_metadata?.username ||
+                    user.email?.split("@")[0] ||
+                    "Gracz"
+                ).trim();
+
+            if (role === "owner") {
+
+                name.textContent =
+                    "👑 Właściciel";
+
+            } else if (role === "admin") {
+
+                name.textContent =
+                    "🛡️ Administrator";
+
+            } else {
+
+                name.textContent =
+                    username || "Konto";
+            }
+
+            avatar.src =
+                profile?.avatar_url ||
+                "assets/logo.png";
+
+            avatar.alt =
+                `Avatar ${username}`;
+
+            avatar.onerror = () => {
+                avatar.src = "assets/logo.png";
+            };
+
+        } catch (error) {
+
+            console.warn(
+                "Nie udało się pobrać danych konta:",
+                error
+            );
+
+            name.textContent = "Konto";
+            avatar.src = "assets/logo.png";
+        }
+    }
+
+    loadMinecraftAccount();
+
+    const chatButton =
+        document.getElementById("mc-chat-button");
+
+    const staiButton =
+        document.getElementById("mc-stai-button");
+
+    if (chatButton) {
+
+        chatButton.addEventListener(
+            "click",
+            () => {
+
+                alert(
+                    "ShadowChat będzie dostępny wkrótce."
+                );
+
+            }
+        );
+
+    }
+
+    if (staiButton) {
+
+        staiButton.addEventListener(
+            "click",
+            () => {
+
+                alert(
+                    "STAI będzie dostępny wkrótce."
+                );
+
+            }
+        );
+
+    }
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html>

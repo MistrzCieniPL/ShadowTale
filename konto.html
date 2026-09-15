@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Konto — ShadowTale.pl</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    .account-page {
+      min-height: 100vh;
+      padding: 120px 20px 60px;
+      box-sizing: border-box;
+    }
+
+    .account-container {
+      width: min(100%, 1100px);
+      margin: 0 auto;
+    }
+
+    .account-card {
+      background: rgba(8, 8, 18, 0.88);
+      border: 1px solid rgba(120, 80, 255, 0.35);
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow:
+        0 0 30px rgba(90, 50, 255, 0.12),
+        inset 0 0 30px rgba(255, 255, 255, 0.015);
+      backdrop-filter: blur(12px);
+    }
+
+    .account-header {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .account-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(150, 100, 255, 0.7);
+      box-shadow: 0 0 25px rgba(110, 70, 255, 0.35);
+      background: #111;
+    }
+
+    .account-title {
+      margin: 0;
+      font-size: 32px;
+      color: #fff;
+    }
+
+    .account-email {
+      margin: 7px 0 0;
+      color: #aaa;
+      word-break: break-word;
+    }
+
+    .account-section {
+      margin-top: 28px;
+    }
+
+    .account-section h2 {
+      margin: 0 0 15px;
+      color: #fff;
+      font-size: 21px;
+    }
+
+    .account-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .account-info-box {
+      padding: 17px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .account-info-label {
+      display: block;
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .account-info-value {
+      color: #fff;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .roles-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(115, 70, 255, 0.15);
+      border: 1px solid rgba(140, 100, 255, 0.35);
+      color: #eee;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .role-badge.owner {
+      background: rgba(255, 190, 50, 0.13);
+      border-color: rgba(255, 190, 50, 0.45);
+    }
+
+    .role-badge.admin {
+      background: rgba(255, 70, 70, 0.13);
+      border-color: rgba(255, 90, 90, 0.45);
+    }
+
+    .role-badge.media {
+      background: rgba(70, 150, 255, 0.13);
+      border-color: rgba(70, 150, 255, 0.4);
+    }
+
+    .role-badge.programista {
+      background: rgba(50, 220, 170, 0.12);
+      border-color: rgba(50, 220, 170, 0.4);
+    }
+
+    .role-badge.friend {
+      background: rgba(220, 80, 255, 0.12);
+      border-color: rgba(220, 80, 255, 0.4);
+    }
+
+    .role-badge.winner {
+      background: rgba(255, 170, 40, 0.12);
+      border-color: rgba(255, 170, 40, 0.4);
+    }
+
+    .role-badge.early {
+      background: rgba(90, 170, 255, 0.12);
+      border-color: rgba(90, 170, 255, 0.4);
+    }
+
+    .status-active {
+      color: #5dff9b;
+    }
+
+    .account-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 13px;
+    }
+
+    .account-action {
+      position: relative;
+      min-height: 80px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.035);
+      color: #fff;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .account-action:not(.blocked):hover {
+      transform: translateY(-2px);
+      border-color: rgba(130, 90, 255, 0.55);
+      background: rgba(120, 70, 255, 0.08);
+    }
+
+    .account-action-title {
+      display: block;
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    .account-action-description {
+      display: block;
+      color: #999;
+      font-size: 12px;
+    }
+
+    .account-action.blocked {
+      cursor: not-allowed;
+      opacity: 0.48;
+      filter: grayscale(0.35);
+    }
+
+    .lock-icon {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      font-size: 18px;
+    }
+
+    .logout-button {
+      margin-top: 25px;
+      width: 100%;
+      border: 1px solid rgba(255, 70, 70, 0.35);
+      background: rgba(255, 50, 50, 0.08);
+      color: #ff8585;
+      padding: 13px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .logout-button:hover {
+      background: rgba(255, 50, 50, 0.15);
+      border-color: rgba(255, 70, 70, 0.6);
+    }
+
+    .loading-box,
+    .error-box {
+      text-align: center;
+      padding: 50px 20px;
+      color: #aaa;
+    }
+
+    .error-box {
+      color: #ff8585;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .account-page {
+        padding: 100px 12px 40px;
+      }
+
+      .account-card {
+        padding: 20px;
+        border-radius: 17px;
+      }
+
+      .account-title {
+        font-size: 25px;
+      }
+
+      .account-avatar {
+        width: 76px;
+        height: 76px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- GWIAZDY / TŁO -->
+
+<canvas id="stars"></canvas>
+
+  <!-- HEADER -->
+
+  <header class="site-header">
+    <div class="site-header-inner">
+
+  <a href="index.html" class="site-logo">
+    <span id="site-title">ShadowTale.pl</span>
+  </a>
+
+  <nav class="site-nav">
+    <a href="index.html">Strona główna</a>
+    <a href="minecraft.html">Minecraft</a>
+    <a href="undertale.html">Undertale</a>
+    <a href="centrum-pomocy.html">Pomoc</a>
+  </nav>
+
+  <a href="konto.html" id="account-button" class="account-button">
+    Konto
+  </a>
+
+</div>
+
+  </header>
+
+  <!-- KONTO -->
+
+  <main class="account-page">
+    <div class="account-container">
+
+  <div id="account-loading" class="account-card loading-box">
+    Ładowanie konta...
+  </div>
+
+  <div id="account-error" class="account-card error-box hidden">
+    Nie udało się załadować konta.
+  </div>
+
+  <section id="account-content" class="account-card hidden">
+
+    <div class="account-header">
+      <img
+        id="account-avatar"
+        class="account-avatar"
+        src="assets/logo.png"
+        alt="Avatar"
+      >
+
+      <div>
+        <h1 class="account-title">
+          <span id="account-username">Klient</span>
+        </h1>
+
+        <p class="account-email">
+          <span id="account-email">—</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- INFORMACJE -->
+    <div class="account-section">
+      <h2>Informacje o koncie</h2>
+
+      <div class="account-info-grid">
+
+        <div class="account-info-box">
+          <span class="account-info-label">Nazwa użytkownika</span>
+          <span id="info-username" class="account-info-value">—</span>
+        </div>
+
+        <div class="account-info-box">
+          <span class="account-info-label">E-mail</span>
+          <span id="info-email" class="account-info-value">—</span>
+        </div>
+
+        <div class="account-info-box">
+          <span class="account-info-label">Status konta</span>
+          <span class="account-info-value status-active">
+            Aktywne
+          </span>
+        </div>
+
+        <div class="account-info-box">
+          <span class="account-info-label">ID użytkownika</span>
+          <span id="info-id" class="account-info-value">—</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RANGI -->
+    <div class="account-section">
+      <h2>Twoje rangi</h2>
+
+      <div id="roles-list" class="roles-list">
+        <span class="role-badge">
+          👤 Klient
+        </span>
+      </div>
+    </div>
+
+    <!-- FUNKCJE -->
+    <div class="account-section">
+      <h2>Funkcje konta</h2>
+
+      <div class="account-actions">
+
+        <button
+          type="button"
+          class="account-action blocked"
+          data-blocked-feature="Historia"
+        >
+          <span class="lock-icon">🔒</span>
+          <span class="account-action-title">
+            📜 Historia
+          </span>
+          <span class="account-action-description">
+            Historia zakupów i aktywności
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="account-action blocked"
+          data-blocked-feature="Płatności"
+        >
+          <span class="lock-icon">🔒</span>
+          <span class="account-action-title">
+            💳 Płatności
+          </span>
+          <span class="account-action-description">
+            Metody płatności i transakcje
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="account-action blocked"
+          data-blocked-feature="Ustawienia"
+        >
+          <span class="lock-icon">🔒</span>
+          <span class="account-action-title">
+            ⚙️ Ustawienia
+          </span>
+          <span class="account-action-description">
+            Ustawienia konta
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="account-action blocked"
+          data-blocked-feature="Statystyki"
+        >
+          <span class="lock-icon">🔒</span>
+          <span class="account-action-title">
+            📊 Statystyki
+          </span>
+          <span class="account-action-description">
+            Statystyki konta
+          </span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- WYLOGOWANIE -->
+    <button id="logout-button" class="logout-button">
+      Wyloguj się
+    </button>
+
+  </section>
+
+</div>
+
+
+  </main>
+
+  <!-- SHADOWCHAT -->
+
+  <div id="shadowchat-container"></div>
+
+  <!-- STAI -->
+
+  <div id="stai-container"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const loading = document.getElementById("account-loading");
+      const errorBox = document.getElementById("account-error");
+      const content = document.getElementById("account-content");
+
+      const avatar = document.getElementById("account-avatar");
+      const username = document.getElementById("account-username");
+      const email = document.getElementById("account-email");
+
+      const infoUsername = document.getElementById("info-username");
+      const infoEmail = document.getElementById("info-email");
+      const infoId = document.getElementById("info-id");
+
+      const rolesList = document.getElementById("roles-list");
+      const logoutButton = document.getElementById("logout-button");
+
+      let supabaseClient = null;
+
+      /*
+       * ============================
+       * SUPABASE
+       * ============================
+       */
+
+      function getConfig() {
+        const config =
+          window.CONFIG ||
+          window.SHADOWTALE_CONFIG ||
+          {};
+
+        return {
+          url: config.supabaseUrl || config.SUPABASE_URL || "",
+          key: config.supabaseKey || config.SUPABASE_KEY || ""
+        };
+      }
+
+      function createSupabase() {
+        const config = getConfig();
+
+        if (!config.url || !config.key) {
+          throw new Error(
+            "Brak supabaseUrl lub supabaseKey w config.js."
+          );
+        }
+
+        if (!window.supabase || !window.supabase.createClient) {
+          throw new Error(
+            "Biblioteka Supabase nie została załadowana."
+          );
+        }
+
+        /*
+         * WAŻNE:
+         * Nie ustawiamy tutaj własnego storageKey.
+         *
+         * Dzięki temu konto korzysta z tej samej sesji,
+         * co login.html oraz pozostałe strony.
+         */
+        return window.supabase.createClient(
+          config.url,
+          config.key,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          }
+        );
+      }
+
+      /*
+       * ============================
+       * RANGI
+       * ============================
+       */
+
+      const ROLE_INFO = {
+        owner: {
+          label: "Właściciel",
+          icon: "👑",
+          className: "owner"
+        },
+
+        admin: {
+          label: "Admin",
+          icon: "🛡️",
+          className: "admin"
+        },
+
+        programista: {
+          label: "Programista",
+          icon: "💻",
+          className: "programista"
+        },
+
+        moderator: {
+          label: "Moderator",
+          icon: "🔨",
+          className: ""
+        },
+
+        support: {
+          label: "Support",
+          icon: "🎧",
+          className: ""
+        },
+
+        early_access: {
+          label: "Early Access",
+          icon: "⭐",
+          className: "early"
+        },
+
+        "early access": {
+          label: "Early Access",
+          icon: "⭐",
+          className: "early"
+        },
+
+        media: {
+          label: "Media",
+          icon: "📹",
+          className: "media"
+        },
+
+        trusted_media: {
+          label: "Trusted Media",
+          icon: "🎥",
+          className: "media"
+        },
+
+        "trusted media": {
+          label: "Trusted Media",
+          icon: "🎥",
+          className: "media"
+        },
+
+        super_media: {
+          label: "Super Media",
+          icon: "🔥",
+          className: "media"
+        },
+
+        "super media": {
+          label: "Super Media",
+          icon: "🔥",
+          className: "media"
+        },
+
+        starter_media: {
+          label: "Starter Media",
+          icon: "🎬",
+          className: "media"
+        },
+
+        "starter media": {
+          label: "Starter Media",
+          icon: "🎬",
+          className: "media"
+        },
+
+        friend: {
+          label: "Friend",
+          icon: "💜",
+          className: "friend"
+        },
+
+        content_winner: {
+          label: "Wygrany konkurs",
+          icon: "🏆",
+          className: "winner"
+        },
+
+        "content winner": {
+          label: "Wygrany konkurs",
+          icon: "🏆",
+          className: "winner"
+        },
+
+        "wygrany konkurs": {
+          label: "Wygrany konkurs",
+          icon: "🏆",
+          className: "winner"
+        },
+
+        klient: {
+          label: "Klient",
+          icon: "👤",
+          className: ""
+        },
+
+        user: {
+          label: "Klient",
+          icon: "👤",
+          className: ""
+        }
+      };
+
+      function normalizeRole(role) {
+        return String(role || "")
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, " ");
+      }
+
+      function parseRoles(roleValue) {
+        if (!roleValue) {
+          return ["klient"];
+        }
+
+        /*
+         * Obsługa przyszłego systemu wielu rang:
+         *
+         * owner,media,friend
+         *
+         * owner;media;friend
+         *
+         * ["owner","media","friend"]
+         */
+
+        if (Array.isArray(roleValue)) {
+          return roleValue
+            .map(normalizeRole)
+            .filter(Boolean);
+        }
+
+        const text = String(roleValue).trim();
+
+        if (!text) {
+          return ["klient"];
+        }
+
+        if (
+          text.startsWith("[") &&
+          text.endsWith("]")
+        ) {
+          try {
+            const parsed = JSON.parse(text);
+
+            if (Array.isArray(parsed)) {
+              return parsed
+                .map(normalizeRole)
+                .filter(Boolean);
+            }
+          } catch (_) {
+            // Nie jest JSON-em — przechodzimy dalej.
+          }
+        }
+
+        const roles = text
+          .split(/[,;|]/)
+          .map(normalizeRole)
+          .filter(Boolean);
+
+        return roles.length ? roles : ["klient"];
+      }
+
+      function renderRoles(roleValue) {
+        const roles = parseRoles(roleValue);
+
+        rolesList.innerHTML = "";
+
+        const uniqueRoles = [
+          ...new Set(roles)
+        ];
+
+        uniqueRoles.forEach(role => {
+          const info =
+            ROLE_INFO[role] ||
+            {
+              label: role,
+              icon: "🏷️",
+              className: ""
+            };
+
+          const badge =
+            document.createElement("span");
+
+          badge.className =
+            "role-badge " +
+            info.className;
+
+          badge.textContent =
+            `${info.icon} ${info.label}`;
+
+          rolesList.appendChild(badge);
+        });
+      }
+
+      /*
+       * ============================
+       * PROFIL
+       * ============================
+       */
+
+      async function getProfile(userId) {
+        if (!userId) {
+          return null;
+        }
+
+        const {
+          data,
+          error
+        } = await supabaseClient
+          .from("profiles")
+          .select("username, avatar_url, role")
+          .eq("id", userId)
+          .maybeSingle();
+
+        if (error) {
+          console.error(
+            "ShadowTale: błąd pobierania profilu:",
+            error
+          );
+
+          /*
+           * Nie wylogowujemy użytkownika,
+           * jeżeli sam profil ma problem.
+           */
+          return null;
+        }
+
+        return data || null;
+      }
+
+      function getUsername(user, profile) {
+        return (
+          profile?.username ||
+          user?.user_metadata?.username ||
+          user?.user_metadata?.name ||
+          user?.email?.split("@")[0] ||
+          "Klient"
+        );
+      }
+
+      function getAvatar(profile) {
+        return (
+          profile?.avatar_url ||
+          "assets/logo.png"
+        );
+      }
+
+      /*
+       * ============================
+       * WYŚWIETLANIE KONTA
+       * ============================
+       */
+
+      async function loadAccount() {
+        try {
+          supabaseClient = createSupabase();
+
+          const {
+            data,
+            error
+          } = await supabaseClient.auth.getSession();
+
+          if (error) {
+            throw error;
+          }
+
+          const session = data?.session;
+
+          if (!session?.user) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const user = session.user;
+
+          const profile =
+            await getProfile(user.id);
+
+          const displayName =
+            getUsername(user, profile);
+
+          const displayEmail =
+            user.email || "—";
+
+          const displayAvatar =
+            getAvatar(profile);
+
+          /*
+           * Dane nagłówka
+           */
+          username.textContent =
+            displayName;
+
+          email.textContent =
+            displayEmail;
+
+          avatar.src =
+            displayAvatar;
+
+          avatar.onerror = () => {
+            avatar.src = "assets/logo.png";
+          };
+
+          /*
+           * Dane informacji
+           */
+          infoUsername.textContent =
+            displayName;
+
+          infoEmail.textContent =
+            displayEmail;
+
+          infoId.textContent =
+            user.id;
+
+          /*
+           * RANGI
+           *
+           * Jeżeli profiles.role = owner,
+           * pokaże Właściciel.
+           *
+           * Jeżeli profiles.role = admin,
+           * pokaże Admin.
+           *
+           * Jeżeli role zawiera kilka rang,
+           * pokaże wszystkie.
+           */
+          renderRoles(
+            profile?.role || "klient"
+          );
+
+          loading.classList.add("hidden");
+          errorBox.classList.add("hidden");
+          content.classList.remove("hidden");
+
+          console.log(
+            "ShadowTale konto:",
+            {
+              userId: user.id,
+              username: displayName,
+              role: profile?.role || "klient"
+            }
+          );
+
+        } catch (error) {
+          console.error(
+            "ShadowTale: błąd konta:",
+            error
+          );
+
+          loading.classList.add("hidden");
+          content.classList.add("hidden");
+          errorBox.classList.remove("hidden");
+
+          errorBox.innerHTML = `
+            Nie udało się załadować konta.<br>
+            <small>
+              Sprawdź konfigurację Supabase oraz tabelę
+              <strong>profiles</strong>.
+            </small>
+          `;
+        }
+      }
+
+      /*
+       * ============================
+       * BLOKADY
+       * ============================
+       */
+
+      document
+        .querySelectorAll("[data-blocked-feature]")
+        .forEach(button => {
+
+          button.addEventListener("click", () => {
+
+            const feature =
+              button.dataset.blockedFeature ||
+              "Ta funkcja";
+
+            alert(
+              `🔒 ${feature} jest obecnie zablokowana.`
+            );
+
+          });
+
+        });
+
+      /*
+       * ============================
+       * WYLOGOWANIE
+       * ============================
+       */
+
+      logoutButton.addEventListener(
+        "click",
+        async () => {
+
+          logoutButton.disabled = true;
+          logoutButton.textContent =
+            "Wylogowywanie...";
+
+          try {
+
+            const {
+              error
+            } = await supabaseClient.auth.signOut();
+
+            if (error) {
+              throw error;
+            }
+
+            window.location.href =
+              "index.html";
+
+          } catch (error) {
+
+            console.error(
+              "ShadowTale: błąd wylogowania:",
+              error
+            );
+
+            logoutButton.disabled = false;
+            logoutButton.textContent =
+              "Wyloguj się";
+
+            alert(
+              "Nie udało się wylogować. Spróbuj ponownie."
+            );
+          }
+
+        }
+      );
+
+      /*
+       * ============================
+       * START
+       * ============================
+       */
+
+      loadAccount();
+
+    })();
+  </script>
+
+  <!-- APP.JS -->
+
+  <script src="app.js"></script>
+
+</body>
+</html>
