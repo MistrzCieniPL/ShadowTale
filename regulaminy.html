@@ -2,121 +2,1326 @@
 <html lang="pl">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Regulaminy — ShadowTale.pl</title>
 
-<title>Regulamin — ShadowTale.pl</title>
+    <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background: #05050d;
+            color: #f5f3ff;
+
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        /* =========================================================
+           GÓRNY PASEK
+        ========================================================= */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            width: 100%;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(12, 13, 30, 0.98),
+                    rgba(7, 8, 20, 0.97)
+                );
+
+            border-bottom: 1px solid rgba(157, 124, 255, 0.20);
+
+            box-shadow:
+                0 6px 28px rgba(0, 0, 0, 0.38);
+
+            backdrop-filter: blur(14px);
+        }
+
+
+        .header-inner {
+            width: min(1250px, calc(100% - 40px));
+
+            height: 70px;
+
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+
+            gap: 18px;
+        }
+
+
+        /* =========================================================
+           LOGO
+        ========================================================= */
+
+        .logo {
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            flex-shrink: 0;
+
+            color: white;
+            text-decoration: none;
+        }
+
+
+        .logo img {
+            width: 42px;
+            height: 42px;
+
+            display: block;
+
+            object-fit: contain;
+
+            border-radius: 10px;
+        }
+
+
+        .logo-text {
+            display: flex;
+            align-items: baseline;
+
+            white-space: nowrap;
+
+            font-size: 18px;
+            font-weight: 900;
+
+            letter-spacing: 0.6px;
+        }
+
+
+        .logo-shadow {
+            color: #ffffff;
+        }
+
+
+        .logo-tale {
+            color: #a487ff;
+        }
+
+
+        .logo-pl {
+            color: #77738f;
+        }
+
+
+        /* =========================================================
+           WYSZUKIWARKA
+        ========================================================= */
+
+        .header-search {
+            position: relative;
+
+            flex: 1;
+
+            min-width: 0;
+            max-width: 650px;
+
+            margin: 0 auto;
+        }
+
+
+        #global-search-form {
+            width: 100%;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+
+            overflow: hidden;
+
+            border-radius: 12px;
+
+            background: rgba(255, 255, 255, 0.055);
+
+            border: 1px solid rgba(255, 255, 255, 0.11);
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        #global-search-form:focus-within {
+            background: rgba(255, 255, 255, 0.075);
+
+            border-color: rgba(164, 135, 255, 0.65);
+
+            box-shadow:
+                0 0 0 3px rgba(164, 135, 255, 0.09);
+        }
+
+
+        #global-search {
+            flex: 1;
+
+            width: 100%;
+            height: 100%;
+
+            min-width: 0;
+
+            padding: 0 15px;
+
+            border: 0;
+            outline: 0;
+
+            background: transparent;
+
+            color: #ffffff;
+
+            font-size: 13px;
+        }
+
+
+        #global-search::placeholder {
+            color: #858198;
+        }
+
+
+        #search-button {
+            width: 44px;
+            height: 100%;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 0;
+
+            background: transparent;
+
+            color: #aaa2c4;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease;
+        }
+
+
+        #search-button:hover {
+            background: rgba(157, 124, 255, 0.13);
+
+            color: white;
+        }
+
+
+        #search-results {
+            position: absolute;
+
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+
+            z-index: 2000;
+        }
+
+
+        /* =========================================================
+           PRZYCISKI PO PRAWEJ
+        ========================================================= */
+
+        .header-actions {
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+
+            flex-shrink: 0;
+        }
+
+
+        .header-button {
+            height: 42px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            padding: 0 13px;
+
+            border-radius: 11px;
+
+            border: 1px solid rgba(255, 255, 255, 0.10);
+
+            background: rgba(255, 255, 255, 0.045);
+
+            color: #eeeeff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            white-space: nowrap;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        .header-button:hover {
+            background: rgba(157, 124, 255, 0.14);
+
+            border-color: rgba(157, 124, 255, 0.36);
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================================
+           KONTO
+        ========================================================= */
+
+        #account-button {
+            padding-left: 7px;
+            padding-right: 13px;
+        }
+
+
+        #account-avatar {
+            width: 30px;
+            height: 30px;
+
+            display: block;
+
+            object-fit: cover;
+
+            border-radius: 8px;
+
+            border: 1px solid rgba(157, 124, 255, 0.30);
+        }
+
+
+        #account-name {
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           GŁÓWNA ZAWARTOŚĆ
+        ========================================================= */
+
+        .rules-container {
+            width: min(1050px, calc(100% - 40px));
+
+            margin: 0 auto;
+
+            padding: 55px 0 20px;
+        }
+
+
+        .rules-hero {
+            padding: 32px;
+
+            margin-bottom: 26px;
+
+            border-radius: 20px;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(125, 92, 255, 0.17),
+                    transparent 45%
+                ),
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.025)
+                );
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+
+
+        .rules-hero h1 {
+            margin: 0 0 10px;
+
+            font-size: clamp(28px, 4vw, 42px);
+
+            line-height: 1.1;
+        }
+
+
+        .rules-hero p {
+            margin: 0;
+
+            color: #aaa5bc;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+        }
+
+
+        .rules-info {
+            margin-top: 18px;
+
+            padding: 12px 15px;
+
+            border-radius: 12px;
+
+            background: rgba(157, 124, 255, 0.07);
+
+            border: 1px solid rgba(157, 124, 255, 0.13);
+
+            color: #9e99ae;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================================
+           ROZWIJANE ZASADY
+        ========================================================= */
+
+        .rules-list {
+            display: flex;
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+
+        .rule-card {
+            overflow: hidden;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(255, 255, 255, 0.025)
+                );
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
+
+
+        .rule-card:hover {
+            border-color: rgba(157, 124, 255, 0.28);
+        }
+
+
+        .rule-card[open] {
+            border-color: rgba(157, 124, 255, 0.38);
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.20);
+        }
+
+
+        .rule-card summary {
+            position: relative;
+
+            min-height: 60px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 55px 0 20px;
+
+            cursor: pointer;
+
+            list-style: none;
+
+            font-size: 15px;
+            font-weight: 800;
+
+            user-select: none;
+        }
+
+
+        .rule-card summary::-webkit-details-marker {
+            display: none;
+        }
+
+
+        .rule-card summary::after {
+            content: "+";
+
+            position: absolute;
+
+            right: 20px;
+
+            color: #a487ff;
+
+            font-size: 21px;
+            font-weight: 400;
+
+            transition: transform 0.2s ease;
+        }
+
+
+        .rule-card[open] summary::after {
+            content: "−";
+        }
+
+
+        .rule-content {
+            padding: 0 20px 20px;
+
+            color: #aaa5b8;
+
+            font-size: 13px;
+
+            line-height: 1.75;
+        }
+
+
+        .rule-content p {
+            margin: 0 0 12px;
+        }
+
+
+        .rule-content p:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .rule-content ul {
+            margin: 8px 0 0;
+
+            padding-left: 22px;
+        }
+
+
+        .rule-content li {
+            margin-bottom: 7px;
+        }
+
+
+        .rule-content strong {
+            color: #eeeaff;
+        }
+
+
+        .rule-content a {
+            color: #a487ff;
+
+            text-decoration: none;
+        }
+
+
+        .rule-content a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .site-footer {
+            margin-top: 70px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(7, 8, 20, 0.96),
+                    rgba(4, 5, 13, 1)
+                );
+
+            border-top: 1px solid rgba(120, 100, 255, 0.18);
+        }
+
+
+        .footer-inner {
+            width: min(1250px, calc(100% - 40px));
+
+            margin: 0 auto;
+
+            padding: 34px 0 17px;
+        }
+
+
+        .footer-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.4fr
+                1fr
+                1fr
+                1fr
+                1.2fr;
+
+            gap: 30px;
+        }
+
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .footer-column h3 {
+            margin: 0 0 7px;
+
+            color: #ffffff;
+
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+
+        .footer-column a {
+            width: fit-content;
+
+            color: #858198;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            transition:
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        .footer-column a:hover {
+            color: #bdaeff;
+
+            transform: translateX(2px);
+        }
+
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+
+            margin-bottom: 8px;
+
+            text-decoration: none;
+        }
+
+
+        .footer-brand img {
+            width: 34px;
+            height: 34px;
+
+            object-fit: contain;
+
+            border-radius: 9px;
+        }
+
+
+        .footer-brand-text {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+
+        .footer-description {
+            max-width: 230px;
+
+            margin: 0;
+
+            color: #716d82;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+        .footer-bottom {
+            margin-top: 30px;
+
+            padding-top: 15px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+            color: #646074;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 950px) {
+
+            .header-inner {
+                width: calc(100% - 28px);
+
+                gap: 12px;
+            }
+
+
+            .logo-text {
+                display: none;
+            }
+
+
+            .header-search {
+                max-width: none;
+            }
+
+
+            .header-button span {
+                display: none;
+            }
+
+
+            .header-button {
+                width: 42px;
+
+                padding: 0;
+            }
+
+
+            #account-button {
+                width: auto;
+
+                padding: 0 9px;
+            }
+
+
+            #account-name {
+                display: none;
+            }
+
+
+            .footer-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .header-inner {
+                width: calc(100% - 16px);
+
+                height: 60px;
+
+                gap: 8px;
+            }
+
+
+            .logo {
+                height: 42px;
+            }
+
+
+            .logo img {
+                width: 38px;
+                height: 38px;
+            }
+
+
+            #global-search-form {
+                height: 38px;
+            }
+
+
+            #search-button {
+                width: 40px;
+            }
+
+
+            .header-actions {
+                gap: 5px;
+            }
+
+
+            .header-button {
+                width: 38px;
+                height: 38px;
+
+                border-radius: 9px;
+            }
+
+
+            #account-button {
+                width: 38px;
+
+                padding: 0;
+            }
+
+
+            #account-avatar {
+                width: 27px;
+                height: 27px;
+            }
+
+
+            .rules-container {
+                width: calc(100% - 20px);
+
+                padding-top: 30px;
+            }
+
+
+            .rules-hero {
+                padding: 23px;
+
+                border-radius: 16px;
+            }
+
+
+            .rule-card summary {
+                min-height: 55px;
+
+                padding-left: 16px;
+                padding-right: 50px;
+
+                font-size: 14px;
+            }
+
+
+            .rule-content {
+                padding: 0 16px 17px;
+            }
+
+
+            .footer-inner {
+                width: calc(100% - 24px);
+
+                padding-top: 25px;
+            }
+
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+
+                gap: 25px 15px;
+            }
+
+
+            .footer-bottom {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<canvas id="stars"></canvas>
+    <div id="stars"></div>
 
-<header class="site-header">
 
-<a class="site-logo" href="index.html">
-<img src="assets/logo.png" alt="ShadowTale.pl">
-<span>ShadowTale.pl</span>
-</a>
+    <!-- =========================================================
+         HEADER
+    ========================================================= -->
 
-<div class="header-search">
-<input id="site-search" type="search" placeholder="Szukaj..." autocomplete="off">
-<div id="search-results" class="search-results"></div>
-</div>
+    <header class="site-header">
 
-<button id="account-button" class="account-button" type="button">Konto</button>
+        <div class="header-inner">
 
-</header>
+            <a href="index.html" class="logo">
 
-<main class="container">
+                <img
+                    src="assets/logo.png"
+                    alt="ShadowTale"
+                >
 
-<section class="hero">
+                <span class="logo-text">
+                    <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span><span class="logo-pl">.PL</span>
+                </span>
 
-<h1>📜 Regulamin ShadowTale</h1>
+            </a>
 
-<p>
-Zasady obowiązujące w ShadowTale.
-</p>
 
-</section>
+            <div class="header-search">
 
-<section class="section">
+                <form
+                    id="global-search-form"
+                    autocomplete="off"
+                >
 
-<div class="card">
+                    <input
+                        type="search"
+                        id="global-search"
+                        placeholder="Szukaj plików, skryptów, map..."
+                        autocomplete="off"
+                    >
 
-<h2>1. Minecraft</h2>
+                    <button
+                        id="search-button"
+                        type="submit"
+                        aria-label="Szukaj"
+                    >
+                        🔎
+                    </button>
 
-<p>
-Materiały Minecraft udostępniane przez
-ShadowTale należy wykorzystywać zgodnie
-z opisem danego projektu i jego licencją.
-</p>
+                </form>
 
-</div>
+                <div id="search-results"></div>
 
-<br>
+            </div>
 
-<div class="card">
 
-<h2>2. Undertale</h2>
+            <div class="header-actions">
 
-<p>
-Materiały związane z Undertale są
-udostępniane w celach określonych
-przy danym projekcie.
-</p>
+                <a
+                    href="admin.html"
+                    id="panel-button"
+                    class="header-button"
+                    style="display:none;"
+                >
+                    🛡️
+                    <span>Panel</span>
+                </a>
 
-</div>
 
-<br>
+                <a
+                    href="media.html"
+                    class="header-button blocked-feature"
+                    data-blocked="media"
+                >
+                    🎬
+                    <span>Media</span>
+                </a>
 
-<div class="card">
 
-<h2>3. Zasady ogólne</h2>
+                <a
+                    href="login.html"
+                    id="account-button"
+                    class="header-button"
+                    aria-label="Zaloguj się"
+                >
 
-<p>
-Zabrania się wykorzystywania strony
-do działań szkodliwych, oszustw oraz
-łamania prawa.
-</p>
+                    <img
+                        id="account-avatar"
+                        src="assets/logo.png"
+                        alt="ShadowTale"
+                    >
 
-</div>
+                    <span id="account-name">
+                        Zaloguj się
+                    </span>
 
-<br>
+                </a>
 
-<div class="card">
+            </div>
 
-<h2>4. Discord</h2>
+        </div>
 
-<p>
-Na serwerze Discord obowiązują zasady
-ShadowTale oraz zasady platformy Discord.
-</p>
+    </header>
 
-</div>
 
-</section>
+    <!-- =========================================================
+         TREŚĆ
+    ========================================================= -->
 
-</main>
+    <main class="rules-container">
 
-<footer class="footer">
-<div class="footer-links">
-<a href="index.html">Start</a>
-<a href="minecraft.html">Minecraft</a>
-<a href="undertale.html">Undertale</a>
-<a href="custom.html">Custom</a>
-<a href="discord.html">Discord</a>
-<a href="regulamin.html">Regulamin</a>
-</div>
-ShadowTale © 2026
-</footer>
+        <section class="rules-hero">
 
-<script src="app.js"></script>
+            <h1>📜 Regulaminy ShadowTale</h1>
+
+            <p>
+                Zbiór zasad obowiązujących na stronie ShadowTale.pl,
+                przy korzystaniu z materiałów, zakupach oraz usługach.
+            </p>
+
+            <div class="rules-info">
+                Kliknij wybraną sekcję, aby rozwinąć jej treść.
+            </div>
+
+        </section>
+
+
+        <section class="rules-list">
+
+            <details class="rule-card">
+                <summary>1. Minecraft</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Materiały związane z Minecraft udostępniane
+                        przez ShadowTale należy wykorzystywać zgodnie
+                        z opisem danego projektu.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Nie wolno rozpowszechniać zakupionych
+                            materiałów bez odpowiedniej zgody.
+                        </li>
+
+                        <li>
+                            Nie należy przedstawiać cudzych materiałów
+                            jako własnych.
+                        </li>
+
+                        <li>
+                            Projekt może posiadać dodatkowe zasady
+                            dotyczące jego użytkowania.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <details class="rule-card">
+                <summary>2. Undertale</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Materiały związane z Undertale są udostępniane
+                        zgodnie z informacjami podanymi przy konkretnym
+                        projekcie.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Pliki należy wykorzystywać zgodnie
+                            z ich przeznaczeniem.
+                        </li>
+
+                        <li>
+                            Nie wolno rozpowszechniać materiałów
+                            w sposób naruszający prawa ich właścicieli.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <details class="rule-card">
+                <summary>3. Zasady ogólne</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Każdy użytkownik ShadowTale powinien korzystać
+                        ze strony zgodnie z prawem i zasadami serwisu.
+                    </p>
+
+                    <ul>
+                        <li>Zabronione jest wykorzystywanie strony do oszustw.</li>
+                        <li>Zabronione jest celowe zakłócanie działania strony.</li>
+                        <li>
+                            Nie wolno uzyskiwać nieautoryzowanego dostępu
+                            do kont, paneli lub danych innych osób.
+                        </li>
+                        <li>
+                            Nie wolno wykorzystywać błędów strony
+                            do uzyskania nieuprawnionych korzyści.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <details class="rule-card">
+                <summary>4. Discord</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Korzystając z serwera Discord ShadowTale,
+                        należy przestrzegać zasad serwera oraz
+                        zasad platformy Discord.
+                    </p>
+
+                    <ul>
+                        <li>Zakazane jest celowe spamowanie.</li>
+                        <li>Należy zachowywać kulturę wypowiedzi.</li>
+                        <li>
+                            Administracja może reagować na naruszenia
+                            zasad serwera.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <details class="rule-card">
+                <summary>5. Konto i bezpieczeństwo</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Użytkownik odpowiada za bezpieczeństwo
+                        swojego konta oraz danych logowania.
+                    </p>
+
+                    <ul>
+                        <li>Nie należy udostępniać hasła innym osobom.</li>
+                        <li>Nie należy udostępniać danych dostępowych.</li>
+                        <li>
+                            W przypadku problemu z kontem należy
+                            skontaktować się z administracją.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <details class="rule-card">
+                <summary>6. Zakupy i pliki</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Przed dokonaniem zakupu należy zapoznać się
+                        z opisem produktu oraz informacjami podanymi
+                        na jego stronie.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Produkt należy pobierać za pomocą
+                            dostępnych funkcji strony.
+                        </li>
+
+                        <li>
+                            Zakupionych materiałów nie należy
+                            udostępniać osobom trzecim, jeśli
+                            warunki produktu tego zabraniają.
+                        </li>
+
+                        <li>
+                            Problemy z zakupem lub plikiem można
+                            zgłaszać administracji.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <details class="rule-card">
+                <summary>7. Pomoc i zgłoszenia</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Problemy techniczne, pytania oraz zgłoszenia
+                        można kierować poprzez dostępne na stronie
+                        formy kontaktu.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Zgłoszenie powinno zawierać dokładny
+                            opis problemu.
+                        </li>
+
+                        <li>
+                            W przypadku błędu warto podać informacje
+                            pozwalające odtworzyć problem.
+                        </li>
+
+                        <li>
+                            Zgłoszenia należy tworzyć w odpowiedniej
+                            kategorii.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <details class="rule-card">
+                <summary>8. Prywatność i cookies</summary>
+
+                <div class="rule-content">
+                    <p>
+                        Informacje dotyczące prywatności oraz plików
+                        cookies znajdują się w odpowiednich dokumentach.
+                    </p>
+
+                    <ul>
+                        <li>
+                            <a href="prywatnosc.html">
+                                Polityka prywatności
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="cookies.html">
+                                Cookies
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================= -->
+
+    <footer class="site-footer">
+
+        <div class="footer-inner">
+
+            <div class="footer-grid">
+
+                <div class="footer-column">
+
+                    <a href="index.html" class="footer-brand">
+
+                        <img
+                            src="assets/logo.png"
+                            alt="ShadowTale"
+                        >
+
+                        <span class="footer-brand-text">
+                            <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span><span class="logo-pl">.PL</span>
+                        </span>
+
+                    </a>
+
+                    <p class="footer-description">
+                        ShadowTale.pl — Twój świat, twoje zasady.
+                    </p>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h3>Minecraft</h3>
+
+                    <a href="minecraft.html">Wszystkie</a>
+                    <a href="mc-skrypty.html">Skrypty</a>
+                    <a href="mc-mapy.html">Mapy</a>
+                    <a href="mc-configi.html">Configi</a>
+                    <a href="mc-txt.html">TXT</a>
+                    <a href="mc-skiny.html">Skiny</a>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h3>Undertale</h3>
+
+                    <a href="undertale.html">Wszystkie</a>
+                    <a href="ut-postacie.html">Lore postaci</a>
+                    <a href="ut-przedmioty.html">Lore przedmiotów</a>
+                    <a href="ut-dane.html">Dane / wykresy</a>
+                    <a href="ut-save.html">Save'y</a>
+                    <a href="ut-mody.html">Mody</a>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h3>Konto</h3>
+
+                    <a href="konto.html">Konto</a>
+                    <a href="ustawienia.html">Ustawienia</a>
+                    <a href="statystyki.html">Statystyki</a>
+                    <a href="historia.html">Historia</a>
+                    <a href="platnosci.html">Płatności</a>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h3>Pomoc</h3>
+
+                    <a href="pomoc.html">Centrum pomocy</a>
+                    <a href="ticket.html">Ticket</a>
+                    <a href="regulaminy.html">Regulaminy</a>
+                    <a href="prywatnosc.html">Prywatność</a>
+                    <a href="cookies.html">Cookies</a>
+                    <a href="zasady-zakupow.html">Zasady zakupów</a>
+                    <a href="discord.html">Discord</a>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 ShadowTale.pl
+                </span>
+
+                <span>
+                    Twój świat, twoje zasady.
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <script src="app.js"></script>
 
 </body>
-</html> 
+
+</html>
