@@ -1,0 +1,2701 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>ShadowTale.pl — Skrypty Minecraft</title>
+
+<meta
+    name="description"
+    content="ShadowTale.pl — Skrypty Minecraft."
+>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- CONFIG -->
+<script src="config.js"></script>
+
+<style>
+    :root {
+        --bg: #050712;
+        --bg2: #080b18;
+        --panel: rgba(12,16,34,.88);
+        --panel2: rgba(15,20,42,.92);
+
+        --purple: #8b5cf6;
+        --purple-light: #a78bfa;
+        --blue: #5865f2;
+
+        --green: #39ff88;
+        --red: #ff5c6c;
+        --yellow: #ffd166;
+
+        --text: #f8fafc;
+        --muted: #94a3b8;
+
+        --border: rgba(139,92,246,.22);
+        --shadow: 0 25px 80px rgba(0,0,0,.45);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+
+        color: var(--text);
+
+        background:
+            radial-gradient(
+                circle at 50% -10%,
+                rgba(88,101,242,.18),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at 10% 30%,
+                rgba(139,92,246,.09),
+                transparent 30%
+            ),
+            var(--bg);
+
+        font-family:
+            Inter,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
+        overflow-x: hidden;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+        font: inherit;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    /* =====================================================
+       GWIAZDY
+    ===================================================== */
+
+    #stars {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background: #fff;
+        opacity: .25;
+
+        animation:
+            twinkle 3s ease-in-out infinite alternate;
+    }
+
+    .star:nth-child(3n) {
+        animation-duration: 4.5s;
+    }
+
+    .star:nth-child(4n) {
+        width: 3px;
+        height: 3px;
+        opacity: .45;
+    }
+
+    @keyframes twinkle {
+        from {
+            opacity: .12;
+            transform: scale(.75);
+        }
+
+        to {
+            opacity: .85;
+            transform: scale(1.25);
+        }
+    }
+
+    /* =====================================================
+       HEADER — SKOPIOWANY Z INDEX
+    ===================================================== */
+
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+        width: 100%;
+
+        background: rgba(5,7,18,.88);
+
+        border-bottom:
+            1px solid rgba(139,92,246,.18);
+
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
+        box-shadow:
+            0 10px 45px rgba(0,0,0,.3);
+    }
+
+    .header-inner {
+        width: min(1400px, calc(100% - 32px));
+        min-height: 62px;
+
+        margin: 0 auto;
+
+        display: flex;
+        align-items: center;
+
+        gap: 18px;
+    }
+
+    .logo {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 10px;
+
+        min-width: max-content;
+
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: .5px;
+    }
+
+    .logo img {
+        width: 38px;
+        height: 38px;
+
+        object-fit: contain;
+
+        filter:
+            drop-shadow(0 0 9px rgba(139,92,246,.7))
+            drop-shadow(0 0 22px rgba(88,101,242,.35));
+    }
+
+    .logo-shadow {
+        color: #fff;
+    }
+
+    .logo-tale {
+        color: var(--purple);
+
+        text-shadow:
+            0 0 10px rgba(139,92,246,.75),
+            0 0 25px rgba(139,92,246,.35);
+    }
+
+    .logo-pl {
+        color: var(--blue);
+        font-size: 13px;
+    }
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    .header-search {
+        position: relative;
+
+        flex: 1;
+
+        width: 100%;
+        max-width: 650px;
+
+        margin: 0 auto;
+    }
+
+    #global-search-form {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
+    }
+
+    #global-search {
+        width: 100%;
+        height: 45px;
+
+        padding: 0 16px;
+
+        color: #fff;
+
+        background:
+            rgba(15,20,42,.92);
+
+        border:
+            1px solid rgba(139,92,246,.22);
+
+        border-radius: 12px;
+
+        outline: none;
+
+        transition: .2s ease;
+    }
+
+    #global-search::placeholder {
+        color: #68738f;
+    }
+
+    #global-search:focus {
+        border-color:
+            rgba(139,92,246,.7);
+
+        box-shadow:
+            0 0 22px rgba(139,92,246,.16);
+    }
+
+    #search-button {
+        width: 45px;
+        height: 45px;
+
+        flex: 0 0 45px;
+
+        border:
+            1px solid rgba(139,92,246,.3);
+
+        border-radius: 12px;
+
+        background:
+            rgba(139,92,246,.12);
+
+        color: #fff;
+
+        transition: .2s ease;
+    }
+
+    #search-button:hover {
+        background:
+            rgba(139,92,246,.25);
+
+        border-color:
+            rgba(139,92,246,.65);
+
+        transform: translateY(-1px);
+    }
+
+    #search-results {
+        position: absolute;
+
+        top: 54px;
+        left: 0;
+
+        width: 100%;
+
+        display: none;
+
+        padding: 8px;
+
+        background:
+            rgba(7,10,24,.98);
+
+        border:
+            1px solid rgba(139,92,246,.3);
+
+        border-radius: 14px;
+
+        box-shadow:
+            0 20px 60px rgba(0,0,0,.55);
+
+        z-index: 2000;
+    }
+
+    /* =====================================================
+       HEADER BUTTONS
+    ===================================================== */
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .header-button {
+        min-height: 40px;
+
+        padding: 0 14px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        border:
+            1px solid rgba(139,92,246,.25);
+
+        border-radius: 12px;
+
+        background:
+            rgba(12,16,34,.9);
+
+        color: #fff;
+
+        font-weight: 700;
+
+        transition: .2s ease;
+    }
+
+    .header-button:hover {
+        transform: translateY(-2px);
+
+        border-color:
+            rgba(139,92,246,.65);
+
+        background:
+            rgba(139,92,246,.13);
+
+        box-shadow:
+            0 0 20px rgba(139,92,246,.17);
+    }
+
+    #panel-button {
+        display: none;
+    }
+
+    #account-button {
+        min-width: 140px;
+    }
+
+    #account-avatar {
+        width: 29px;
+        height: 29px;
+
+        border-radius: 50%;
+
+        object-fit: cover;
+
+        border:
+            1px solid rgba(139,92,246,.45);
+
+        background:
+            var(--bg2);
+    }
+
+    #account-name {
+        max-width: 130px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* =====================================================
+       PAGE HERO
+    ===================================================== */
+
+    .page-hero {
+        width: min(1200px, calc(100% - 32px));
+
+        margin: 0 auto;
+
+        padding:
+            75px 0 35px;
+
+        text-align: center;
+    }
+
+    .page-badge {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 8px;
+
+        padding:
+            8px 15px;
+
+        margin-bottom: 18px;
+
+        border:
+            1px solid rgba(57,255,136,.25);
+
+        border-radius: 999px;
+
+        background:
+            rgba(57,255,136,.06);
+
+        color: var(--green);
+
+        font-size: 13px;
+        font-weight: 900;
+    }
+
+    .page-hero h1 {
+        margin: 0 0 15px;
+
+        font-size:
+            clamp(40px, 6vw, 68px);
+
+        line-height: 1;
+
+        letter-spacing: -3px;
+    }
+
+    .page-hero h1 span {
+        color: var(--purple);
+
+        text-shadow:
+            0 0 18px rgba(139,92,246,.55),
+            0 0 40px rgba(139,92,246,.2);
+    }
+
+    .page-hero p {
+        max-width: 700px;
+
+        margin: 0 auto;
+
+        color: var(--muted);
+
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+    /* =====================================================
+       FILTERS
+    ===================================================== */
+
+    .products-section {
+        width: min(1200px, calc(100% - 32px));
+
+        margin: 0 auto;
+
+        padding:
+            25px 0 90px;
+    }
+
+    .filters {
+        margin-bottom: 28px;
+
+        padding: 18px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 18px;
+
+        flex-wrap: wrap;
+
+        border:
+            1px solid rgba(139,92,246,.2);
+
+        border-radius: 18px;
+
+        background:
+            rgba(12,16,34,.78);
+
+        box-shadow:
+            0 15px 50px rgba(0,0,0,.25);
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: center;
+
+        gap: 9px;
+
+        flex-wrap: wrap;
+    }
+
+    .filter-label {
+        color: var(--muted);
+
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .filter-button {
+        min-height: 38px;
+
+        padding:
+            0 14px;
+
+        border:
+            1px solid rgba(139,92,246,.2);
+
+        border-radius: 10px;
+
+        background:
+            rgba(139,92,246,.06);
+
+        color: #cbd5e1;
+
+        font-size: 13px;
+        font-weight: 800;
+
+        transition: .2s ease;
+    }
+
+    .filter-button:hover {
+        border-color:
+            rgba(139,92,246,.55);
+
+        background:
+            rgba(139,92,246,.13);
+
+        color: #fff;
+    }
+
+    .filter-button.active {
+        border-color:
+            rgba(139,92,246,.7);
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(139,92,246,.3),
+                rgba(88,101,242,.25)
+            );
+
+        color: #fff;
+
+        box-shadow:
+            0 0 20px rgba(139,92,246,.12);
+    }
+
+    /* =====================================================
+       PRODUCT GRID
+    ===================================================== */
+
+    #mc-products-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 18px;
+    }
+
+    .product-card {
+        position: relative;
+
+        min-height: 220px;
+
+        padding: 23px;
+
+        display: flex;
+        flex-direction: column;
+
+        border:
+            1px solid rgba(139,92,246,.2);
+
+        border-radius: 18px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(15,20,42,.94),
+                rgba(8,11,24,.97)
+            );
+
+        box-shadow:
+            0 15px 50px rgba(0,0,0,.23);
+
+        transition:
+            transform .22s ease,
+            border-color .22s ease,
+            box-shadow .22s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+
+        border-color:
+            rgba(139,92,246,.55);
+
+        box-shadow:
+            0 22px 65px rgba(0,0,0,.4),
+            0 0 30px rgba(139,92,246,.1);
+    }
+
+    .product-card h3 {
+        margin:
+            0 0 15px;
+
+        font-size: 21px;
+
+        line-height: 1.3;
+    }
+
+    .st-badges {
+        min-height: 34px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 7px;
+
+        flex-wrap: wrap;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+
+        min-height: 30px;
+
+        padding:
+            0 11px;
+
+        border-radius: 999px;
+
+        font-size: 11px;
+        font-weight: 900;
+
+        letter-spacing: .3px;
+    }
+
+    .status-verified {
+        color: var(--green);
+
+        border:
+            1px solid rgba(57,255,136,.3);
+
+        background:
+            rgba(57,255,136,.07);
+    }
+
+    .status-unverified {
+        color: var(--yellow);
+
+        border:
+            1px solid rgba(255,209,102,.3);
+
+        background:
+            rgba(255,209,102,.07);
+    }
+
+    .product-bottom {
+        margin-top: auto;
+        padding-top: 22px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 12px;
+    }
+
+    .product-price {
+        color: #fff;
+
+        font-size: 15px;
+        font-weight: 900;
+    }
+
+    .product-price.free {
+        color: var(--green);
+    }
+
+    .product-open {
+        min-height: 40px;
+
+        padding:
+            0 15px;
+
+        border:
+            1px solid rgba(139,92,246,.3);
+
+        border-radius: 10px;
+
+        background:
+            rgba(139,92,246,.1);
+
+        color: #fff;
+
+        font-weight: 800;
+
+        transition: .2s ease;
+    }
+
+    .product-open:hover {
+        background:
+            rgba(139,92,246,.23);
+
+        border-color:
+            rgba(139,92,246,.65);
+    }
+
+    /* =====================================================
+       EMPTY / LOADING
+    ===================================================== */
+
+    .products-message {
+        grid-column: 1 / -1;
+
+        padding:
+            55px 25px;
+
+        text-align: center;
+
+        border:
+            1px solid rgba(139,92,246,.18);
+
+        border-radius: 18px;
+
+        background:
+            rgba(12,16,34,.7);
+
+        color: var(--muted);
+    }
+
+    .products-message strong {
+        display: block;
+
+        margin-bottom: 8px;
+
+        color: #fff;
+
+        font-size: 20px;
+    }
+
+    /* =====================================================
+       MODAL
+    ===================================================== */
+
+    #product-modal {
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 10000;
+
+        display: none;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+
+        background:
+            rgba(3,5,15,.8);
+
+        backdrop-filter:
+            blur(9px);
+
+        -webkit-backdrop-filter:
+            blur(9px);
+    }
+
+    #product-modal.active {
+        display: flex;
+    }
+
+    .product-modal-card {
+        width:
+            min(760px, 100%);
+
+        max-height:
+            min(820px, calc(100vh - 40px));
+
+        overflow-y: auto;
+
+        padding: 30px;
+
+        border:
+            1px solid rgba(139,92,246,.38);
+
+        border-radius: 24px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(15,20,42,.99),
+                rgba(7,10,24,.99)
+            );
+
+        box-shadow:
+            0 30px 100px rgba(0,0,0,.7),
+            0 0 50px rgba(139,92,246,.1);
+    }
+
+    .modal-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 20px;
+
+        margin-bottom: 25px;
+    }
+
+    .modal-top h2 {
+        margin: 0 0 10px;
+
+        font-size:
+            clamp(25px, 4vw, 34px);
+
+        line-height: 1.15;
+    }
+
+    #product-modal-status {
+        display: inline-flex;
+    }
+
+    #product-close {
+        width: 40px;
+        height: 40px;
+
+        flex: 0 0 40px;
+
+        border:
+            1px solid rgba(255,255,255,.1);
+
+        border-radius: 10px;
+
+        background:
+            rgba(255,255,255,.05);
+
+        color: #fff;
+
+        font-size: 18px;
+    }
+
+    #product-close:hover {
+        background:
+            rgba(255,255,255,.1);
+    }
+
+    .modal-description {
+        margin:
+            0 0 25px;
+
+        color: #cbd5e1;
+
+        line-height: 1.75;
+
+        white-space: pre-wrap;
+    }
+
+    .product-details {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+
+        margin-bottom: 25px;
+    }
+
+    .detail-box {
+        padding: 15px;
+
+        border:
+            1px solid rgba(139,92,246,.16);
+
+        border-radius: 13px;
+
+        background:
+            rgba(5,7,18,.5);
+    }
+
+    .detail-label {
+        display: block;
+
+        margin-bottom: 6px;
+
+        color: #71809d;
+
+        font-size: 11px;
+        font-weight: 900;
+
+        text-transform: uppercase;
+        letter-spacing: .7px;
+    }
+
+    .detail-value {
+        color: #fff;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        line-height: 1.5;
+    }
+
+    .modal-section {
+        margin-top: 25px;
+    }
+
+    .modal-section h3 {
+        margin:
+            0 0 10px;
+
+        font-size: 17px;
+    }
+
+    .modal-section-content {
+        padding: 16px;
+
+        border:
+            1px solid rgba(139,92,246,.14);
+
+        border-radius: 13px;
+
+        background:
+            rgba(5,7,18,.4);
+
+        color: #aeb9cc;
+
+        line-height: 1.7;
+
+        white-space: pre-wrap;
+    }
+
+    .modal-actions {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 10px;
+
+        margin-top: 28px;
+    }
+
+    .modal-action {
+        min-height: 45px;
+
+        padding:
+            0 18px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border:
+            1px solid rgba(139,92,246,.3);
+
+        border-radius: 11px;
+
+        background:
+            rgba(139,92,246,.1);
+
+        color: #fff;
+
+        font-weight: 900;
+
+        transition: .2s ease;
+    }
+
+    .modal-action:hover {
+        transform: translateY(-2px);
+
+        border-color:
+            rgba(139,92,246,.65);
+
+        background:
+            rgba(139,92,246,.2);
+    }
+
+    .modal-action.primary {
+        border-color: transparent;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--purple),
+                var(--blue)
+            );
+    }
+
+    .modal-action.free {
+        background:
+            rgba(57,255,136,.1);
+
+        border-color:
+            rgba(57,255,136,.35);
+
+        color: var(--green);
+    }
+
+    .modal-error {
+        display: none;
+
+        margin-top: 15px;
+
+        padding: 12px 14px;
+
+        border:
+            1px solid rgba(255,92,108,.3);
+
+        border-radius: 10px;
+
+        background:
+            rgba(255,92,108,.07);
+
+        color: #ff9ba6;
+
+        font-size: 13px;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .site-footer {
+        margin-top: 60px;
+
+        padding:
+            60px 0 25px;
+
+        border-top:
+            1px solid rgba(139,92,246,.16);
+
+        background:
+            rgba(3,5,13,.82);
+    }
+
+    .footer-inner {
+        width:
+            min(1200px, calc(100% - 32px));
+
+        margin: 0 auto;
+    }
+
+    .footer-bottom {
+        padding-top: 20px;
+
+        display: flex;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        border-top:
+            1px solid rgba(255,255,255,.06);
+
+        color: #64748b;
+
+        font-size: 13px;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 1000px) {
+
+        .header-inner {
+            flex-wrap: wrap;
+            padding: 10px 0;
+        }
+
+        .header-search {
+            order: 3;
+            flex-basis: 100%;
+            max-width: none;
+        }
+
+        #mc-products-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 650px) {
+
+        .header-inner {
+            width:
+                calc(100% - 22px);
+        }
+
+        .header-actions {
+            margin-left: auto;
+        }
+
+        .header-button {
+            padding: 0 10px;
+        }
+
+        .header-button span {
+            display: none;
+        }
+
+        #account-button {
+            min-width: 43px;
+        }
+
+        #account-name {
+            max-width: 80px;
+        }
+
+        .page-hero {
+            width:
+                calc(100% - 22px);
+
+            padding-top: 55px;
+        }
+
+        .products-section {
+            width:
+                calc(100% - 22px);
+        }
+
+        #mc-products-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filters {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .filter-group {
+            width: 100%;
+        }
+
+        .product-details {
+            grid-template-columns: 1fr;
+        }
+
+        .product-modal-card {
+            padding: 22px;
+        }
+
+        .modal-top {
+            gap: 10px;
+        }
+
+        .footer-inner {
+            width:
+                calc(100% - 22px);
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+        }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<!-- =====================================================
+     HEADER — TAKI SAM JAK INDEX.HTML
+===================================================== -->
+
+<header class="site-header">
+
+
+<div class="header-inner">
+
+    <a href="index.html" class="logo">
+
+        <img
+            src="assets/logo.png"
+            alt="ShadowTale"
+        >
+
+        <span>
+            <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span><span class="logo-pl">.PL</span>
+        </span>
+
+    </a>
+
+    <div class="header-search">
+
+        <form
+            id="global-search-form"
+            autocomplete="off"
+        >
+
+            <input
+                type="search"
+                id="global-search"
+                placeholder="Szukaj plików, skryptów, map..."
+                autocomplete="off"
+            >
+
+            <button
+                id="search-button"
+                type="submit"
+                aria-label="Szukaj"
+            >
+                🔎
+            </button>
+
+        </form>
+
+        <div id="search-results"></div>
+
+    </div>
+
+    <div class="header-actions">
+
+        <a
+            href="admin.html"
+            id="panel-button"
+            class="header-button"
+            style="display:none;"
+        >
+            🛡️
+            <span>Panel</span>
+        </a>
+
+        <a
+            href="media.html"
+            class="header-button"
+        >
+            🎬
+            <span>Media</span>
+        </a>
+
+        <a
+            href="login.html"
+            id="account-button"
+            class="header-button"
+        >
+
+            <img
+                id="account-avatar"
+                src="assets/logo.png"
+                alt="Avatar"
+            >
+
+            <span id="account-name">
+                Nick gracza
+            </span>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+</header>
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="page-hero">
+
+
+<div class="page-badge">
+    🎮 MINECRAFT
+</div>
+
+<h1>
+    Skrypty <span>Minecraft</span>
+</h1>
+
+<p>
+    Znajdź skrypty do swojego serwera Minecraft.
+    Możesz filtrować produkty według ceny oraz
+    statusu weryfikacji.
+</p>
+
+
+</section>
+
+<!-- =====================================================
+     PRODUCTS
+===================================================== -->
+
+<main class="products-section">
+
+
+<div class="filters">
+
+    <div class="filter-group">
+
+        <span class="filter-label">
+            Cena:
+        </span>
+
+        <button
+            type="button"
+            class="filter-button active"
+            data-price="all"
+        >
+            Wszystkie
+        </button>
+
+        <button
+            type="button"
+            class="filter-button"
+            data-price="free"
+        >
+            Darmowe
+        </button>
+
+        <button
+            type="button"
+            class="filter-button"
+            data-price="paid"
+        >
+            Płatne
+        </button>
+
+    </div>
+
+
+    <div class="filter-group">
+
+        <span class="filter-label">
+            Status:
+        </span>
+
+        <button
+            type="button"
+            class="filter-button active"
+            data-status="all"
+        >
+            Wszystkie
+        </button>
+
+        <button
+            type="button"
+            class="filter-button"
+            data-status="verified"
+        >
+            Zweryfikowane
+        </button>
+
+        <button
+            type="button"
+            class="filter-button"
+            data-status="unverified"
+        >
+            Niezweryfikowane
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="mc-products-grid">
+
+    <div class="products-message">
+        Ładowanie skryptów...
+    </div>
+
+</div>
+
+
+</main>
+
+<!-- =====================================================
+     PRODUCT MODAL
+===================================================== -->
+
+<div
+    id="product-modal"
+    aria-hidden="true"
+>
+
+
+<div class="product-modal-card">
+
+    <div class="modal-top">
+
+        <div>
+
+            <h2 id="product-modal-title">
+                Produkt
+            </h2>
+
+            <div id="product-modal-status"></div>
+
+        </div>
+
+        <button
+            id="product-close"
+            type="button"
+            aria-label="Zamknij"
+        >
+            ✕
+        </button>
+
+    </div>
+
+
+    <div
+        id="product-modal-description"
+        class="modal-description"
+    ></div>
+
+
+    <div
+        id="product-details"
+        class="product-details"
+    ></div>
+
+
+    <div
+        id="product-instructions-section"
+        class="modal-section"
+        style="display:none;"
+    >
+
+        <h3>
+            📘 Instrukcja
+        </h3>
+
+        <div
+            id="product-modal-instructions"
+            class="modal-section-content"
+        ></div>
+
+    </div>
+
+
+    <div
+        id="product-youtube-section"
+        class="modal-section"
+        style="display:none;"
+    >
+
+        <h3>
+            ▶️ Poradnik YouTube
+        </h3>
+
+        <a
+            id="product-youtube"
+            class="modal-action"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Otwórz poradnik
+        </a>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+        <a
+            id="product-action"
+            class="modal-action primary"
+            href="#"
+        >
+            Otwórz
+        </a>
+
+        <button
+            id="product-modal-close-bottom"
+            type="button"
+            class="modal-action"
+        >
+            Zamknij
+        </button>
+
+    </div>
+
+
+    <div
+        id="product-modal-error"
+        class="modal-error"
+    ></div>
+
+</div>
+
+
+</div>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer">
+
+
+<div class="footer-inner">
+
+    <div class="footer-bottom">
+
+        <span>
+            © 2026 ShadowTale.pl
+        </span>
+
+        <span>
+            Twój świat, twoje zasady.
+        </span>
+
+    </div>
+
+</div>
+
+
+</footer>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    /* =====================================================
+       SUPABASE
+    ===================================================== */
+
+    let db = null;
+
+    try {
+
+        const url =
+            window.CONFIG?.supabaseUrl ||
+            window.CONFIG?.SUPABASE_URL;
+
+        const key =
+            window.CONFIG?.supabaseKey ||
+            window.CONFIG?.SUPABASE_KEY;
+
+        if (
+            !url ||
+            !key ||
+            !window.supabase
+        ) {
+            throw new Error(
+                "Brak konfiguracji Supabase."
+            );
+        }
+
+        db =
+            window.supabase.createClient(
+                url,
+                key
+            );
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "mc-products-grid"
+        ).innerHTML = `
+            <div class="products-message">
+                <strong>Nie udało się uruchomić strony.</strong>
+                Sprawdź plik config.js oraz konfigurację Supabase.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    /* =====================================================
+       GWIAZDY
+    ===================================================== */
+
+    const stars =
+        document.getElementById("stars");
+
+    if (stars) {
+
+        const fragment =
+            document.createDocumentFragment();
+
+        for (let i = 0; i < 90; i++) {
+
+            const star =
+                document.createElement("div");
+
+            star.className = "star";
+
+            star.style.left =
+                Math.random() * 100 + "%";
+
+            star.style.top =
+                Math.random() * 100 + "%";
+
+            star.style.animationDelay =
+                Math.random() * 4 + "s";
+
+            fragment.appendChild(star);
+        }
+
+        stars.appendChild(fragment);
+    }
+
+
+    /* =====================================================
+       ELEMENTY
+    ===================================================== */
+
+    const grid =
+        document.getElementById(
+            "mc-products-grid"
+        );
+
+    const modal =
+        document.getElementById(
+            "product-modal"
+        );
+
+    const closeButton =
+        document.getElementById(
+            "product-close"
+        );
+
+    const closeBottom =
+        document.getElementById(
+            "product-modal-close-bottom"
+        );
+
+    const modalTitle =
+        document.getElementById(
+            "product-modal-title"
+        );
+
+    const modalStatus =
+        document.getElementById(
+            "product-modal-status"
+        );
+
+    const modalDescription =
+        document.getElementById(
+            "product-modal-description"
+        );
+
+    const details =
+        document.getElementById(
+            "product-details"
+        );
+
+    const instructionsSection =
+        document.getElementById(
+            "product-instructions-section"
+        );
+
+    const instructions =
+        document.getElementById(
+            "product-modal-instructions"
+        );
+
+    const youtubeSection =
+        document.getElementById(
+            "product-youtube-section"
+        );
+
+    const youtube =
+        document.getElementById(
+            "product-youtube"
+        );
+
+    const action =
+        document.getElementById(
+            "product-action"
+        );
+
+    const modalError =
+        document.getElementById(
+            "product-modal-error"
+        );
+
+
+    let products = [];
+
+    let priceFilter = "all";
+
+    let statusFilter = "all";
+
+
+    /* =====================================================
+       HELPERY
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    function isFree(product) {
+
+        if (
+            product.is_free === true ||
+            product.is_free === "true"
+        ) {
+            return true;
+        }
+
+        const price =
+            Number(product.price || 0);
+
+        return price <= 0;
+    }
+
+
+    function isVerified(product) {
+
+        return (
+            product.file_verified === true ||
+            product.file_verified === "true"
+        );
+    }
+
+
+    function formatPrice(product) {
+
+        if (isFree(product)) {
+            return "Darmowy";
+        }
+
+        const price =
+            Number(product.price || 0);
+
+        return (
+            price.toFixed(2)
+                .replace(".", ",") +
+            " zł"
+        );
+    }
+
+
+    function getVersions(product) {
+
+        const value =
+            product.minecraft_version;
+
+        if (!value) {
+            return "Brak podanych wersji";
+        }
+
+        if (Array.isArray(value)) {
+
+            return value
+                .filter(Boolean)
+                .join(", ");
+        }
+
+        return String(value)
+            .split(",")
+            .map(item => item.trim())
+            .filter(Boolean)
+            .join(", ");
+    }
+
+
+    function getPlugins(product) {
+
+        const value =
+            product.required_plugins;
+
+        if (!value) {
+            return "Brak";
+        }
+
+        if (Array.isArray(value)) {
+
+            return value
+                .filter(Boolean)
+                .join(", ") || "Brak";
+        }
+
+        try {
+
+            const parsed =
+                JSON.parse(value);
+
+            if (Array.isArray(parsed)) {
+
+                return parsed
+                    .filter(Boolean)
+                    .join(", ") || "Brak";
+            }
+
+        } catch (error) {}
+
+        return String(value)
+            .split(",")
+            .map(item => item.trim())
+            .filter(Boolean)
+            .join(", ") || "Brak";
+    }
+
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
+    function createCard(product) {
+
+        const card =
+            document.createElement("article");
+
+        card.className =
+            "product-card";
+
+
+        const name =
+            escapeHtml(
+                product.name || "Bez nazwy"
+            );
+
+
+        const verified =
+            isVerified(product);
+
+
+        const statusHtml =
+            verified
+
+                ? `
+                    <span class="status-badge status-verified">
+                        ✓ Zweryfikowany
+                    </span>
+                `
+
+                : `
+                    <span class="status-badge status-unverified">
+                        ⚠ Niezweryfikowany
+                    </span>
+                `;
+
+
+        card.innerHTML = `
+
+            <h3>
+                ${name}
+            </h3>
+
+            <div class="st-badges">
+                ${statusHtml}
+            </div>
+
+            <div class="product-bottom">
+
+                <div class="product-price ${isFree(product) ? "free" : ""}">
+                    ${escapeHtml(formatPrice(product))}
+                </div>
+
+                <button
+                    type="button"
+                    class="product-open"
+                >
+                    Zobacz
+                </button>
+
+            </div>
+        `;
+
+
+        const openButton =
+            card.querySelector(
+                ".product-open"
+            );
+
+
+        openButton.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+                openProduct(product);
+
+            }
+        );
+
+
+        return card;
+    }
+
+
+    /* =====================================================
+       FILTROWANIE
+    ===================================================== */
+
+    function getFilteredProducts() {
+
+        return products.filter(product => {
+
+            const free =
+                isFree(product);
+
+            const verified =
+                isVerified(product);
+
+
+            if (
+                priceFilter === "free" &&
+                !free
+            ) {
+                return false;
+            }
+
+
+            if (
+                priceFilter === "paid" &&
+                free
+            ) {
+                return false;
+            }
+
+
+            if (
+                statusFilter === "verified" &&
+                !verified
+            ) {
+                return false;
+            }
+
+
+            if (
+                statusFilter === "unverified" &&
+                verified
+            ) {
+                return false;
+            }
+
+
+            return true;
+
+        });
+    }
+
+
+    function renderProducts() {
+
+        const filtered =
+            getFilteredProducts();
+
+
+        grid.innerHTML = "";
+
+
+        if (!filtered.length) {
+
+            grid.innerHTML = `
+                <div class="products-message">
+                    <strong>Brak produktów</strong>
+                    Nie znaleziono skryptów pasujących do wybranych filtrów.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        filtered.forEach(product => {
+
+            grid.appendChild(
+                createCard(product)
+            );
+
+        });
+    }
+
+
+    /* =====================================================
+       MODAL
+    ===================================================== */
+
+    function openProduct(product) {
+
+        modalTitle.textContent =
+            product.name || "Produkt";
+
+
+        modalDescription.textContent =
+            product.description ||
+            "Brak opisu produktu.";
+
+
+        modalStatus.innerHTML =
+            isVerified(product)
+
+                ? `
+                    <span class="status-badge status-verified">
+                        ✓ Zweryfikowany
+                    </span>
+                `
+
+                : `
+                    <span class="status-badge status-unverified">
+                        ⚠ Niezweryfikowany
+                    </span>
+                `;
+
+
+        details.innerHTML = `
+
+            <div class="detail-box">
+
+                <span class="detail-label">
+                    Cena
+                </span>
+
+                <span class="detail-value">
+                    ${escapeHtml(formatPrice(product))}
+                </span>
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <span class="detail-label">
+                    Wersje Minecraft
+                </span>
+
+                <span class="detail-value">
+                    ${escapeHtml(getVersions(product))}
+                </span>
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <span class="detail-label">
+                    Wymagane pluginy
+                </span>
+
+                <span class="detail-value">
+                    ${escapeHtml(getPlugins(product))}
+                </span>
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <span class="detail-label">
+                    Status
+                </span>
+
+                <span class="detail-value">
+                    ${
+                        isVerified(product)
+                            ? "Zweryfikowany"
+                            : "Niezweryfikowany"
+                    }
+                </span>
+
+            </div>
+
+        `;
+
+
+        if (
+            product.instructions &&
+            String(product.instructions).trim()
+        ) {
+
+            instructionsSection.style.display =
+                "block";
+
+            instructions.textContent =
+                product.instructions;
+
+        } else {
+
+            instructionsSection.style.display =
+                "none";
+
+            instructions.textContent =
+                "";
+
+        }
+
+
+        if (
+            product.youtube_url &&
+            String(product.youtube_url).trim()
+        ) {
+
+            youtubeSection.style.display =
+                "block";
+
+            youtube.href =
+                product.youtube_url;
+
+        } else {
+
+            youtubeSection.style.display =
+                "none";
+
+            youtube.href =
+                "#";
+
+        }
+
+
+        modalError.style.display =
+            "none";
+
+        modalError.textContent =
+            "";
+
+
+        action.className =
+            "modal-action";
+
+
+        action.textContent =
+            "";
+
+
+        action.href =
+            "#";
+
+
+        if (isFree(product)) {
+
+            action.classList.add("free");
+
+            action.textContent =
+                "⬇ Pobierz";
+
+            action.onclick =
+                async event => {
+
+                    event.preventDefault();
+
+                    await downloadProduct(
+                        product
+                    );
+
+                };
+
+        } else {
+
+            action.classList.add("primary");
+
+            action.textContent =
+                "💳 Zapłać " +
+                formatPrice(product);
+
+            action.onclick =
+                event => {
+
+                    event.preventDefault();
+
+                    window.location.href =
+                        "zakup.html?product=" +
+                        encodeURIComponent(
+                            product.id
+                        );
+
+                };
+
+        }
+
+
+        modal.classList.add("active");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.style.overflow =
+            "hidden";
+    }
+
+
+    function closeProduct() {
+
+        modal.classList.remove(
+            "active"
+        );
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.style.overflow =
+            "";
+    }
+
+
+    closeButton.addEventListener(
+        "click",
+        closeProduct
+    );
+
+
+    closeBottom.addEventListener(
+        "click",
+        closeProduct
+    );
+
+
+    modal.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === modal
+            ) {
+                closeProduct();
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+                closeProduct();
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       DOWNLOAD
+    ===================================================== */
+
+    async function downloadProduct(product) {
+
+        modalError.style.display =
+            "none";
+
+        try {
+
+            if (!product.file_path) {
+
+                throw new Error(
+                    "Ten produkt nie ma przypisanego pliku."
+                );
+
+            }
+
+
+            action.textContent =
+                "Pobieranie...";
+
+
+            action.style.pointerEvents =
+                "none";
+
+
+            const result =
+                await db.storage
+                    .from("products")
+                    .createSignedUrl(
+                        product.file_path,
+                        60
+                    );
+
+
+            if (result.error) {
+                throw result.error;
+            }
+
+
+            if (
+                !result.data ||
+                !result.data.signedUrl
+            ) {
+                throw new Error(
+                    "Nie udało się utworzyć linku do pliku."
+                );
+            }
+
+
+            window.location.href =
+                result.data.signedUrl;
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            modalError.textContent =
+                "Nie udało się pobrać pliku: " +
+                (
+                    error?.message ||
+                    "nieznany błąd"
+                );
+
+            modalError.style.display =
+                "block";
+
+
+            action.textContent =
+                "⬇ Pobierz";
+
+            action.style.pointerEvents =
+                "";
+        }
+    }
+
+
+    /* =====================================================
+       FILTRY
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            "[data-price]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    priceFilter =
+                        button.dataset.price;
+
+                    document
+                        .querySelectorAll(
+                            "[data-price]"
+                        )
+                        .forEach(item => {
+
+                            item.classList.toggle(
+                                "active",
+                                item === button
+                            );
+
+                        });
+
+                    renderProducts();
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(
+            "[data-status]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    statusFilter =
+                        button.dataset.status;
+
+                    document
+                        .querySelectorAll(
+                            "[data-status]"
+                        )
+                        .forEach(item => {
+
+                            item.classList.toggle(
+                                "active",
+                                item === button
+                            );
+
+                        });
+
+                    renderProducts();
+
+                }
+            );
+
+        });
+
+
+    /* =====================================================
+       WYSZUKIWANIE — PROSTE PRZEJŚCIE DO INDEX
+       Nie używamy app.js, żeby nie powodować znikania strony.
+    ===================================================== */
+
+    const searchForm =
+        document.getElementById(
+            "global-search-form"
+        );
+
+    const searchInput =
+        document.getElementById(
+            "global-search"
+        );
+
+
+    searchForm?.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+            const value =
+                String(
+                    searchInput?.value || ""
+                ).trim();
+
+
+            if (!value) {
+                return;
+            }
+
+
+            window.location.href =
+                "index.html?search=" +
+                encodeURIComponent(value);
+
+        }
+    );
+
+
+    /* =====================================================
+       KONTO
+    ===================================================== */
+
+    async function loadAccount() {
+
+        const accountButton =
+            document.getElementById(
+                "account-button"
+            );
+
+        const accountName =
+            document.getElementById(
+                "account-name"
+            );
+
+        const accountAvatar =
+            document.getElementById(
+                "account-avatar"
+            );
+
+        const panelButton =
+            document.getElementById(
+                "panel-button"
+            );
+
+
+        try {
+
+            const sessionResult =
+                await db.auth.getSession();
+
+
+            const session =
+                sessionResult?.data?.session;
+
+
+            if (!session) {
+
+                accountButton.href =
+                    "login.html";
+
+                accountName.textContent =
+                    "Nick gracza";
+
+                accountAvatar.src =
+                    "assets/logo.png";
+
+                panelButton.style.display =
+                    "none";
+
+                return;
+            }
+
+
+            accountButton.href =
+                "konto.html";
+
+
+            const user =
+                session.user;
+
+
+            const profileResult =
+                await db
+                    .from("profiles")
+                    .select(
+                        "username, avatar_url, role"
+                    )
+                    .eq(
+                        "id",
+                        user.id
+                    )
+                    .maybeSingle();
+
+
+            const profile =
+                profileResult.data;
+
+
+            accountName.textContent =
+                profile?.username ||
+                user.email?.split("@")[0] ||
+                "Klient";
+
+
+            if (
+                profile?.avatar_url
+            ) {
+
+                accountAvatar.src =
+                    profile.avatar_url;
+
+            } else {
+
+                accountAvatar.src =
+                    "assets/logo.png";
+
+            }
+
+
+            const role =
+                String(
+                    profile?.role || ""
+                ).toLowerCase();
+
+
+            if (
+                role === "owner" ||
+                role === "admin" ||
+                role === "administrator"
+            ) {
+
+                panelButton.style.display =
+                    "inline-flex";
+
+            } else {
+
+                panelButton.style.display =
+                    "none";
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Błąd konta:",
+                error
+            );
+
+        }
+    }
+
+
+    await loadAccount();
+
+
+    /* =====================================================
+       PRODUKTY
+    ===================================================== */
+
+    async function loadProducts() {
+
+        grid.innerHTML = `
+            <div class="products-message">
+                Ładowanie skryptów...
+            </div>
+        `;
+
+
+        try {
+
+            const result =
+                await db
+                    .from("products")
+                    .select(
+                        "id, owner_id, name, slug, world, category, type, price, is_free, minecraft_version, required_plugins, file_path, file_verified, youtube_url, description, instructions, downloads_enabled, blocked"
+                    )
+                    .eq(
+                        "world",
+                        "minecraft"
+                    )
+                    .eq(
+                        "category",
+                        "skrypty"
+                    )
+                    .eq(
+                        "blocked",
+                        false
+                    )
+                    .order(
+                        "id",
+                        {
+                            ascending: false
+                        }
+                    );
+
+
+            if (result.error) {
+                throw result.error;
+            }
+
+
+            products =
+                result.data || [];
+
+
+            renderProducts();
+
+        } catch (error) {
+
+            console.error(
+                "Błąd produktów:",
+                error
+            );
+
+
+            grid.innerHTML = `
+                <div class="products-message">
+
+                    <strong>
+                        Nie udało się pobrać produktów.
+                    </strong>
+
+                    ${escapeHtml(
+                        error?.message ||
+                        "Nieznany błąd Supabase."
+                    )}
+
+                </div>
+            `;
+        }
+    }
+
+
+    await loadProducts();
+
+});
+
+</script>
+
+</body>
+</html>

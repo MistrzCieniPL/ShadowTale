@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pomoc — ShadowTale</title>
+
+    <meta
+        name="description"
+        content="ShadowTale.pl — Centrum pomocy, tickety i najczęściej zadawane pytania."
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+
+    <style>
+        :root {
+            --bg: #050712;
+            --panel: rgba(12,16,34,.88);
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --blue: #5865f2;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(88,101,242,.18),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 10% 30%,
+                    rgba(139,92,246,.09),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =====================================================
+           GWIAZDY
+        ===================================================== */
+
+        #stars {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+
+            width: 2px;
+            height: 2px;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            opacity: .25;
+
+            animation:
+                twinkle 3s ease-in-out infinite alternate;
+        }
+
+        .star:nth-child(3n) {
+            animation-duration: 4.5s;
+        }
+
+        .star:nth-child(4n) {
+            width: 3px;
+            height: 3px;
+            opacity: .45;
+        }
+
+        @keyframes twinkle {
+            from {
+                opacity: .12;
+                transform: scale(.75);
+            }
+
+            to {
+                opacity: .85;
+                transform: scale(1.25);
+            }
+        }
+
+        /* =====================================================
+           HEADER — IDENTYCZNY UKŁAD JAK INDEX.HTML
+        ===================================================== */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            width: 100%;
+
+            background: rgba(5,7,18,.88);
+
+            border-bottom:
+                1px solid rgba(139,92,246,.18);
+
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 10px 45px rgba(0,0,0,.3);
+        }
+
+        .header-inner {
+            width: min(1400px, calc(100% - 32px));
+
+            min-height: 62px;
+
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+
+            gap: 18px;
+        }
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 10px;
+
+            min-width: max-content;
+
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: .5px;
+        }
+
+        .logo img {
+            width: 38px;
+            height: 38px;
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 0 9px rgba(139,92,246,.7))
+                drop-shadow(0 0 22px rgba(88,101,242,.35));
+        }
+
+        .logo-shadow {
+            color: #fff;
+        }
+
+        .logo-tale {
+            color: var(--purple);
+
+            text-shadow:
+                0 0 10px rgba(139,92,246,.75),
+                0 0 25px rgba(139,92,246,.35);
+        }
+
+        .logo-pl {
+            color: var(--blue);
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        .header-search {
+            position: relative;
+
+            flex: 1;
+
+            width: 100%;
+            max-width: 650px;
+
+            margin: 0 auto;
+        }
+
+        #global-search-form {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        #global-search {
+            width: 100%;
+            height: 45px;
+
+            padding: 0 16px;
+
+            color: #fff;
+
+            background:
+                rgba(15,20,42,.92);
+
+            border:
+                1px solid rgba(139,92,246,.22);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            transition: .2s ease;
+        }
+
+        #global-search::placeholder {
+            color: #68738f;
+        }
+
+        #global-search:focus {
+            border-color:
+                rgba(139,92,246,.7);
+
+            box-shadow:
+                0 0 22px rgba(139,92,246,.16);
+        }
+
+        #search-button {
+            width: 45px;
+            height: 45px;
+
+            flex: 0 0 45px;
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            border-radius: 12px;
+
+            background:
+                rgba(139,92,246,.12);
+
+            color: #fff;
+
+            transition: .2s ease;
+        }
+
+        #search-button:hover {
+            background:
+                rgba(139,92,246,.25);
+
+            border-color:
+                rgba(139,92,246,.65);
+
+            transform: translateY(-1px);
+        }
+
+        #search-results {
+            position: absolute;
+
+            top: 54px;
+            left: 0;
+
+            width: 100%;
+
+            display: none;
+
+            padding: 8px;
+
+            background:
+                rgba(7,10,24,.98);
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.55);
+
+            z-index: 2000;
+        }
+
+        /* =====================================================
+           HEADER BUTTONS
+        ===================================================== */
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .header-button {
+            min-height: 40px;
+
+            padding: 0 14px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            border:
+                1px solid rgba(139,92,246,.25);
+
+            border-radius: 12px;
+
+            background:
+                rgba(12,16,34,.9);
+
+            color: #fff;
+
+            font-weight: 700;
+
+            transition: .2s ease;
+        }
+
+        .header-button:hover {
+            transform: translateY(-2px);
+
+            border-color:
+                rgba(139,92,246,.65);
+
+            background:
+                rgba(139,92,246,.13);
+
+            box-shadow:
+                0 0 20px rgba(139,92,246,.17);
+        }
+
+        #panel-button {
+            display: none;
+        }
+
+        /* =====================================================
+           KONTO — TAKIE SAME ID JAK W INDEX.HTML
+        ===================================================== */
+
+        #account-button {
+            min-width: 150px;
+        }
+
+        #account-avatar {
+            width: 30px;
+            height: 30px;
+
+            border-radius: 50%;
+
+            object-fit: contain;
+
+            border:
+                1px solid rgba(139,92,246,.5);
+
+            background:
+                rgba(8,11,24,.95);
+
+            padding: 2px;
+
+            filter:
+                drop-shadow(0 0 7px rgba(139,92,246,.4));
+        }
+
+        #account-name {
+            max-width: 150px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        main {
+            position: relative;
+            z-index: 2;
+
+            width: min(1100px, calc(100% - 30px));
+
+            margin: 40px auto 80px;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .hero h1 {
+            margin: 0 0 12px;
+
+            font-size:
+                clamp(38px, 6vw, 60px);
+
+            line-height: 1;
+        }
+
+        .hero h1 span {
+            color: var(--purple);
+        }
+
+        .hero p {
+            margin: 0 auto;
+
+            max-width: 700px;
+
+            color: var(--muted);
+
+            line-height: 1.7;
+        }
+
+        /* =====================================================
+           SEARCH POMOC
+        ===================================================== */
+
+        .help-search-box {
+            display: flex;
+
+            gap: 10px;
+
+            margin: 28px auto 35px;
+
+            max-width: 750px;
+        }
+
+        .help-search-box input {
+            flex: 1;
+            min-width: 0;
+
+            padding:
+                15px 17px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            outline: none;
+
+            background:
+                rgba(10,8,25,.9);
+
+            color: #fff;
+
+            font-size: 15px;
+        }
+
+        .help-search-box input::placeholder {
+            color: #68738f;
+        }
+
+        .help-search-box input:focus {
+            border-color:
+                rgba(139,92,246,.7);
+
+            box-shadow:
+                0 0 22px rgba(139,92,246,.12);
+        }
+
+        .help-search-box button {
+            border: 0;
+
+            border-radius: 12px;
+
+            padding:
+                0 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+
+            color: #fff;
+
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        /* =====================================================
+           KATEGORIE
+        ===================================================== */
+
+        .categories {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+        .help-card {
+            border:
+                1px solid rgba(139,92,246,.22);
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+            background:
+                rgba(10,8,24,.78);
+
+            backdrop-filter: blur(10px);
+
+            transition: .2s;
+
+            cursor: pointer;
+        }
+
+        .help-card:hover {
+            border-color:
+                rgba(139,92,246,.55);
+
+            transform: translateY(-3px);
+
+            background:
+                rgba(17,12,38,.9);
+
+            box-shadow:
+                0 15px 45px rgba(0,0,0,.25);
+        }
+
+        .help-icon {
+            font-size: 30px;
+
+            margin-bottom: 10px;
+        }
+
+        .help-card h3 {
+            margin: 0 0 8px;
+
+            font-size: 20px;
+        }
+
+        .help-card p {
+            margin: 0;
+
+            color: #aaa6bf;
+
+            line-height: 1.55;
+        }
+
+        /* =====================================================
+           BRAK WYNIKÓW
+        ===================================================== */
+
+        .empty {
+            display: none;
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #9994aa;
+        }
+
+        /* =====================================================
+           FAQ
+        ===================================================== */
+
+        .faq-section {
+            margin-top: 35px;
+        }
+
+        .faq-section h2 {
+            margin-bottom: 16px;
+        }
+
+        .faq {
+            border:
+                1px solid rgba(139,92,246,.2);
+
+            border-radius: 13px;
+
+            margin-bottom: 10px;
+
+            background:
+                rgba(10,8,24,.78);
+
+            overflow: hidden;
+        }
+
+        .faq button {
+            width: 100%;
+
+            border: 0;
+
+            background: transparent;
+
+            color: #fff;
+
+            text-align: left;
+
+            padding: 17px 20px;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .faq button:hover {
+            background:
+                rgba(139,92,246,.05);
+        }
+
+        .faq-answer {
+            display: none;
+
+            padding:
+                0 20px 18px;
+
+            color: #aaa6bf;
+
+            line-height: 1.7;
+        }
+
+        .faq.open .faq-answer {
+            display: block;
+        }
+
+        /* =====================================================
+           CONTACT
+        ===================================================== */
+
+        .contact-box {
+            margin-top: 35px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            border:
+                1px solid rgba(139,92,246,.25);
+
+            border-radius: 18px;
+
+            background:
+                rgba(10,8,24,.82);
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.2);
+        }
+
+        .contact-box h2 {
+            margin-top: 0;
+        }
+
+        .contact-box p {
+            color: #aaa6bf;
+
+            line-height: 1.6;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding:
+                12px 20px;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+
+            color: #fff;
+
+            text-decoration: none;
+
+            font-weight: 800;
+
+            border: 0;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 30px rgba(88,101,242,.25);
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            position: relative;
+            z-index: 2;
+
+            padding: 25px;
+
+            text-align: center;
+
+            color: #77738d;
+
+            border-top:
+                1px solid rgba(139,92,246,.12);
+        }
+
+        /* =====================================================
+           RESPONSIVE — TAKIE SAMO ZACHOWANIE JAK INDEX
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .header-inner {
+                flex-wrap: wrap;
+
+                padding:
+                    10px 0;
+            }
+
+            .header-search {
+                order: 3;
+
+                flex-basis: 100%;
+
+                max-width: none;
+            }
+
+            .categories {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .header-inner {
+                width:
+                    calc(100% - 22px);
+            }
+
+            .header-actions {
+                margin-left: auto;
+            }
+
+            .header-button {
+                padding:
+                    0 10px;
+            }
+
+            .header-button span {
+                display: none;
+            }
+
+            #account-button {
+                min-width: 43px;
+            }
+
+            #account-name {
+                max-width: 90px;
+            }
+
+            main {
+                width:
+                    calc(100% - 22px);
+            }
+
+            .help-search-box {
+                flex-direction: column;
+            }
+
+            .help-search-box button {
+                min-height: 48px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<!-- =====================================================
+     HEADER — Z INDEX.HTML
+===================================================== -->
+
+<header class="site-header">
+
+    <div class="header-inner">
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <img
+                src="assets/logo.png"
+                alt="ShadowTale"
+            >
+
+            <span>
+                <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span><span class="logo-pl">.PL</span>
+            </span>
+
+        </a>
+
+
+        <!-- WYSZUKIWARKA -->
+
+        <div class="header-search">
+
+            <form
+                id="global-search-form"
+                autocomplete="off"
+            >
+
+                <input
+                    type="search"
+                    id="global-search"
+                    placeholder="Szukaj plików, skryptów, map..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="search-button"
+                    type="submit"
+                    aria-label="Szukaj"
+                >
+                    🔎
+                </button>
+
+            </form>
+
+            <div id="search-results"></div>
+
+        </div>
+
+
+        <!-- PRZYCISKI -->
+
+        <div class="header-actions">
+
+            <a
+                href="admin.html"
+                id="panel-button"
+                class="header-button"
+                style="display:none;"
+            >
+                🛡️
+                <span>Panel</span>
+            </a>
+
+
+            <a
+                href="media.html"
+                class="header-button blocked-feature"
+                data-blocked="media"
+            >
+                🎬
+                <span>Media</span>
+            </a>
+
+
+            <!-- KONTO -->
+
+            <a
+                href="login.html"
+                id="account-button"
+                class="header-button"
+                aria-label="Zaloguj się"
+            >
+
+                <img
+                    id="account-avatar"
+                    src="assets/logo.png"
+                    alt="ShadowTale"
+                >
+
+                <span id="account-name">
+                    Zaloguj się
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main>
+
+    <section class="hero">
+
+        <h1>
+            Centrum <span>pomocy</span>
+        </h1>
+
+        <p>
+            Znajdź odpowiedź na najczęstsze pytania dotyczące ShadowTale,
+            konta, zakupów, produktów oraz zgłoszeń.
+        </p>
+
+    </section>
+
+
+    <!-- WYSZUKIWARKA POMOCY -->
+
+    <div class="help-search-box">
+
+        <input
+            id="help-search"
+            type="text"
+            placeholder="Wpisz czego szukasz..."
+            autocomplete="off"
+        >
+
+        <button
+            type="button"
+            onclick="searchHelp()"
+        >
+            Szukaj
+        </button>
+
+    </div>
+
+
+    <!-- KATEGORIE -->
+
+    <section
+        class="categories"
+        id="help-categories"
+    >
+
+        <article
+            class="help-card"
+            data-search="konto logowanie rejestracja hasło użytkownik profil ustawienia"
+        >
+
+            <div class="help-icon">
+                👤
+            </div>
+
+            <h3>
+                Konto
+            </h3>
+
+            <p>
+                Problemy z logowaniem, rejestracją,
+                ustawieniami i profilem.
+            </p>
+
+        </article>
+
+
+        <article
+            class="help-card"
+            data-search="zakup płatność produkt sklep zamówienie kupowanie"
+        >
+
+            <div class="help-icon">
+                🛒
+            </div>
+
+            <h3>
+                Zakupy i produkty
+            </h3>
+
+            <p>
+                Informacje dotyczące kupowania produktów
+                i pobierania plików.
+            </p>
+
+        </article>
+
+
+        <article
+            class="help-card"
+            data-search="minecraft skrypt mapa config tekstura schemat txt"
+        >
+
+            <div class="help-icon">
+                ⛏️
+            </div>
+
+            <h3>
+                Minecraft
+            </h3>
+
+            <p>
+                Pomoc związana ze skryptami, mapami,
+                configami, schematami i teksturami.
+            </p>
+
+        </article>
+
+
+        <article
+            class="help-card"
+            data-search="undertale save dane postacie przedmioty grafiki"
+        >
+
+            <div class="help-icon">
+                ❤️
+            </div>
+
+            <h3>
+                Undertale
+            </h3>
+
+            <p>
+                Informacje dotyczące kategorii
+                i plików Undertale.
+            </p>
+
+        </article>
+
+
+        <article
+            class="help-card"
+            data-search="ticket pomoc zgłoszenie kontakt administrator odpowiedź wiadomość"
+        >
+
+            <div class="help-icon">
+                🎫
+            </div>
+
+            <h3>
+                Tickety
+            </h3>
+
+            <p>
+                Potrzebujesz indywidualnej pomocy?
+                Utwórz ticket.
+            </p>
+
+        </article>
+
+
+        <article
+            class="help-card"
+            data-search="discord serwer społeczność"
+        >
+
+            <div class="help-icon">
+                💬
+            </div>
+
+            <h3>
+                Discord
+            </h3>
+
+            <p>
+                Dołącz do społeczności ShadowTale
+                i uzyskaj dodatkową pomoc.
+            </p>
+
+        </article>
+
+    </section>
+
+
+    <div
+        class="empty"
+        id="no-results"
+    >
+        Nie znaleziono pasującej kategorii.
+    </div>
+
+
+    <!-- FAQ -->
+
+    <section class="faq-section">
+
+        <h2>
+            Najczęściej zadawane pytania
+        </h2>
+
+
+        <div class="faq">
+
+            <button onclick="toggleFaq(this)">
+                Jak kupić produkt?
+            </button>
+
+            <div class="faq-answer">
+
+                Wybierz produkt w sklepie, sprawdź jego opis
+                i wersje, a następnie przejdź przez proces zakupu.
+                Po poprawnym zakupie plik będzie dostępny zgodnie
+                z ustawieniami produktu.
+
+            </div>
+
+        </div>
+
+
+        <div class="faq">
+
+            <button onclick="toggleFaq(this)">
+                Gdzie znajdę zakupione pliki?
+            </button>
+
+            <div class="faq-answer">
+
+                Zakupione produkty są przypisane do Twojego konta.
+                Wejdź w swoje konto i sprawdź sekcję dotyczącą
+                zakupów lub pobranych produktów.
+
+            </div>
+
+        </div>
+
+
+        <div class="faq">
+
+            <button onclick="toggleFaq(this)">
+                Co zrobić, jeśli plik nie działa?
+            </button>
+
+            <div class="faq-answer">
+
+                Sprawdź najpierw wymagania produktu, wersję Minecrafta
+                oraz wymagane pluginy. Jeśli problem nadal występuje,
+                utwórz ticket i dokładnie opisz problem.
+
+            </div>
+
+        </div>
+
+
+        <div class="faq">
+
+            <button onclick="toggleFaq(this)">
+                Jak zgłosić problem z zakupem?
+            </button>
+
+            <div class="faq-answer">
+
+                Najlepiej utworzyć ticket i podać nazwę produktu
+                oraz krótki opis problemu. Nie podawaj hasła
+                do swojego konta.
+
+            </div>
+
+        </div>
+
+
+        <div class="faq">
+
+            <button onclick="toggleFaq(this)">
+                Jak zamówić Custom?
+            </button>
+
+            <div class="faq-answer">
+
+                Jeżeli nie ma produktu, którego szukasz,
+                możesz skorzystać z opcji zamówienia Custom
+                dostępnej w odpowiedniej kategorii.
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- TICKET -->
+
+    <section class="contact-box">
+
+        <h2>
+            Nadal potrzebujesz pomocy?
+        </h2>
+
+        <p>
+            Utwórz ticket, a obsługa ShadowTale będzie mogła
+            zająć się Twoim zgłoszeniem.
+        </p>
+
+        <a
+            href="ticket.html"
+            class="primary-btn"
+        >
+            Utwórz ticket
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+    ShadowTale © 2026 — Centrum pomocy
+</footer>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* =====================================================
+       GWIAZDY
+    ===================================================== */
+
+    const stars =
+        document.getElementById("stars");
+
+    if (stars) {
+
+        const fragment =
+            document.createDocumentFragment();
+
+        for (let i = 0; i < 90; i++) {
+
+            const star =
+                document.createElement("div");
+
+            star.className = "star";
+
+            star.style.left =
+                Math.random() * 100 + "%";
+
+            star.style.top =
+                Math.random() * 100 + "%";
+
+            star.style.animationDelay =
+                Math.random() * 4 + "s";
+
+            fragment.appendChild(star);
+        }
+
+        stars.appendChild(fragment);
+    }
+
+
+    /* =====================================================
+       FAQ
+    ===================================================== */
+
+    window.toggleFaq = function(button) {
+
+        const faq =
+            button.parentElement;
+
+        faq.classList.toggle("open");
+
+    };
+
+
+    /* =====================================================
+       WYSZUKIWANIE POMOCY
+    ===================================================== */
+
+    window.searchHelp = function() {
+
+        const input =
+            document.getElementById("help-search");
+
+        const query =
+            String(
+                input?.value || ""
+            )
+            .trim()
+            .toLowerCase();
+
+        const cards =
+            document.querySelectorAll(".help-card");
+
+        let visible = 0;
+
+        cards.forEach(card => {
+
+            const searchable =
+                String(
+                    card.dataset.search || ""
+                )
+                .toLowerCase();
+
+            const title =
+                card
+                    .querySelector("h3")
+                    ?.textContent
+                    .toLowerCase() || "";
+
+            const description =
+                card
+                    .querySelector("p")
+                    ?.textContent
+                    .toLowerCase() || "";
+
+            const match =
+                !query ||
+                searchable.includes(query) ||
+                title.includes(query) ||
+                description.includes(query);
+
+            card.style.display =
+                match ? "" : "none";
+
+            if (match) {
+                visible++;
+            }
+
+        });
+
+        const noResults =
+            document.getElementById(
+                "no-results"
+            );
+
+        if (noResults) {
+
+            noResults.style.display =
+                visible === 0
+                    ? "block"
+                    : "none";
+
+        }
+
+    };
+
+
+    const helpSearch =
+        document.getElementById(
+            "help-search"
+        );
+
+    helpSearch?.addEventListener(
+        "input",
+        window.searchHelp
+    );
+
+    helpSearch?.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                window.searchHelp();
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       GLOBAL SEARCH
+       app.js obsługuje:
+       #global-search
+       #search-button
+       #search-results
+    ===================================================== */
+
+    const globalSearchForm =
+        document.getElementById(
+            "global-search-form"
+        );
+
+    globalSearchForm?.addEventListener(
+        "submit",
+        event => {
+
+            const input =
+                document.getElementById(
+                    "global-search"
+                );
+
+            const value =
+                String(
+                    input?.value || ""
+                ).trim();
+
+            if (!value) {
+
+                event.preventDefault();
+
+            }
+
+        }
+    );
+
+});
+
+</script>
+
+</body>
+</html>

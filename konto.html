@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Konto — ShadowTale</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+        /* =========================================================
+           SHADOWTALE — KONTO
+           ========================================================= */
+
+        :root {
+            --account-bg: #05050b;
+            --account-panel: rgba(12, 12, 25, 0.82);
+            --account-border: rgba(255,255,255,0.09);
+            --account-text: #ffffff;
+            --account-muted: #a7a7ba;
+            --account-purple: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+            background: var(--account-bg);
+            color: var(--account-text);
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* =========================================================
+           TŁO / GWIAZDY
+           ========================================================= */
+
+        #stars {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(111, 45, 189, 0.16), transparent 32%),
+                radial-gradient(circle at 80% 30%, rgba(25, 95, 255, 0.11), transparent 30%),
+                radial-gradient(circle at 50% 90%, rgba(180, 30, 255, 0.08), transparent 35%),
+                #05050b;
+        }
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .topbar {
+            position: relative;
+            z-index: 20;
+
+            width: min(1400px, calc(100% - 30px));
+            margin: 15px auto 0;
+
+            min-height: 70px;
+            padding: 12px 16px;
+
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+
+            background: rgba(8, 8, 18, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        .logo-button {
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 145px;
+            height: 46px;
+
+            padding: 0 18px;
+
+            border: 1px solid rgba(139,92,246,0.35);
+            border-radius: 13px;
+
+            background: linear-gradient(
+                135deg,
+                rgba(139,92,246,0.18),
+                rgba(70,40,130,0.08)
+            );
+
+            color: #fff;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 900;
+            letter-spacing: 2px;
+
+            transition: 0.2s ease;
+        }
+
+        .logo-button:hover {
+            border-color: rgba(139,92,246,0.75);
+
+            box-shadow:
+                0 0 15px rgba(139,92,246,0.28),
+                inset 0 0 15px rgba(139,92,246,0.08);
+
+            transform: translateY(-1px);
+        }
+
+        .logo-shadow {
+            color: #fff;
+        }
+
+        .logo-tale {
+            color: #9b6cff;
+        }
+
+        .top-search {
+            flex: 1;
+            min-width: 0;
+
+            height: 46px;
+
+            padding: 0 16px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 13px;
+
+            outline: none;
+
+            background: rgba(255,255,255,0.035);
+            color: #fff;
+
+            font-size: 14px;
+
+            transition: 0.2s ease;
+        }
+
+        .top-search::placeholder {
+            color: #85859a;
+        }
+
+        .top-search:focus {
+            border-color: rgba(139,92,246,0.65);
+
+            box-shadow:
+                0 0 15px rgba(139,92,246,0.14);
+        }
+
+        .top-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .top-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 42px;
+            padding: 0 13px;
+
+            border-radius: 11px;
+            border: 1px solid rgba(255,255,255,0.07);
+
+            background: rgba(255,255,255,0.035);
+
+            color: #ddddec;
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+        .top-link:hover {
+            color: #fff;
+            border-color: rgba(139,92,246,0.45);
+            background: rgba(139,92,246,0.09);
+
+            box-shadow:
+                0 0 14px rgba(139,92,246,0.15);
+        }
+
+        /* =========================================================
+           SEARCH RESULTS
+           ========================================================= */
+
+        #search-results {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 180px;
+            right: 270px;
+
+            display: none;
+
+            padding: 8px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+
+            background: rgba(10,10,20,0.97);
+            backdrop-filter: blur(20px);
+
+            box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+
+            z-index: 100;
+        }
+
+        .search-result {
+            display: block;
+
+            padding: 11px 13px;
+            border-radius: 10px;
+
+            color: #fff;
+            text-decoration: none;
+
+            transition: 0.15s ease;
+        }
+
+        .search-result:hover {
+            background: rgba(139,92,246,0.12);
+        }
+
+        /* =========================================================
+           GŁÓWNA ZAWARTOŚĆ
+           ========================================================= */
+
+        .account-wrapper {
+            width: min(1050px, calc(100% - 30px));
+            margin: 45px auto 80px;
+        }
+
+        .account-heading {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .account-heading h1 {
+            margin: 0 0 8px;
+
+            font-size: clamp(30px, 5vw, 48px);
+            font-weight: 900;
+            letter-spacing: -1px;
+
+            background: linear-gradient(
+                90deg,
+                #fff,
+                #bba2ff,
+                #fff
+            );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .account-heading p {
+            margin: 0;
+            color: var(--account-muted);
+            font-size: 14px;
+        }
+
+        /* =========================================================
+           PANEL KONTA
+           ========================================================= */
+
+        .account-card {
+            position: relative;
+            overflow: hidden;
+
+            padding: 30px;
+
+            border: 1px solid var(--account-border);
+            border-radius: 24px;
+
+            background: var(--account-panel);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 25px 80px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        .account-card::before {
+            content: "";
+
+            position: absolute;
+            top: -120px;
+            right: -120px;
+
+            width: 300px;
+            height: 300px;
+
+            border-radius: 50%;
+
+            background: radial-gradient(
+                circle,
+                rgba(139,92,246,0.14),
+                transparent 70%
+            );
+
+            pointer-events: none;
+        }
+
+        .profile-section {
+            position: relative;
+            z-index: 1;
+
+            display: flex;
+            align-items: center;
+            gap: 25px;
+
+            padding-bottom: 28px;
+            margin-bottom: 25px;
+
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+
+            flex-shrink: 0;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            border: 2px solid rgba(139,92,246,0.55);
+
+            background: #11111d;
+
+            box-shadow:
+                0 0 25px rgba(139,92,246,0.2),
+                inset 0 0 15px rgba(139,92,246,0.08);
+        }
+
+        .profile-info {
+            min-width: 0;
+        }
+
+        .profile-info h2 {
+            margin: 0 0 8px;
+
+            font-size: 28px;
+            font-weight: 900;
+
+            word-break: break-word;
+        }
+
+        .profile-email {
+            margin: 0 0 14px;
+
+            color: #9292a8;
+            font-size: 13px;
+
+            word-break: break-word;
+        }
+
+        /* =========================================================
+           RANGA — NEONOWY EFEKT
+           ========================================================= */
+
+        .role-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .role-badge {
+            --role-color: #9ca3af;
+            --role-glow: rgba(156,163,175,0.55);
+
+            position: relative;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            min-height: 34px;
+            padding: 7px 13px;
+
+            border-radius: 999px;
+
+            color: var(--role-color);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--role-color) 13%, transparent),
+                    rgba(255,255,255,0.025)
+                );
+
+            border: 1px solid color-mix(
+                in srgb,
+                var(--role-color) 65%,
+                transparent
+            );
+
+            font-size: 12px;
+            font-weight: 900;
+
+            text-shadow:
+                0 0 6px var(--role-glow),
+                0 0 12px var(--role-glow);
+
+            box-shadow:
+                0 0 7px color-mix(
+                    in srgb,
+                    var(--role-color) 30%,
+                    transparent
+                ),
+                0 0 18px color-mix(
+                    in srgb,
+                    var(--role-color) 16%,
+                    transparent
+                ),
+                inset 0 0 10px color-mix(
+                    in srgb,
+                    var(--role-color) 8%,
+                    transparent
+                );
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .role-badge::before {
+            content: "";
+
+            position: absolute;
+            inset: -2px;
+
+            border-radius: inherit;
+
+            background: var(--role-color);
+
+            opacity: 0.12;
+            filter: blur(9px);
+
+            z-index: -1;
+
+            animation: roleNeonPulse 2.8s ease-in-out infinite;
+        }
+
+        .role-badge:hover {
+            transform: translateY(-2px) scale(1.025);
+
+            box-shadow:
+                0 0 10px var(--role-glow),
+                0 0 25px var(--role-glow),
+                0 0 45px color-mix(
+                    in srgb,
+                    var(--role-color) 22%,
+                    transparent
+                ),
+                inset 0 0 14px color-mix(
+                    in srgb,
+                    var(--role-color) 12%,
+                    transparent
+                );
+        }
+
+        @keyframes roleNeonPulse {
+            0%,
+            100% {
+                opacity: 0.08;
+            }
+
+            50% {
+                opacity: 0.19;
+            }
+        }
+
+        /* =========================================================
+           KOLORY ISTNIEJĄCYCH RANG
+           ========================================================= */
+
+        .role-badge.owner {
+            --role-color: #ffd84d;
+            --role-glow: rgba(255,216,77,0.72);
+        }
+
+        .role-badge.admin {
+            --role-color: #5ca9ff;
+            --role-glow: rgba(92,169,255,0.72);
+        }
+
+        .role-badge.moderator {
+            --role-color: #ff6868;
+            --role-glow: rgba(255,104,104,0.72);
+        }
+
+        .role-badge.helper {
+            --role-color: #61e58a;
+            --role-glow: rgba(97,229,138,0.7);
+        }
+
+        .role-badge.klient {
+            --role-color: #b9c1d6;
+            --role-glow: rgba(185,193,214,0.5);
+        }
+
+        .role-badge.early-access {
+            --role-color: #d08cff;
+            --role-glow: rgba(208,140,255,0.7);
+        }
+
+        .role-badge.wspinacz-szczytow {
+            --role-color: #8ee7ff;
+            --role-glow: rgba(142,231,255,0.7);
+        }
+
+        .role-badge.programista-skryptow {
+            --role-color: #4cffb0;
+            --role-glow: rgba(76,255,176,0.7);
+        }
+
+        .role-badge.programista-configow {
+            --role-color: #ffbd5c;
+            --role-glow: rgba(255,189,92,0.7);
+        }
+
+        .role-badge.programista-budowlaniec {
+            --role-color: #ff925c;
+            --role-glow: rgba(255,146,92,0.7);
+        }
+
+        .role-badge.programista-undertale {
+            --role-color: #ff5c83;
+            --role-glow: rgba(255,92,131,0.7);
+        }
+
+        .role-badge.grafik {
+            --role-color: #c77dff;
+            --role-glow: rgba(199,125,255,0.7);
+        }
+
+        .role-badge.media {
+            --role-color: #ff7bd4;
+            --role-glow: rgba(255,123,212,0.7);
+        }
+
+        .role-badge.media-1 {
+            --role-color: #79c8ff;
+            --role-glow: rgba(121,200,255,0.7);
+        }
+
+        .role-badge.media-2 {
+            --role-color: #70e8ff;
+            --role-glow: rgba(112,232,255,0.7);
+        }
+
+        .role-badge.media-3 {
+            --role-color: #bb8cff;
+            --role-glow: rgba(187,140,255,0.7);
+        }
+
+        .role-badge.media-4 {
+            --role-color: #ff8cbd;
+            --role-glow: rgba(255,140,189,0.7);
+        }
+
+        .role-badge.trusted-media {
+            --role-color: #4ee6ff;
+            --role-glow: rgba(78,230,255,0.75);
+        }
+
+        .role-badge.super-media {
+            --role-color: #ff704d;
+            --role-glow: rgba(255,112,77,0.75);
+        }
+
+        .role-badge.starter-media {
+            --role-color: #ffcb5c;
+            --role-glow: rgba(255,203,92,0.72);
+        }
+
+        .role-badge.friend {
+            --role-color: #d58cff;
+            --role-glow: rgba(213,140,255,0.72);
+        }
+
+        .role-badge.content-winner {
+            --role-color: #ffe15c;
+            --role-glow: rgba(255,225,92,0.75);
+        }
+
+        .role-badge.programista {
+            --role-color: #65ffdf;
+            --role-glow: rgba(101,255,223,0.72);
+        }
+
+        /* =========================================================
+           STATYSTYKI / OPCJE
+           ========================================================= */
+
+        .account-grid {
+            position: relative;
+            z-index: 1;
+
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .account-option {
+            min-height: 92px;
+
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 18px;
+
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+
+            background: rgba(255,255,255,0.025);
+
+            color: #fff;
+            text-decoration: none;
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .account-option:hover {
+            transform: translateY(-2px);
+
+            border-color: rgba(139,92,246,0.45);
+
+            background: rgba(139,92,246,0.065);
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.18),
+                0 0 18px rgba(139,92,246,0.08);
+        }
+
+        .option-icon {
+            width: 48px;
+            height: 48px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background: rgba(139,92,246,0.1);
+            border: 1px solid rgba(139,92,246,0.18);
+
+            font-size: 21px;
+        }
+
+        .option-text {
+            min-width: 0;
+        }
+
+        .option-text strong {
+            display: block;
+
+            margin-bottom: 5px;
+
+            font-size: 15px;
+        }
+
+        .option-text span {
+            display: block;
+
+            color: #85859a;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .account-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .account-option.disabled:hover {
+            transform: none;
+
+            border-color: rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.025);
+
+            box-shadow: none;
+        }
+
+        /* =========================================================
+           PANEL ADMINISTRACYJNY
+           ========================================================= */
+
+        #admin-panel-option {
+            display: none;
+        }
+
+        /* =========================================================
+           WYLOGOWANIE
+           ========================================================= */
+
+        .logout-area {
+            position: relative;
+            z-index: 1;
+
+            margin-top: 24px;
+            padding-top: 24px;
+
+            border-top: 1px solid rgba(255,255,255,0.07);
+
+            text-align: center;
+        }
+
+        #logout-button {
+            min-width: 180px;
+
+            padding: 12px 18px;
+
+            border: 1px solid rgba(255,85,85,0.25);
+            border-radius: 12px;
+
+            background: rgba(255,65,65,0.06);
+
+            color: #ff8c8c;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        #logout-button:hover {
+            border-color: rgba(255,85,85,0.55);
+
+            background: rgba(255,65,65,0.11);
+
+            box-shadow:
+                0 0 18px rgba(255,65,65,0.13);
+        }
+
+        /* =========================================================
+           BŁĘDY / ŁADOWANIE
+           ========================================================= */
+
+        .account-message {
+            padding: 35px 20px;
+
+            text-align: center;
+
+            color: #a7a7ba;
+        }
+
+        .account-error {
+            color: #ff8c8c;
+        }
+
+        .loading {
+            animation: loadingPulse 1.4s ease-in-out infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%,
+            100% {
+                opacity: 0.45;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 900px) {
+            .topbar {
+                flex-wrap: wrap;
+            }
+
+            .logo-button {
+                min-width: 130px;
+            }
+
+            .top-search {
+                order: 3;
+                flex-basis: 100%;
+            }
+
+            #search-results {
+                left: 15px;
+                right: 15px;
+                top: calc(100% + 8px);
+            }
+
+            .top-links {
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .account-wrapper {
+                width: min(100% - 20px, 1050px);
+                margin-top: 25px;
+            }
+
+            .account-card {
+                padding: 20px;
+                border-radius: 19px;
+            }
+
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .role-container {
+                justify-content: center;
+            }
+
+            .account-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-links {
+                width: 100%;
+            }
+
+            .top-link {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="stars"></canvas>
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
+    <header class="topbar">
+
+        <a href="index.html" class="logo-button" aria-label="ShadowTale">
+            <span class="logo-shadow">SHADOW</span>
+            <span class="logo-tale">TALE</span>
+        </a>
+
+        <input
+            id="shadow-search"
+            class="top-search"
+            type="search"
+            placeholder="Szukaj na ShadowTale..."
+            autocomplete="off"
+            aria-label="Szukaj na ShadowTale"
+        >
+
+        <div class="top-links">
+            <a href="media.html" class="top-link">Media</a>
+            <a href="pomoc.html" class="top-link">Pomoc</a>
+        </div>
+
+        <div id="search-results"></div>
+
+    </header>
+
+    <!-- =========================================================
+         KONTO
+         ========================================================= -->
+
+    <main class="account-wrapper">
+
+        <div class="account-heading">
+            <h1>Twoje konto</h1>
+            <p>Zarządzaj swoim profilem i ustawieniami ShadowTale.</p>
+        </div>
+
+        <section class="account-card">
+
+            <div id="account-loading" class="account-message loading">
+                Ładowanie konta...
+            </div>
+
+            <div id="account-content" style="display:none;">
+
+                <!-- PROFIL -->
+
+                <div class="profile-section">
+
+                    <img
+                        id="account-avatar"
+                        class="avatar"
+                        src="assets/logo.png"
+                        alt="Avatar użytkownika"
+                    >
+
+                    <div class="profile-info">
+
+                        <h2 id="account-username">
+                            Ładowanie...
+                        </h2>
+
+                        <p id="account-email" class="profile-email">
+                            Ładowanie...
+                        </p>
+
+                        <div
+                            id="account-roles"
+                            class="role-container"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <!-- OPCJE KONTA -->
+
+                <div class="account-grid">
+
+                    <a
+                        href="statystyki.html"
+                        class="account-option"
+                    >
+                        <div class="option-icon">📊</div>
+
+                        <div class="option-text">
+                            <strong>Statystyki</strong>
+                            <span>
+                                Zobacz swoje statystyki i aktywność.
+                            </span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="ustawienia.html"
+                        class="account-option"
+                    >
+                        <div class="option-icon">⚙️</div>
+
+                        <div class="option-text">
+                            <strong>Ustawienia</strong>
+                            <span>
+                                Zarządzaj ustawieniami swojego konta.
+                            </span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="#"
+                        class="account-option disabled"
+                        onclick="return false;"
+                    >
+                        <div class="option-icon">📜</div>
+
+                        <div class="option-text">
+                            <strong>Historia</strong>
+                            <span>
+                                Historia zakupów będzie dostępna później.
+                            </span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="#"
+                        class="account-option disabled"
+                        onclick="return false;"
+                    >
+                        <div class="option-icon">💳</div>
+
+                        <div class="option-text">
+                            <strong>Płatności</strong>
+                            <span>
+                                Informacje o płatnościach będą dostępne później.
+                            </span>
+                        </div>
+                    </a>
+
+                    <a
+                        id="admin-panel-option"
+                        href="admin.html"
+                        class="account-option"
+                    >
+                        <div class="option-icon">🛡️</div>
+
+                        <div class="option-text">
+                            <strong>Panel administracyjny</strong>
+                            <span>
+                                Zarządzaj ShadowTale.
+                            </span>
+                        </div>
+                    </a>
+
+                </div>
+
+                <!-- WYLOGOWANIE -->
+
+                <div class="logout-area">
+                    <button id="logout-button" type="button">
+                        Wyloguj się
+                    </button>
+                </div>
+
+            </div>
+
+            <div
+                id="account-error"
+                class="account-message account-error"
+                style="display:none;"
+            ></div>
+
+        </section>
+
+    </main>
+
+    <script>
+        /* =========================================================
+           SHADOWTALE — KONTO.JS
+           Jedna ranga: profiles.role
+           Neon = efekt wizualny
+           ========================================================= */
+
+        let supabaseClient = null;
+
+        const DEFAULT_AVATAR = "assets/logo.png";
+
+        /* =========================================================
+           KONFIGURACJA SUPABASE
+           ========================================================= */
+
+        function getSupabaseConfig() {
+            const config =
+                window.CONFIG ||
+                window.SHADOWTALE_CONFIG ||
+                {};
+
+            return {
+                url:
+                    config.supabaseUrl ||
+                    config.SUPABASE_URL ||
+                    "",
+
+                key:
+                    config.supabaseKey ||
+                    config.SUPABASE_KEY ||
+                    ""
+            };
+        }
+
+        function initSupabase() {
+            if (
+                typeof window.supabase === "undefined" ||
+                !window.supabase.createClient
+            ) {
+                throw new Error(
+                    "Biblioteka Supabase nie została załadowana."
+                );
+            }
+
+            const config = getSupabaseConfig();
+
+            if (!config.url || !config.key) {
+                throw new Error(
+                    "Brakuje konfiguracji Supabase w config.js."
+                );
+            }
+
+            supabaseClient =
+                window.supabase.createClient(
+                    config.url,
+                    config.key
+                );
+        }
+
+        /* =========================================================
+           INFORMACJE O RANGACH
+           ========================================================= */
+
+        const ROLE_INFO = {
+
+            owner: {
+                name: "Właściciel",
+                icon: "👑",
+                className: "owner"
+            },
+
+            admin: {
+                name: "Admin",
+                icon: "🛡️",
+                className: "admin"
+            },
+
+            administrator: {
+                name: "Administrator",
+                icon: "🛡️",
+                className: "admin"
+            },
+
+            moderator: {
+                name: "Moderator",
+                icon: "🔨",
+                className: "moderator"
+            },
+
+            helper: {
+                name: "Helper",
+                icon: "🧰",
+                className: "helper"
+            },
+
+            klient: {
+                name: "Klient",
+                icon: "👤",
+                className: "klient"
+            },
+
+            user: {
+                name: "Klient",
+                icon: "👤",
+                className: "klient"
+            },
+
+            użytkownik: {
+                name: "Klient",
+                icon: "👤",
+                className: "klient"
+            },
+
+            "early access": {
+                name: "Early Access",
+                icon: "⭐",
+                className: "early-access"
+            },
+
+            early_access: {
+                name: "Early Access",
+                icon: "⭐",
+                className: "early-access"
+            },
+
+            "wspinacz szczytów": {
+                name: "Wspinacz szczytów",
+                icon: "⛰️",
+                className: "wspinacz-szczytow"
+            },
+
+            "programista skryptów": {
+                name: "Programista skryptów",
+                icon: "💻",
+                className: "programista-skryptow"
+            },
+
+            "programista configów": {
+                name: "Programista configów",
+                icon: "⚙️",
+                className: "programista-configow"
+            },
+
+            "programista-budowlaniec": {
+                name: "Programista-budowlaniec",
+                icon: "🏗️",
+                className: "programista-budowlaniec"
+            },
+
+            "programista undertale": {
+                name: "Programista Undertale",
+                icon: "❤️",
+                className: "programista-undertale"
+            },
+
+            grafik: {
+                name: "Grafik",
+                icon: "🎨",
+                className: "grafik"
+            },
+
+            media: {
+                name: "Media",
+                icon: "📹",
+                className: "media"
+            },
+
+            "media 1": {
+                name: "Media — Poziom 1",
+                icon: "📹",
+                className: "media-1"
+            },
+
+            "media 2": {
+                name: "Media — Poziom 2",
+                icon: "📹",
+                className: "media-2"
+            },
+
+            "media 3": {
+                name: "Media — Poziom 3",
+                icon: "📹",
+                className: "media-3"
+            },
+
+            "media 4": {
+                name: "Media — Poziom 4",
+                icon: "📹",
+                className: "media-4"
+            },
+
+            "trusted media": {
+                name: "Trusted Media",
+                icon: "🎥",
+                className: "trusted-media"
+            },
+
+            "super media": {
+                name: "Super Media",
+                icon: "🔥",
+                className: "super-media"
+            },
+
+            "starter media": {
+                name: "Starter Media",
+                icon: "🎬",
+                className: "starter-media"
+            },
+
+            friend: {
+                name: "Friend",
+                icon: "💜",
+                className: "friend"
+            },
+
+            "content winner": {
+                name: "Wygrany konkurs",
+                icon: "🏆",
+                className: "content-winner"
+            },
+
+            "wygrany konkurs": {
+                name: "Wygrany konkurs",
+                icon: "🏆",
+                className: "content-winner"
+            },
+
+            programista: {
+                name: "Programista",
+                icon: "💻",
+                className: "programista"
+            }
+
+        };
+
+        /* =========================================================
+           NORMALIZACJA RANGI
+           ========================================================= */
+
+        function normalizeRole(role) {
+            if (!role) {
+                return "";
+            }
+
+            return String(role)
+                .trim()
+                .toLowerCase();
+        }
+
+        function getRoleInfo(role) {
+            const normalized = normalizeRole(role);
+
+            return (
+                ROLE_INFO[normalized] || {
+                    name: role,
+                    icon: "✦",
+                    className: "klient"
+                }
+            );
+        }
+
+        /* =========================================================
+           RENDER RANGI
+           ========================================================= */
+
+        function renderRole(role) {
+            const info = getRoleInfo(role);
+
+            const badge = document.createElement("span");
+
+            badge.className =
+                "role-badge " +
+                info.className;
+
+            badge.title =
+                "Ranga: " + info.name;
+
+            badge.innerHTML = `
+                <span>${info.icon}</span>
+                <span>${escapeHtml(info.name)}</span>
+            `;
+
+            return badge;
+        }
+
+        /* =========================================================
+           ESCAPE HTML
+           ========================================================= */
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        /* =========================================================
+           ZAŁADOWANIE KONTA
+           ========================================================= */
+
+        async function loadAccount() {
+
+            const loading =
+                document.getElementById(
+                    "account-loading"
+                );
+
+            const content =
+                document.getElementById(
+                    "account-content"
+                );
+
+            const errorBox =
+                document.getElementById(
+                    "account-error"
+                );
+
+            try {
+
+                loading.style.display = "block";
+                content.style.display = "none";
+                errorBox.style.display = "none";
+
+                if (!supabaseClient) {
+                    initSupabase();
+                }
+
+                const {
+                    data: sessionData,
+                    error: sessionError
+                } = await supabaseClient.auth.getSession();
+
+                if (sessionError) {
+                    throw sessionError;
+                }
+
+                const session =
+                    sessionData?.session;
+
+                if (!session?.user) {
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
+
+                const user =
+                    session.user;
+
+                /* =================================================
+                   POBIERANIE PROFILU
+
+                   UWAGA:
+                   Używamy tylko:
+                   username
+                   avatar_url
+                   role
+
+                   Nie używamy roles.
+                   ================================================= */
+
+                const {
+                    data: profile,
+                    error: profileError
+                } = await supabaseClient
+                    .from("profiles")
+                    .select(
+                        "username, avatar_url, role"
+                    )
+                    .eq("id", user.id)
+                    .maybeSingle();
+
+                if (profileError) {
+                    throw new Error(
+                        "Nie udało się pobrać profilu: " +
+                        profileError.message
+                    );
+                }
+
+                const username =
+                    profile?.username ||
+                    user.user_metadata?.username ||
+                    user.email?.split("@")[0] ||
+                    "Klient";
+
+                const avatar =
+                    profile?.avatar_url ||
+                    user.user_metadata?.avatar_url ||
+                    DEFAULT_AVATAR;
+
+                const role =
+                    profile?.role ||
+                    user.user_metadata?.role ||
+                    "klient";
+
+                /* ================================================
+                   PROFIL
+                   ================================================ */
+
+                document.getElementById(
+                    "account-username"
+                ).textContent = username;
+
+                document.getElementById(
+                    "account-email"
+                ).textContent =
+                    user.email || "Brak adresu e-mail";
+
+                const avatarElement =
+                    document.getElementById(
+                        "account-avatar"
+                    );
+
+                avatarElement.src = avatar;
+
+                avatarElement.onerror =
+                    function () {
+                        this.onerror = null;
+                        this.src = DEFAULT_AVATAR;
+                    };
+
+                /* ================================================
+                   RANGA
+                   ================================================ */
+
+                const rolesContainer =
+                    document.getElementById(
+                        "account-roles"
+                    );
+
+                rolesContainer.innerHTML = "";
+
+                rolesContainer.appendChild(
+                    renderRole(role)
+                );
+
+                /* ================================================
+                   PANEL ADMINISTRACYJNY
+                   ================================================ */
+
+                const normalizedRole =
+                    normalizeRole(role);
+
+                const adminPanel =
+                    document.getElementById(
+                        "admin-panel-option"
+                    );
+
+                if (
+                    normalizedRole === "owner" ||
+                    normalizedRole === "admin" ||
+                    normalizedRole === "administrator"
+                ) {
+                    adminPanel.style.display =
+                        "flex";
+                } else {
+                    adminPanel.style.display =
+                        "none";
+                }
+
+                /* ================================================
+                   POKAŻ KONTO
+                   ================================================ */
+
+                loading.style.display = "none";
+                content.style.display = "block";
+
+            } catch (error) {
+
+                console.error(
+                    "ShadowTale konto:",
+                    error
+                );
+
+                loading.style.display = "none";
+                content.style.display = "none";
+
+                errorBox.style.display =
+                    "block";
+
+                errorBox.textContent =
+                    error?.message ||
+                    "Nie udało się załadować konta.";
+            }
+        }
+
+        /* =========================================================
+           WYLOGOWANIE
+           ========================================================= */
+
+        async function logout() {
+
+            const button =
+                document.getElementById(
+                    "logout-button"
+                );
+
+            try {
+
+                button.disabled = true;
+                button.textContent =
+                    "Wylogowywanie...";
+
+                if (!supabaseClient) {
+                    initSupabase();
+                }
+
+                const {
+                    error
+                } = await supabaseClient.auth.signOut();
+
+                if (error) {
+                    throw error;
+                }
+
+                window.location.href =
+                    "login.html";
+
+            } catch (error) {
+
+                console.error(
+                    "Wylogowanie:",
+                    error
+                );
+
+                button.disabled = false;
+                button.textContent =
+                    "Wyloguj się";
+
+                alert(
+                    "Nie udało się wylogować: " +
+                    (error?.message || "Nieznany błąd")
+                );
+            }
+        }
+
+        /* =========================================================
+           GWIAZDY
+           ========================================================= */
+
+        function createStars() {
+
+            const canvas =
+                document.getElementById(
+                    "stars"
+                );
+
+            if (!canvas) {
+                return;
+            }
+
+            const ctx =
+                canvas.getContext("2d");
+
+            let width = 0;
+            let height = 0;
+
+            const stars = [];
+
+            const STAR_COUNT = 135;
+
+            function resize() {
+
+                width =
+                    canvas.width =
+                    window.innerWidth;
+
+                height =
+                    canvas.height =
+                    window.innerHeight;
+            }
+
+            function createStar() {
+
+                return {
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+
+                    size:
+                        Math.random() * 1.7 +
+                        0.2,
+
+                    speed:
+                        Math.random() * 0.18 +
+                        0.03,
+
+                    alpha:
+                        Math.random() * 0.75 +
+                        0.15
+                };
+            }
+
+            function resetStars() {
+
+                stars.length = 0;
+
+                for (
+                    let i = 0;
+                    i < STAR_COUNT;
+                    i++
+                ) {
+                    stars.push(
+                        createStar()
+                    );
+                }
+            }
+
+            function animate() {
+
+                ctx.clearRect(
+                    0,
+                    0,
+                    width,
+                    height
+                );
+
+                for (const star of stars) {
+
+                    star.y += star.speed;
+
+                    if (
+                        star.y >
+                        height + 5
+                    ) {
+                        star.y = -5;
+                        star.x =
+                            Math.random() *
+                            width;
+                    }
+
+                    ctx.beginPath();
+
+                    ctx.fillStyle =
+                        `rgba(255,255,255,${star.alpha})`;
+
+                    ctx.arc(
+                        star.x,
+                        star.y,
+                        star.size,
+                        0,
+                        Math.PI * 2
+                    );
+
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(
+                    animate
+                );
+            }
+
+            resize();
+            resetStars();
+            animate();
+
+            window.addEventListener(
+                "resize",
+                function () {
+                    resize();
+                }
+            );
+        }
+
+        /* =========================================================
+           WYSZUKIWARKA
+           ========================================================= */
+
+        function setupSearch() {
+
+            const input =
+                document.getElementById(
+                    "shadow-search"
+                );
+
+            const results =
+                document.getElementById(
+                    "search-results"
+                );
+
+            if (!input || !results) {
+                return;
+            }
+
+            input.addEventListener(
+                "input",
+                function () {
+
+                    const query =
+                        input.value
+                            .trim()
+                            .toLowerCase();
+
+                    if (!query) {
+                        results.style.display =
+                            "none";
+
+                        results.innerHTML =
+                            "";
+
+                        return;
+                    }
+
+                    /*
+                     * Jeżeli główny app.js ma własny
+                     * system wyszukiwania, pozwalamy mu
+                     * przejąć obsługę.
+                     */
+
+                    if (
+                        typeof window.getSearchResults ===
+                        "function"
+                    ) {
+                        try {
+
+                            const found =
+                                window.getSearchResults(
+                                    query
+                                );
+
+                            if (
+                                Array.isArray(found) &&
+                                found.length
+                            ) {
+
+                                results.innerHTML =
+                                    found
+                                        .slice(0, 6)
+                                        .map(
+                                            item => {
+
+                                                const title =
+                                                    item.title ||
+                                                    item.name ||
+                                                    "Wynik";
+
+                                                const url =
+                                                    item.url ||
+                                                    "#";
+
+                                                return `
+                                                    <a
+                                                        class="search-result"
+                                                        href="${escapeHtml(url)}"
+                                                    >
+                                                        ${escapeHtml(title)}
+                                                    </a>
+                                                `;
+                                            }
+                                        )
+                                        .join("");
+
+                                results.style.display =
+                                    "block";
+
+                                return;
+                            }
+
+                        } catch (error) {
+                            console.warn(
+                                "Wyszukiwarka:",
+                                error
+                            );
+                        }
+                    }
+
+                    results.innerHTML =
+                        `
+                        <div class="search-result">
+                            Brak wyników dla:
+                            <strong>${escapeHtml(query)}</strong>
+                        </div>
+                        `;
+
+                    results.style.display =
+                        "block";
+                }
+            );
+
+            document.addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        !input.contains(
+                            event.target
+                        ) &&
+                        !results.contains(
+                            event.target
+                        )
+                    ) {
+                        results.style.display =
+                            "none";
+                    }
+                }
+            );
+        }
+
+        /* =========================================================
+           START
+           ========================================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                createStars();
+                setupSearch();
+
+                document
+                    .getElementById(
+                        "logout-button"
+                    )
+                    ?.addEventListener(
+                        "click",
+                        logout
+                    );
+
+                loadAccount();
+            }
+        );
+    </script>
+
+</body>
+</html>

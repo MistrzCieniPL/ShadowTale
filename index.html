@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShadowTale.pl — Twój świat, twoje zasady</title>
+
+    <meta
+        name="description"
+        content="ShadowTale.pl — Minecraft, Undertale, pliki, poradniki i społeczność w jednym miejscu."
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+
+    <style>
+        :root {
+            --bg: #050712;
+            --bg2: #080b18;
+            --panel: rgba(12,16,34,.88);
+            --panel2: rgba(15,20,42,.92);
+
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --blue: #5865f2;
+
+            --green: #39ff88;
+
+            --text: #f8fafc;
+            --muted: #94a3b8;
+
+            --border: rgba(139,92,246,.22);
+            --shadow: 0 25px 80px rgba(0,0,0,.45);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(88,101,242,.18),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 10% 30%,
+                    rgba(139,92,246,.09),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =====================================================
+           GWIAZDY
+        ===================================================== */
+
+        #stars {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: #fff;
+            opacity: .25;
+
+            animation:
+                twinkle 3s ease-in-out infinite alternate;
+        }
+
+        .star:nth-child(3n) {
+            animation-duration: 4.5s;
+        }
+
+        .star:nth-child(4n) {
+            width: 3px;
+            height: 3px;
+            opacity: .45;
+        }
+
+        @keyframes twinkle {
+            from {
+                opacity: .12;
+                transform: scale(.75);
+            }
+
+            to {
+                opacity: .85;
+                transform: scale(1.25);
+            }
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            width: 100%;
+
+            background: rgba(5,7,18,.88);
+
+            border-bottom:
+                1px solid rgba(139,92,246,.18);
+
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 10px 45px rgba(0,0,0,.3);
+        }
+
+        .header-inner {
+            width: min(1400px, calc(100% - 32px));
+            min-height: 62px;
+
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+
+            gap: 18px;
+        }
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 10px;
+
+            min-width: max-content;
+
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: .5px;
+        }
+
+        .logo img {
+            width: 38px;
+            height: 38px;
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 0 9px rgba(139,92,246,.7))
+                drop-shadow(0 0 22px rgba(88,101,242,.35));
+        }
+
+        .logo-shadow {
+            color: #fff;
+        }
+
+        .logo-tale {
+            color: var(--purple);
+
+            text-shadow:
+                0 0 10px rgba(139,92,246,.75),
+                0 0 25px rgba(139,92,246,.35);
+        }
+
+        .logo-pl {
+            color: var(--blue);
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        .header-search {
+            position: relative;
+
+            flex: 1;
+
+            width: 100%;
+            max-width: 650px;
+
+            margin: 0 auto;
+        }
+
+        #global-search-form {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        #global-search {
+            width: 100%;
+            height: 45px;
+
+            padding: 0 16px;
+
+            color: #fff;
+
+            background:
+                rgba(15,20,42,.92);
+
+            border:
+                1px solid rgba(139,92,246,.22);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            transition: .2s ease;
+        }
+
+        #global-search::placeholder {
+            color: #68738f;
+        }
+
+        #global-search:focus {
+            border-color:
+                rgba(139,92,246,.7);
+
+            box-shadow:
+                0 0 22px rgba(139,92,246,.16);
+        }
+
+        #search-button {
+            width: 45px;
+            height: 45px;
+
+            flex: 0 0 45px;
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            border-radius: 12px;
+
+            background:
+                rgba(139,92,246,.12);
+
+            color: #fff;
+
+            transition: .2s ease;
+        }
+
+        #search-button:hover {
+            background:
+                rgba(139,92,246,.25);
+
+            border-color:
+                rgba(139,92,246,.65);
+
+            transform: translateY(-1px);
+        }
+
+        #search-results {
+            position: absolute;
+
+            top: 54px;
+            left: 0;
+
+            width: 100%;
+
+            display: none;
+
+            padding: 8px;
+
+            background:
+                rgba(7,10,24,.98);
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.55);
+
+            z-index: 2000;
+        }
+
+        /* =====================================================
+           HEADER BUTTONS
+        ===================================================== */
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .header-button {
+            min-height: 40px;
+
+            padding: 0 14px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            border:
+                1px solid rgba(139,92,246,.25);
+
+            border-radius: 12px;
+
+            background:
+                rgba(12,16,34,.9);
+
+            color: #fff;
+
+            font-weight: 700;
+
+            transition: .2s ease;
+        }
+
+        .header-button:hover {
+            transform: translateY(-2px);
+
+            border-color:
+                rgba(139,92,246,.65);
+
+            background:
+                rgba(139,92,246,.13);
+
+            box-shadow:
+                0 0 20px rgba(139,92,246,.17);
+        }
+
+        #panel-button {
+            display: none;
+        }
+
+        /* =====================================================
+           NIEZALOGOWANE KONTO
+        ===================================================== */
+
+        #account-button {
+            min-width: 150px;
+        }
+
+        #account-avatar {
+            width: 30px;
+            height: 30px;
+
+            border-radius: 50%;
+
+            object-fit: contain;
+
+            border:
+                1px solid rgba(139,92,246,.5);
+
+            background:
+                rgba(8,11,24,.95);
+
+            padding: 2px;
+
+            filter:
+                drop-shadow(0 0 7px rgba(139,92,246,.4));
+        }
+
+        #account-name {
+            max-width: 150px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            width: min(1200px, calc(100% - 32px));
+            min-height: 610px;
+
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 90px 20px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 15px;
+
+            margin-bottom: 23px;
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            border-radius: 999px;
+
+            background:
+                rgba(139,92,246,.08);
+
+            color:
+                #c4b5fd;
+
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .hero h1 {
+            margin: 0 0 22px;
+
+            font-size:
+                clamp(48px, 8vw, 92px);
+
+            line-height: .95;
+
+            font-weight: 950;
+
+            letter-spacing: -4px;
+        }
+
+        .hero h1 span {
+            display: block;
+        }
+
+        .hero-title-purple {
+            color: var(--purple);
+
+            text-shadow:
+                0 0 18px rgba(139,92,246,.6),
+                0 0 45px rgba(139,92,246,.25);
+        }
+
+        .hero p {
+            max-width: 720px;
+
+            margin: 0 auto;
+
+            color: var(--muted);
+
+            font-size: 18px;
+            line-height: 1.75;
+        }
+
+        .hero-actions {
+            margin-top: 35px;
+
+            display: flex;
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 14px;
+        }
+
+        .hero-button {
+            min-width: 175px;
+            min-height: 48px;
+
+            padding: 0 23px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            border-radius: 12px;
+
+            background:
+                rgba(139,92,246,.09);
+
+            color: #fff;
+
+            font-weight: 800;
+
+            transition: .2s ease;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-3px);
+
+            border-color:
+                rgba(139,92,246,.65);
+
+            box-shadow:
+                0 0 30px rgba(139,92,246,.2);
+        }
+
+        .hero-button.primary {
+            border-color: transparent;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+        }
+
+        /* =====================================================
+           SEKCJE
+        ===================================================== */
+
+        .section {
+            width: min(1200px, calc(100% - 32px));
+
+            margin: 0 auto;
+
+            padding: 80px 0;
+        }
+
+        .section-heading {
+            margin-bottom: 38px;
+            text-align: center;
+        }
+
+        .section-heading h2 {
+            margin: 0 0 10px;
+
+            font-size:
+                clamp(30px, 5vw, 46px);
+        }
+
+        .section-heading p {
+            margin: 0;
+
+            color: var(--muted);
+
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           WORLD CARDS
+        ===================================================== */
+
+        .world-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 24px;
+        }
+
+        .world-card {
+            position: relative;
+
+            min-height: 330px;
+
+            padding: 36px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            overflow: hidden;
+
+            border:
+                1px solid rgba(139,92,246,.25);
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15,20,42,.95),
+                    rgba(8,11,24,.97)
+                );
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.25);
+
+            transition: .3s ease;
+        }
+
+        .world-card:hover {
+            transform: translateY(-7px);
+
+            box-shadow:
+                0 28px 80px rgba(0,0,0,.45);
+        }
+
+        .world-card:first-child {
+            border-color:
+                rgba(57,255,136,.38);
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.25),
+                0 0 28px rgba(57,255,136,.12);
+        }
+
+        .world-card:first-child:hover {
+            border-color:
+                rgba(57,255,136,.75);
+
+            box-shadow:
+                0 28px 80px rgba(0,0,0,.45),
+                0 0 40px rgba(57,255,136,.2);
+        }
+
+        .world-card:nth-child(2) {
+            border-color:
+                rgba(139,92,246,.42);
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.25),
+                0 0 28px rgba(139,92,246,.13);
+        }
+
+        .world-card:nth-child(2):hover {
+            border-color:
+                rgba(167,139,250,.78);
+
+            box-shadow:
+                0 28px 80px rgba(0,0,0,.45),
+                0 0 40px rgba(139,92,246,.22);
+        }
+
+        .world-card-icon {
+            width: 94px;
+            height: 94px;
+
+            margin-bottom: 23px;
+
+            display: grid;
+            place-items: center;
+
+            border:
+                1px solid rgba(139,92,246,.2);
+
+            border-radius: 25px;
+
+            background:
+                rgba(5,7,18,.75);
+
+            font-size: 48px;
+        }
+
+        .world-card-category {
+            margin-bottom: 9px;
+
+            font-size: 11px;
+            font-weight: 900;
+
+            letter-spacing: 1.8px;
+
+            text-transform: uppercase;
+        }
+
+        .world-card:first-child .world-card-category {
+            color: var(--green);
+
+            text-shadow:
+                0 0 8px rgba(57,255,136,.8);
+        }
+
+        .world-card:nth-child(2) .world-card-category {
+            color: var(--purple-light);
+
+            text-shadow:
+                0 0 8px rgba(139,92,246,.8);
+        }
+
+        .world-card h3 {
+            margin: 0 0 10px;
+
+            font-size: 30px;
+        }
+
+        .world-card p {
+            max-width: 520px;
+
+            margin: 0 0 23px;
+
+            color: var(--muted);
+
+            line-height: 1.65;
+        }
+
+        .world-card-button {
+            padding:
+                12px 21px;
+
+            border:
+                1px solid rgba(139,92,246,.3);
+
+            border-radius: 11px;
+
+            background:
+                rgba(139,92,246,.09);
+
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           MEDIA
+        ===================================================== */
+
+        .media-card {
+            display: grid;
+
+            grid-template-columns:
+                1.25fr 1fr;
+
+            gap: 26px;
+
+            padding: 26px;
+
+            border:
+                1px solid rgba(139,92,246,.2);
+
+            border-radius: 22px;
+
+            background:
+                rgba(12,16,34,.78);
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .media-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+
+            display: block;
+
+            border-radius: 16px;
+
+            background: #000;
+
+            border:
+                1px solid rgba(139,92,246,.2);
+        }
+
+        .media-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .media-info h3 {
+            margin: 0 0 12px;
+
+            font-size: 28px;
+        }
+
+        .media-info p {
+            margin: 0 0 20px;
+
+            color: var(--muted);
+
+            line-height: 1.7;
+        }
+
+        .video-timestamps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .video-timestamps button {
+            padding:
+                9px 12px;
+
+            border:
+                1px solid rgba(139,92,246,.25);
+
+            border-radius: 9px;
+
+            color: #fff;
+
+            background:
+                rgba(139,92,246,.08);
+        }
+
+        .video-timestamps button:hover {
+            background:
+                rgba(139,92,246,.2);
+        }
+
+        /* =====================================================
+           CUSTOM
+        ===================================================== */
+
+        .custom-card {
+            padding: 45px 35px;
+
+            text-align: center;
+
+            border:
+                1px solid rgba(139,92,246,.22);
+
+            border-radius: 22px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(139,92,246,.12),
+                    transparent 65%
+                ),
+                rgba(12,16,34,.78);
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .custom-card h2 {
+            margin: 0 0 12px;
+
+            font-size: 34px;
+        }
+
+        .custom-card p {
+            max-width: 700px;
+
+            margin:
+                0 auto 25px;
+
+            color: var(--muted);
+
+            line-height: 1.7;
+        }
+
+        .custom-actions {
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+        }
+
+        /* =====================================================
+           QUICK LINKS
+        ===================================================== */
+
+        .quick-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+        .quick-card {
+            padding: 25px;
+
+            text-align: center;
+
+            border:
+                1px solid rgba(139,92,246,.18);
+
+            border-radius: 16px;
+
+            background:
+                rgba(12,16,34,.72);
+
+            transition: .25s ease;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-5px);
+
+            border-color:
+                rgba(139,92,246,.5);
+
+            box-shadow:
+                0 0 28px rgba(139,92,246,.12);
+        }
+
+        .quick-icon {
+            display: block;
+
+            margin-bottom: 10px;
+
+            font-size: 30px;
+        }
+
+        .quick-card h3 {
+            margin: 0 0 7px;
+        }
+
+        .quick-card p {
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        /* =====================================================
+           SHADOWCHAT / STAI
+        ===================================================== */
+
+        #chat-button,
+        #stai-button {
+            position: fixed;
+
+            bottom: 22px;
+
+            z-index: 1200;
+
+            width: 58px;
+            height: 58px;
+
+            border-radius: 50%;
+
+            color: #fff;
+
+            font-size: 24px;
+
+            border: 1px solid rgba(139,92,246,.45);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,.4);
+        }
+
+        #chat-button {
+            left: 22px;
+        }
+
+        #stai-button {
+            right: 22px;
+        }
+
+        #chat-button:hover,
+        #stai-button:hover {
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        #chat-unread {
+            position: absolute;
+
+            top: -4px;
+            right: -4px;
+
+            min-width: 21px;
+            height: 21px;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            border:
+                2px solid var(--bg);
+
+            border-radius: 999px;
+
+            background: #ef4444;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        #live-chat {
+            position: fixed;
+
+            left: 22px;
+            bottom: 92px;
+
+            z-index: 1199;
+
+            width:
+                min(390px, calc(100vw - 44px));
+
+            height: 520px;
+
+            display: none;
+
+            flex-direction: column;
+
+            overflow: hidden;
+
+            background:
+                rgba(7,10,24,.98);
+
+            border:
+                1px solid rgba(139,92,246,.35);
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 25px 80px rgba(0,0,0,.55);
+        }
+
+        .chat-header {
+            min-height: 60px;
+
+            padding:
+                0 16px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom:
+                1px solid rgba(255,255,255,.07);
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        #chat-close {
+            width: 34px;
+            height: 34px;
+
+            border: 0;
+
+            border-radius: 9px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            color: #fff;
+        }
+
+        #chat-messages {
+            flex: 1;
+
+            padding: 14px;
+
+            overflow-y: auto;
+        }
+
+        .chat-form {
+            padding: 12px;
+
+            display: flex;
+
+            gap: 8px;
+
+            border-top:
+                1px solid rgba(255,255,255,.07);
+        }
+
+        #chat-input {
+            flex: 1;
+
+            min-width: 0;
+            height: 42px;
+
+            padding:
+                0 12px;
+
+            border:
+                1px solid rgba(139,92,246,.2);
+
+            border-radius: 10px;
+
+            background:
+                rgba(15,20,42,.8);
+
+            color: #fff;
+
+            outline: none;
+        }
+
+        #chat-form button {
+            width: 45px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background:
+                var(--purple);
+
+            color: #fff;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .site-footer {
+            margin-top: 60px;
+
+            padding:
+                60px 0 25px;
+
+            border-top:
+                1px solid rgba(139,92,246,.16);
+
+            background:
+                rgba(3,5,13,.82);
+        }
+
+        .footer-inner {
+            width:
+                min(1200px, calc(100% - 32px));
+
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+
+            grid-template-columns:
+                2fr repeat(4,1fr);
+
+            gap: 35px;
+        }
+
+        .footer-column h3 {
+            margin: 0 0 14px;
+        }
+
+        .footer-column p,
+        .footer-column a {
+            display: block;
+
+            color: #7f8aa4;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+
+            transition: .2s ease;
+        }
+
+        .footer-column a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            margin-top: 40px;
+
+            padding-top: 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            border-top:
+                1px solid rgba(255,255,255,.06);
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           COOKIES
+        ===================================================== */
+
+        .cookie-banner {
+            position: fixed;
+
+            left: 50%;
+            bottom: 18px;
+
+            z-index: 1300;
+
+            width:
+                min(720px, calc(100% - 32px));
+
+            transform:
+                translateX(-50%);
+
+            padding:
+                18px 20px;
+
+            display: none;
+
+            align-items: center;
+
+            gap: 20px;
+
+            background:
+                rgba(7,10,24,.97);
+
+            border:
+                1px solid rgba(139,92,246,.25);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.5);
+        }
+
+        .cookie-banner p {
+            flex: 1;
+
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+        #accept-cookies {
+            min-height: 40px;
+
+            padding:
+                0 17px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    var(--blue)
+                );
+
+            color: #fff;
+
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           REVIEW MODAL
+        ===================================================== */
+
+        #review-modal {
+            position: fixed;
+
+            inset: 0;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                rgba(3,5,15,.78);
+
+            backdrop-filter:
+                blur(8px);
+
+            z-index: 10000;
+        }
+
+        #review-modal.active {
+            display: flex;
+        }
+
+        .review-card {
+            width:
+                min(430px, 100%);
+
+            padding: 30px;
+
+            text-align: center;
+
+            border:
+                1px solid rgba(139,92,246,.45);
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15,20,42,.99),
+                    rgba(7,10,24,.99)
+                );
+
+            box-shadow:
+                0 30px 100px rgba(0,0,0,.7),
+                0 0 50px rgba(139,92,246,.12);
+        }
+
+        .review-icon {
+            width: 70px;
+            height: 70px;
+
+            margin:
+                0 auto 18px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 20px;
+
+            background:
+                rgba(139,92,246,.12);
+
+            font-size: 34px;
+        }
+
+        .review-card h2 {
+            margin: 0 0 10px;
+        }
+
+        .review-card p {
+            margin:
+                0 auto 22px;
+
+            color: #aab1ca;
+
+            line-height: 1.6;
+        }
+
+        #review-close {
+            border: 0;
+
+            border-radius: 11px;
+
+            padding:
+                12px 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--purple),
+                    #3b82f6
+                );
+
+            color: #fff;
+
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .header-inner {
+                flex-wrap: wrap;
+                padding: 10px 0;
+            }
+
+            .header-search {
+                order: 3;
+                flex-basis: 100%;
+                max-width: none;
+            }
+
+            .world-grid,
+            .media-card {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0,1fr));
+            }
+
+            .footer-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0,1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .header-inner {
+                width:
+                    calc(100% - 22px);
+            }
+
+            .header-actions {
+                margin-left: auto;
+            }
+
+            .header-button {
+                padding: 0 10px;
+            }
+
+            .header-button span {
+                display: none;
+            }
+
+            #account-button {
+                min-width: 43px;
+            }
+
+            #account-name {
+                max-width: 90px;
+            }
+
+            .hero {
+                min-height: 520px;
+
+                width:
+                    calc(100% - 22px);
+            }
+
+            .hero-content {
+                padding:
+                    75px 10px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section {
+                width:
+                    calc(100% - 22px);
+
+                padding:
+                    60px 0;
+            }
+
+            .world-card {
+                min-height: 280px;
+
+                padding:
+                    27px 20px;
+            }
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+
+            #chat-button,
+            #stai-button {
+                width: 52px;
+                height: 52px;
+
+                bottom: 14px;
+            }
+
+            #chat-button {
+                left: 14px;
+            }
+
+            #stai-button {
+                right: 14px;
+            }
+
+            #live-chat {
+                left: 12px;
+                bottom: 78px;
+
+                width:
+                    calc(100vw - 24px);
+
+                height:
+                    min(560px, calc(100vh - 95px));
+            }
+
+            .cookie-banner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #accept-cookies {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="site-header">
+
+    <div class="header-inner">
+
+        <a href="index.html" class="logo">
+
+            <img
+                src="assets/logo.png"
+                alt="ShadowTale"
+            >
+
+            <span>
+                <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span><span class="logo-pl">.PL</span>
+            </span>
+
+        </a>
+
+        <div class="header-search">
+
+            <form
+                id="global-search-form"
+                autocomplete="off"
+            >
+
+                <input
+                    type="search"
+                    id="global-search"
+                    placeholder="Szukaj plików, skryptów, map..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="search-button"
+                    type="submit"
+                    aria-label="Szukaj"
+                >
+                    🔎
+                </button>
+
+            </form>
+
+            <div id="search-results"></div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <a
+                href="admin.html"
+                id="panel-button"
+                class="header-button"
+                style="display:none;"
+            >
+                🛡️
+                <span>Panel</span>
+            </a>
+
+            <!-- MEDIA NADAL MOŻE BYĆ BLOKOWANE -->
+            <a
+                href="media.html"
+                class="header-button blocked-feature"
+                data-blocked="media"
+            >
+                🎬
+                <span>Media</span>
+            </a>
+
+            <!--
+                NIEZALOGOWANY:
+                logo ShadowTale + "Zaloguj się"
+
+                ZALOGOWANY:
+                app.js może zmienić avatar i nazwę
+                na profil użytkownika.
+            -->
+
+            <a
+                href="login.html"
+                id="account-button"
+                class="header-button"
+                aria-label="Zaloguj się"
+            >
+
+                <img
+                    id="account-avatar"
+                    src="assets/logo.png"
+                    alt="ShadowTale"
+                >
+
+                <span id="account-name">
+                    Zaloguj się
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                ✦ ShadowTale.pl
+            </div>
+
+            <h1>
+
+                <span>
+                    Twój świat.
+                </span>
+
+                <span class="hero-title-purple">
+                    Twoje zasady.
+                </span>
+
+            </h1>
+
+            <p>
+                Wszystko, czego potrzebujesz do Minecrafta
+                i Undertale, znajdziesz w jednym miejscu.
+                Skrypty, mapy, configi, pliki, lore,
+                dane i wiele więcej.
+            </p>
+
+            <div class="hero-actions">
+
+                <a
+                    href="minecraft.html"
+                    class="hero-button primary"
+                >
+                    🎮 Minecraft
+                </a>
+
+                <a
+                    href="undertale.html"
+                    class="hero-button blocked-feature"
+                    data-blocked="undertale"
+                >
+                    ❤️ Undertale
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ŚWIATY
+    ================================================= -->
+
+    <section
+        id="worlds"
+        class="section"
+    >
+
+        <div class="section-heading">
+
+            <h2>
+                Wybierz swój świat
+            </h2>
+
+            <p>
+                Przejdź do interesującej Cię kategorii.
+            </p>
+
+        </div>
+
+        <div class="world-grid">
+
+            <a
+                href="minecraft.html"
+                class="world-card"
+            >
+
+                <div class="world-card-icon">
+                    🎮
+                </div>
+
+                <div class="world-card-category">
+                    KATEGORIA MINECRAFT
+                </div>
+
+                <h3>
+                    Minecraft
+                </h3>
+
+                <p>
+                    Skrypty, mapy, configi, pliki TXT
+                    i skiny. Wszystko, czego możesz
+                    potrzebować do swojego świata Minecraft.
+                </p>
+
+                <span class="world-card-button">
+                    Przejdź do Minecraft →
+                </span>
+
+            </a>
+
+
+            <a
+                href="undertale.html"
+                class="world-card blocked-feature"
+                data-blocked="undertale"
+            >
+
+                <div class="world-card-icon">
+                    ❤️
+                </div>
+
+                <div class="world-card-category">
+                    KATEGORIA UNDERTALE
+                </div>
+
+                <h3>
+                    Undertale
+                </h3>
+
+                <p>
+                    Lore postaci, lore przedmiotów,
+                    dane, wykresy, Save'y oraz mody.
+                </p>
+
+                <span class="world-card-button">
+                    Przejdź do Undertale →
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         MEDIA
+    ================================================= -->
+
+    <section
+        id="media"
+        class="section"
+    >
+
+        <div class="section-heading">
+
+            <h2>
+                Poradnik ShadowTale
+            </h2>
+
+            <p>
+                Dowiedz się, jak korzystać ze strony
+                i znaleźć interesujące Cię materiały.
+            </p>
+
+        </div>
+
+        <div
+            class="media-card blocked-feature"
+            data-blocked="media"
+        >
+
+            <video
+                id="presentation-video"
+                class="media-video"
+                controls
+                preload="metadata"
+            >
+
+                <source
+                    src="assets/prezentacja.mp4"
+                    type="video/mp4"
+                >
+
+                Twoja przeglądarka nie obsługuje
+                odtwarzania wideo.
+
+            </video>
+
+            <div class="media-info">
+
+                <h3>
+                    Jak korzystać z ShadowTale?
+                </h3>
+
+                <p>
+                    Obejrzyj prezentację ShadowTale
+                    i zobacz, gdzie znaleźć kategorie,
+                    materiały, konto, pomoc oraz
+                    pozostałe funkcje.
+                </p>
+
+                <div class="video-timestamps">
+
+                    <button type="button" data-time="0">00:00</button>
+                    <button type="button" data-time="30">00:30</button>
+                    <button type="button" data-time="75">01:15</button>
+                    <button type="button" data-time="120">02:00</button>
+                    <button type="button" data-time="165">02:45</button>
+                    <button type="button" data-time="210">03:30</button>
+                    <button type="button" data-time="260">04:20</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         CUSTOM
+    ================================================= -->
+
+    <section
+        id="custom"
+        class="section"
+    >
+
+        <div
+            class="custom-card blocked-feature"
+            data-blocked="custom"
+        >
+
+            <h2>
+                Nie ma tego, czego szukasz?
+            </h2>
+
+            <p>
+                Nadal możesz zamówić customowy skrypt,
+                mapę, config lub inny materiał przygotowany
+                specjalnie dla Ciebie.
+            </p>
+
+            <div class="custom-actions">
+
+                <a
+                    href="custom.html"
+                    class="hero-button primary"
+                >
+                    🛠️ Zamów custom
+                </a>
+
+                <!-- DISCORD ODBLOKOWANY -->
+
+                <a
+                    href="discord.html"
+                    class="hero-button"
+                >
+                    💬 Discord
+                </a>
+
+                <a
+                    href="propozycje.html"
+                    class="hero-button"
+                >
+                    💡 Wyślij propozycję
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         QUICK LINKS
+    ================================================= -->
+
+    <section
+        id="links"
+        class="section"
+    >
+
+        <div class="section-heading">
+
+            <h2>
+                ShadowTale
+            </h2>
+
+            <p>
+                Najważniejsze miejsca w jednym miejscu.
+            </p>
+
+        </div>
+
+        <div class="quick-grid">
+
+            <!-- DISCORD ODBLOKOWANY -->
+
+            <a
+                href="discord.html"
+                class="quick-card"
+            >
+
+                <span class="quick-icon">
+                    💬
+                </span>
+
+                <h3>
+                    Discord
+                </h3>
+
+                <p>
+                    Dołącz do naszej społeczności.
+                </p>
+
+            </a>
+
+
+            <a
+                href="wesprzyj.html"
+                class="quick-card"
+            >
+
+                <span class="quick-icon">
+                    💜
+                </span>
+
+                <h3>
+                    Wesprzyj nas
+                </h3>
+
+                <p>
+                    Wesprzyj rozwój ShadowTale.
+                </p>
+
+            </a>
+
+
+            <!-- REGULAMINY ODBLOKOWANE -->
+
+            <a
+                href="regulaminy.html"
+                class="quick-card"
+            >
+
+                <span class="quick-icon">
+                    📜
+                </span>
+
+                <h3>
+                    Regulaminy
+                </h3>
+
+                <p>
+                    Zobacz zasady obowiązujące na stronie.
+                </p>
+
+            </a>
+
+
+            <!-- POMOC ODBLOKOWANA -->
+
+            <a
+                href="pomoc.html"
+                class="quick-card"
+            >
+
+                <span class="quick-icon">
+                    ❓
+                </span>
+
+                <h3>
+                    Centrum pomocy
+                </h3>
+
+                <p>
+                    Potrzebujesz pomocy? Sprawdź odpowiedzi.
+                </p>
+
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     SHADOWCHAT
+===================================================== -->
+
+<button
+    id="chat-button"
+    type="button"
+    title="ShadowChat"
+    aria-label="Otwórz ShadowChat"
+>
+    💬
+
+    <span id="chat-unread">
+        0
+    </span>
+</button>
+
+
+<div
+    id="live-chat"
+    aria-hidden="true"
+>
+
+    <div class="chat-header">
+
+        <h3>
+            💬 ShadowChat
+        </h3>
+
+        <button
+            id="chat-close"
+            type="button"
+            aria-label="Zamknij czat"
+        >
+            ✕
+        </button>
+
+    </div>
+
+    <div id="chat-messages"></div>
+
+    <form
+        id="chat-form"
+        class="chat-form"
+    >
+
+        <input
+            type="text"
+            id="chat-input"
+            maxlength="2000"
+            placeholder="Napisz wiadomość..."
+            autocomplete="off"
+        >
+
+        <button
+            type="submit"
+            aria-label="Wyślij"
+        >
+            ➤
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =====================================================
+     STAI
+===================================================== -->
+
+<button
+    id="stai-button"
+    type="button"
+    title="STAI — ShadowTale AI"
+    aria-label="Otwórz STAI"
+>
+    🤖
+</button>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-grid">
+
+            <div class="footer-column">
+
+                <a
+                    href="index.html"
+                    class="logo"
+                    style="margin-bottom:15px;"
+                >
+
+                    <img
+                        src="assets/logo.png"
+                        alt="ShadowTale"
+                    >
+
+                    <span>
+                        <span class="logo-shadow">SHADOW</span><span class="logo-tale">TALE</span><span class="logo-pl">.PL</span>
+                    </span>
+
+                </a>
+
+                <p>
+                    ShadowTale.pl — Twój świat,
+                    twoje zasady.
+                </p>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Minecraft
+                </h3>
+
+                <a href="minecraft.html">Wszystkie</a>
+                <a href="mc-skrypty.html">Skrypty</a>
+                <a href="mc-mapy.html">Mapy</a>
+                <a href="mc-configi.html">Configi</a>
+                <a href="mc-txt.html">TXT</a>
+                <a href="mc-skiny.html">Skiny</a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Undertale
+                </h3>
+
+                <a
+                    href="undertale.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Wszystkie
+                </a>
+
+                <a
+                    href="ut-postacie.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Lore postaci
+                </a>
+
+                <a
+                    href="ut-przedmioty.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Lore przedmiotów
+                </a>
+
+                <a
+                    href="ut-dane.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Dane / wykresy
+                </a>
+
+                <a
+                    href="ut-save.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Save'y
+                </a>
+
+                <a
+                    href="ut-mody.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Mody
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Konto
+                </h3>
+
+                <a href="konto.html">Konto</a>
+                <a href="ustawienia.html">Ustawienia</a>
+                <a href="statystyki.html">Statystyki</a>
+                <a href="historia.html">Historia</a>
+                <a href="platnosci.html">Płatności</a>
+
+            </div>
+
+
+            <!-- POMOC ODBLOKOWANA -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Pomoc
+                </h3>
+
+                <a href="pomoc.html">
+                    Centrum pomocy
+                </a>
+
+                <a href="ticket.html">
+                    Ticket
+                </a>
+
+                <a href="regulaminy.html">
+                    Regulaminy
+                </a>
+
+                <a href="prywatnosc.html">
+                    Prywatność
+                </a>
+
+                <a href="cookies.html">
+                    Cookies
+                </a>
+
+                <a href="zasady-zakupow.html">
+                    Zasady zakupów
+                </a>
+
+                <a href="discord.html">
+                    Discord
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 ShadowTale.pl
+            </span>
+
+            <span>
+                Twój świat, twoje zasady.
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- =====================================================
+     COOKIES
+===================================================== -->
+
+<div
+    class="cookie-banner"
+    role="dialog"
+    aria-label="Informacja o cookies"
+>
+
+    <p>
+        ShadowTale korzysta z plików cookies i pamięci
+        lokalnej, aby zapamiętać podstawowe ustawienia strony.
+    </p>
+
+    <button
+        id="accept-cookies"
+        type="button"
+    >
+        Akceptuję
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     REVIEW MODAL
+===================================================== -->
+
+<div
+    id="review-modal"
+    aria-hidden="true"
+>
+
+    <div
+        class="review-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="review-title"
+    >
+
+        <div class="review-icon">
+            ⏳
+        </div>
+
+        <h2 id="review-title">
+            Rozpatrujemy to!
+        </h2>
+
+        <p>
+            Daj nam troszkę więcej czasu.
+            Ta funkcja jest jeszcze przygotowywana
+            przez zespół ShadowTale.
+        </p>
+
+        <button
+            type="button"
+            id="review-close"
+        >
+            Rozumiem
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* =================================================
+       GWIAZDY
+    ================================================= */
+
+    const stars =
+        document.getElementById("stars");
+
+    if (stars) {
+
+        const fragment =
+            document.createDocumentFragment();
+
+        for (let i = 0; i < 90; i++) {
+
+            const star =
+                document.createElement("div");
+
+            star.className = "star";
+
+            star.style.left =
+                Math.random() * 100 + "%";
+
+            star.style.top =
+                Math.random() * 100 + "%";
+
+            star.style.animationDelay =
+                Math.random() * 4 + "s";
+
+            fragment.appendChild(star);
+        }
+
+        stars.appendChild(fragment);
+    }
+
+
+    /* =================================================
+       WIDEO
+    ================================================= */
+
+    const video =
+        document.getElementById(
+            "presentation-video"
+        );
+
+    document
+        .querySelectorAll(
+            ".video-timestamps button"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    if (!video) return;
+
+                    video.currentTime =
+                        Number(
+                            button.dataset.time || 0
+                        );
+
+                    video
+                        .play()
+                        .catch(() => {});
+
+                }
+            );
+
+        });
+
+
+    /* =================================================
+       COOKIES
+    ================================================= */
+
+    const cookieBanner =
+        document.querySelector(
+            ".cookie-banner"
+        );
+
+    const acceptCookies =
+        document.getElementById(
+            "accept-cookies"
+        );
+
+    if (
+        cookieBanner &&
+        !localStorage.getItem(
+            "shadowtale-cookies"
+        )
+    ) {
+
+        cookieBanner.style.display =
+            "flex";
+    }
+
+    acceptCookies?.addEventListener(
+        "click",
+        () => {
+
+            localStorage.setItem(
+                "shadowtale-cookies",
+                "accepted"
+            );
+
+            cookieBanner.style.display =
+                "none";
+        }
+    );
+
+
+    /* =================================================
+       REVIEW MODAL
+    ================================================= */
+
+    const reviewModal =
+        document.getElementById(
+            "review-modal"
+        );
+
+    const reviewClose =
+        document.getElementById(
+            "review-close"
+        );
+
+
+    function showReviewMessage(event) {
+
+        if (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        reviewModal?.classList.add(
+            "active"
+        );
+
+        reviewModal?.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+    }
+
+
+    function closeReviewMessage() {
+
+        reviewModal?.classList.remove(
+            "active"
+        );
+
+        reviewModal?.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+    }
+
+
+    /*
+     * BLOKOWANE POZOSTAJĄ TYLKO ELEMENTY,
+     * KTÓRE NADAL MAJĄ klasę blocked-feature.
+     *
+     * Pomoc / Regulaminy / Discord NIE mają już
+     * tej klasy, więc działają normalnie.
+     */
+
+    document
+        .querySelectorAll(
+            ".blocked-feature"
+        )
+        .forEach(element => {
+
+            element.addEventListener(
+                "click",
+                showReviewMessage
+            );
+
+        });
+
+
+    reviewClose?.addEventListener(
+        "click",
+        closeReviewMessage
+    );
+
+
+    reviewModal?.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                reviewModal
+            ) {
+                closeReviewMessage();
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+                closeReviewMessage();
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       SHADOWCHAT
+    ================================================= */
+
+    const chatButton =
+        document.getElementById(
+            "chat-button"
+        );
+
+    const liveChat =
+        document.getElementById(
+            "live-chat"
+        );
+
+    const chatClose =
+        document.getElementById(
+            "chat-close"
+        );
+
+
+    chatButton?.addEventListener(
+        "click",
+        showReviewMessage
+    );
+
+
+    chatClose?.addEventListener(
+        "click",
+        () => {
+
+            if (!liveChat) return;
+
+            liveChat.style.display =
+                "none";
+
+            liveChat.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+    );
+
+
+    /* =================================================
+       STAI
+    ================================================= */
+
+    const staiButton =
+        document.getElementById(
+            "stai-button"
+        );
+
+    staiButton?.addEventListener(
+        "click",
+        showReviewMessage
+    );
+
+
+    /* =================================================
+       SEARCH
+    ================================================= */
+
+    const searchForm =
+        document.getElementById(
+            "global-search-form"
+        );
+
+    searchForm?.addEventListener(
+        "submit",
+        event => {
+
+            const input =
+                document.getElementById(
+                    "global-search"
+                );
+
+            const value =
+                String(
+                    input?.value || ""
+                ).trim();
+
+            if (!value) {
+                event.preventDefault();
+            }
+
+        }
+    );
+
+});
+
+</script>
+
+</body>
+</html>

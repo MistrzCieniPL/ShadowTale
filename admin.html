@@ -1,0 +1,3632 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShadowTale — Panel administracyjny</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --bg: #05050b;
+            --panel: rgba(13, 13, 27, .92);
+            --panel2: rgba(20, 20, 39, .95);
+            --border: rgba(145, 100, 255, .22);
+            --text: #f4f0ff;
+            --muted: #9e99b5;
+            --accent: #9b5cff;
+            --accent2: #6d3bff;
+            --green: #39e58c;
+            --red: #ff5470;
+            --yellow: #ffd166;
+            --blue: #59aaff;
+            --shadow: 0 20px 70px rgba(0,0,0,.45);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 15% 10%, rgba(123, 54, 255, .15), transparent 30%),
+                radial-gradient(circle at 85% 85%, rgba(0, 110, 255, .10), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #loading {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+        }
+
+        #denied,
+        #admin-app {
+            display: none;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 22px;
+            border-right: 1px solid var(--border);
+            background: rgba(5, 5, 12, .94);
+            backdrop-filter: blur(18px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .role-box {
+            padding: 14px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--panel);
+        }
+
+        .role-box small {
+            display: block;
+            color: var(--muted);
+            margin-bottom: 5px;
+        }
+
+        .role-name {
+            font-weight: 800;
+        }
+
+        .nav {
+            display: grid;
+            gap: 8px;
+        }
+
+        .nav button {
+            width: 100%;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted);
+            padding: 12px 14px;
+            text-align: left;
+            border-radius: 12px;
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            color: white;
+            background: rgba(155, 92, 255, .12);
+            border-color: var(--border);
+        }
+
+        .logout {
+            margin-top: 25px;
+            color: #ff8094 !important;
+        }
+
+        .main {
+            padding: 30px;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .topbar p {
+            margin: 5px 0 0;
+            color: var(--muted);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .card {
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .card small {
+            color: var(--muted);
+        }
+
+        .number {
+            display: block;
+            margin-top: 8px;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,.25);
+            color: white;
+            border-radius: 10px;
+            padding: 11px 12px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .toolbar input,
+        .toolbar select {
+            width: auto;
+            min-width: 180px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--panel);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .btn {
+            border: 1px solid var(--border);
+            background: rgba(155,92,255,.12);
+            color: white;
+            border-radius: 10px;
+            padding: 9px 12px;
+        }
+
+        .btn:hover {
+            background: rgba(155,92,255,.24);
+        }
+
+        .btn.green {
+            background: rgba(57,229,140,.10);
+            border-color: rgba(57,229,140,.25);
+        }
+
+        .btn.red {
+            background: rgba(255,84,112,.10);
+            border-color: rgba(255,84,112,.25);
+        }
+
+        .btn.blue {
+            background: rgba(89,170,255,.10);
+            border-color: rgba(89,170,255,.25);
+        }
+
+        .btn.yellow {
+            background: rgba(255,209,102,.10);
+            border-color: rgba(255,209,102,.25);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .badge.green {
+            color: var(--green);
+            background: rgba(57,229,140,.10);
+        }
+
+        .badge.red {
+            color: var(--red);
+            background: rgba(255,84,112,.10);
+        }
+
+        .badge.yellow {
+            color: var(--yellow);
+            background: rgba(255,209,102,.10);
+        }
+
+        .badge.blue {
+            color: var(--blue);
+            background: rgba(89,170,255,.10);
+        }
+
+        .badge.purple {
+            color: #bd8cff;
+            background: rgba(155,92,255,.12);
+        }
+
+        .ticket-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .empty {
+            padding: 35px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,.78);
+            z-index: 1000;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(900px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: #0b0b16;
+            box-shadow: var(--shadow);
+            padding: 22px;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        .version-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(0,0,0,.18);
+        }
+
+        .version-option {
+            display: flex !important;
+            align-items: center;
+            gap: 8px;
+            margin: 0 !important;
+            padding: 9px 10px;
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 9px;
+            background: rgba(255,255,255,.025);
+            cursor: pointer;
+            color: var(--text) !important;
+        }
+
+        .version-option:hover {
+            border-color: var(--accent);
+            background: rgba(155,92,255,.10);
+        }
+
+        .version-option input {
+            width: auto;
+            margin: 0;
+            accent-color: var(--accent);
+        }
+
+        @media (max-width: 800px) {
+            .version-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 500px) {
+            .version-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .ticket-message {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: rgba(255,255,255,.025);
+        }
+
+        .ticket-message .meta {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+        .history-item:last-child {
+            border-bottom: 0;
+        }
+
+        .history-item small {
+            color: var(--muted);
+        }
+
+        .notice {
+            padding: 14px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,209,102,.2);
+            background: rgba(255,209,102,.07);
+            color: #ffe7a3;
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        @media (max-width: 1000px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                z-index: 900;
+                width: 250px;
+                transition: .2s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .main {
+                padding: 16px;
+            }
+
+            .cards,
+            .modal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
+        }
+
+        .video-grid {
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:15px;
+        }
+
+        .video-card video {
+            width:100%;
+            max-height:340px;
+            border-radius:12px;
+            background:#000;
+            margin-top:10px;
+        }
+
+        .video-card h3 { margin:0 0 6px; }
+        .video-card p { color:var(--muted); }
+        .history-table td { vertical-align:top; }
+        .danger-box {
+            border:1px solid rgba(255,84,112,.25);
+            background:rgba(255,84,112,.06);
+        }
+
+        @media (max-width:650px) {
+            .video-grid { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="loading">
+    Ładowanie panelu administracyjnego...
+</div>
+
+<div id="denied">
+    <div style="
+        min-height:100vh;
+        display:grid;
+        place-items:center;
+        padding:30px;
+        text-align:center;
+    ">
+        <div class="card" style="max-width:500px">
+            <h1>Brak dostępu</h1>
+            <p style="color:var(--muted)">
+                Twoje konto nie posiada uprawnień do panelu administracyjnego.
+            </p>
+            <button class="btn" onclick="location.href='index.html'">
+                Wróć na stronę
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="admin-app">
+
+    <div class="layout">
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="logo">
+                SHADOW<span>TALE</span>
+            </div>
+
+            <div class="role-box">
+                <small>Zalogowano jako</small>
+                <div id="admin-username">...</div>
+                <div class="role-name" id="admin-role">...</div>
+            </div>
+
+            <nav class="nav">
+
+                <button class="active" data-section="dashboard">
+                    📊 Dashboard
+                </button>
+
+                <button data-section="tickets">
+                    🎫 Tickety
+                </button>
+
+                <button data-section="orders">
+                    🛒 Zamówienia
+                </button>
+
+                <button data-section="products">
+                    📦 Produkty
+                </button>
+
+                <button data-section="users">
+                    👥 Użytkownicy
+                </button>
+
+                <button data-section="earnings">
+                    💰 Zarobki
+                </button>
+
+                <button data-section="tutorials">
+                    🎬 Poradniki ADM
+                </button>
+
+                <button data-section="history">
+                    🕘 Historia
+                </button>
+
+                <button data-section="homepage">
+                    🌐 Strona główna
+                </button>
+
+                <button class="logout" id="logout">
+                    🚪 Wyloguj
+                </button>
+
+            </nav>
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <button class="btn mobile-menu" id="mobile-menu">
+                        ☰
+                    </button>
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-description">
+                        Zarządzanie ShadowTale.
+                    </p>
+                </div>
+
+                <button class="btn" onclick="location.href='index.html'">
+                    ← Sklep
+                </button>
+            </div>
+
+            <!-- DASHBOARD -->
+
+            <section class="section active" id="section-dashboard">
+
+                <div class="cards">
+
+                    <div class="card">
+                        <small>Wszystkie produkty</small>
+                        <span class="number" id="stat-products">0</span>
+                    </div>
+
+                    <div class="card">
+                        <small>Aktywne tickety</small>
+                        <span class="number" id="stat-tickets">0</span>
+                    </div>
+
+                    <div class="card">
+                        <small>Zamówienia oczekujące</small>
+                        <span class="number" id="stat-orders">0</span>
+                    </div>
+
+                    <div class="card">
+                        <small>Twoje zarobki</small>
+                        <span class="number" id="stat-earnings">0,00 zł</span>
+                    </div>
+
+                </div>
+
+                <div class="card">
+                    <h2>Twoje uprawnienia</h2>
+                    <div id="permission-list">
+                        Ładowanie...
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- TICKETS -->
+
+            <section class="section" id="section-tickets">
+
+                <div class="toolbar">
+
+                    <input
+                        id="ticket-search"
+                        placeholder="Szukaj ticketu..."
+                    >
+
+                    <select id="ticket-status-filter">
+                        <option value="">Wszystkie statusy</option>
+                        <option value="open">Otwarte</option>
+                        <option value="accepted">Przyjęte</option>
+                        <option value="rejected">Odrzucone</option>
+                        <option value="closed">Zamknięte</option>
+                    </select>
+
+                    <select id="ticket-type-filter">
+                        <option value="">Wszystkie typy</option>
+                        <option value="help">Pomoc</option>
+                        <option value="question">Pytanie</option>
+                    </select>
+
+                    <button class="btn" id="refresh-tickets">
+                        ↻ Odśwież
+                    </button>
+
+                </div>
+
+                <div class="notice">
+                    Tickety pomocy i pytań są dostępne dla wszystkich administratorów.
+                    Zamówienia są filtrowane według posiadanych rang.
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Temat</th>
+                                <th>Gracz</th>
+                                <th>Typ</th>
+                                <th>Kategoria</th>
+                                <th>Status</th>
+                                <th>Przypisany</th>
+                                <th>Data</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tickets-body">
+                            <tr>
+                                <td colspan="9" class="empty">
+                                    Ładowanie ticketów...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- ORDERS -->
+
+            <section class="section" id="section-orders">
+
+                <div class="notice">
+                    Pokazujemy tutaj wyłącznie zamówienia, do których masz dostęp
+                    na podstawie swoich rang.
+                </div>
+
+                <div class="toolbar">
+
+                    <input
+                        id="order-search"
+                        placeholder="Szukaj zamówienia..."
+                    >
+
+                    <select id="order-status-filter">
+                        <option value="">Wszystkie</option>
+                        <option value="open">Otwarte</option>
+                        <option value="accepted">Przyjęte</option>
+                        <option value="in_progress">W realizacji</option>
+                        <option value="rejected">Odrzucone</option>
+                        <option value="closed">Zamknięte</option>
+                    </select>
+
+                    <button class="btn" id="refresh-orders">
+                        ↻ Odśwież
+                    </button>
+
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nr</th>
+                                <th>Zamówienie</th>
+                                <th>Gracz</th>
+                                <th>Kategoria</th>
+                                <th>Ranga</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="orders-body">
+                            <tr>
+                                <td colspan="8" class="empty">
+                                    Ładowanie...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- PRODUCTS -->
+
+            <section class="section" id="section-products">
+
+                <div class="toolbar">
+
+                    <input
+                        id="product-search"
+                        placeholder="Szukaj produktu..."
+                    >
+
+                    <select id="product-status-filter">
+                        <option value="">Wszystkie</option>
+                        <option value="verified">Zweryfikowane</option>
+                        <option value="unverified">Niezweryfikowane</option>
+                        <option value="blocked">Zablokowane</option>
+                    </select>
+
+                    <button class="btn" id="new-product">
+                        + Dodaj produkt
+                    </button>
+
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nazwa</th>
+                                <th>Autor</th>
+                                <th>Kategoria</th>
+                                <th>Cena</th>
+                                <th>Wersja MC</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="products-body">
+                            <tr>
+                                <td colspan="8" class="empty">
+                                    Ładowanie...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- USERS -->
+
+            <section class="section" id="section-users">
+
+                <div class="toolbar">
+
+                    <input
+                        id="user-search"
+                        placeholder="Szukaj użytkownika..."
+                    >
+
+                    <button class="btn" id="refresh-users">
+                        ↻ Odśwież
+                    </button>
+
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Użytkownik</th>
+                                <th>Rangi</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="users-body">
+                            <tr>
+                                <td colspan="3" class="empty">
+                                    Ładowanie...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- EARNINGS -->
+
+            <section class="section" id="section-earnings">
+
+                <div class="cards">
+
+                    <div class="card">
+                        <small>Twoja część</small>
+                        <span class="number" id="earnings-own">
+                            0,00 zł
+                        </span>
+                    </div>
+
+                    <div class="card">
+                        <small>Możliwa wypłata</small>
+                        <span class="number" id="earnings-withdrawable">
+                            0,00 zł
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="card">
+                    <h2>Twoje produkty i udział</h2>
+                    <div id="earnings-list">
+                        Ładowanie...
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- TUTORIALS -->
+
+            <section class="section" id="section-tutorials">
+
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+                        <div>
+                            <h2>Poradniki ADM</h2>
+                            <p style="color:var(--muted);margin-bottom:0">
+                                Administratorzy widzą tutaj tylko filmy. Owner może dodawać, edytować i usuwać poradniki.
+                            </p>
+                        </div>
+                        <button class="btn green" id="new-tutorial" style="display:none">+ Dodaj poradnik</button>
+                    </div>
+                </div>
+
+                <div class="video-grid" id="tutorials-list" style="margin-top:15px">
+                    <div class="card empty">Ładowanie poradników...</div>
+                </div>
+
+            </section>
+
+            <!-- HISTORY -->
+
+            <section class="section" id="section-history">
+
+                <div class="card">
+                    <h2>Historia usuniętych produktów</h2>
+                    <p style="color:var(--muted)">
+                        Ta sekcja jest widoczna tylko dla Ownera. Usunięte produkty pozostają tutaj z informacjami potrzebnymi do ich identyfikacji.
+                    </p>
+                </div>
+
+                <div class="table-wrap" style="margin-top:15px">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Nazwa</th>
+                                <th>Slug</th>
+                                <th>Kategoria</th>
+                                <th>Autor</th>
+                                <th>Usunięto</th>
+                                <th>Usunął</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-history-body">
+                            <tr><td colspan="6" class="empty">Ładowanie...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- HOMEPAGE -->
+
+            <section class="section" id="section-homepage">
+
+                <div class="card">
+                    <h2>Strona główna</h2>
+                    <p style="color:var(--muted)">
+                        Szybki dostęp do głównych części ShadowTale.
+                    </p>
+
+                    <div class="toolbar">
+                        <button class="btn"
+                            onclick="location.href='index.html'">
+                            Otwórz stronę
+                        </button>
+
+                        <button class="btn"
+                            onclick="location.href='regulaminy.html'">
+                            Regulaminy
+                        </button>
+
+                        <button class="btn"
+                            onclick="location.href='pomoc.html'">
+                            Centrum pomocy
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<!-- TICKET MODAL -->
+
+<div class="modal-backdrop" id="ticket-modal">
+
+    <div class="modal">
+
+        <h2 id="ticket-modal-title">Ticket</h2>
+
+        <div id="ticket-info"></div>
+
+        <h3>Wiadomości</h3>
+
+        <div id="ticket-messages">
+            Ładowanie...
+        </div>
+
+        <div class="field" style="margin-top:15px">
+            <label>Odpowiedź do gracza</label>
+            <textarea
+                id="ticket-reply"
+                placeholder="Napisz wiadomość..."
+            ></textarea>
+        </div>
+
+        <div class="modal-actions">
+
+            <button class="btn" id="ticket-close-modal">
+                Zamknij okno
+            </button>
+
+            <button class="btn blue" id="ticket-send">
+                Wyślij odpowiedź
+            </button>
+
+            <button class="btn green" id="ticket-accept">
+                ✓ Przyjmij
+            </button>
+
+            <button class="btn red" id="ticket-reject">
+                ✕ Odrzuć
+            </button>
+
+            <button class="btn yellow" id="ticket-close">
+                🔒 Zamknij ticket
+            </button>
+
+            <button class="btn blue" id="ticket-reopen">
+                ↻ Otwórz ponownie
+            </button>
+
+            <button class="btn red" id="ticket-delete">
+                🗑 Usuń ticket
+            </button>
+
+        </div>
+
+        <h3>Historia</h3>
+
+        <div class="history" id="ticket-history">
+            Ładowanie...
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TUTORIAL MODAL -->
+
+<div class="modal-backdrop" id="tutorial-modal">
+    <div class="modal">
+        <h2 id="tutorial-modal-title">Dodaj poradnik</h2>
+        <div class="modal-grid">
+            <div class="field">
+                <label>Tytuł *</label>
+                <input id="tutorial-title">
+            </div>
+            <div class="field">
+                <label>Plik MP4</label>
+                <input id="tutorial-file" type="file" accept="video/mp4,.mp4">
+            </div>
+            <div class="field full">
+                <label>Opis</label>
+                <textarea id="tutorial-description" placeholder="Krótki opis poradnika..."></textarea>
+            </div>
+            <div class="field full">
+                <label>Adres filmu (opcjonalnie, jeśli nie chcesz wysyłać MP4)</label>
+                <input id="tutorial-url" placeholder="https://..."><br>
+                <small style="color:var(--muted)">Możesz użyć pliku MP4 albo gotowego adresu filmu.</small>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn" id="tutorial-cancel">Anuluj</button>
+            <button class="btn green" id="tutorial-save">Zapisz poradnik</button>
+        </div>
+    </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+
+<div class="modal-backdrop" id="product-modal">
+
+    <div class="modal">
+
+        <h2>Dodaj produkt</h2>
+
+        <div class="modal-grid">
+
+            <div class="field">
+                <label>Nazwa *</label>
+                <input id="product-name">
+            </div>
+
+            <div class="field">
+                <label>Slug *</label>
+                <input id="product-slug">
+            </div>
+
+            <div class="field">
+                <label>Świat *</label>
+                <select id="product-world">
+                    <option value="minecraft">Minecraft</option>
+                    <option value="undertale">Undertale</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Kategoria *</label>
+                <select id="product-category">
+                    <option value="skrypty">Skrypty</option>
+                    <option value="mapy">Mapy</option>
+                    <option value="schematy">Schematy</option>
+                    <option value="configi">Configi</option>
+                    <option value="tekstury">Tekstury</option>
+                    <option value="undertale">Undertale</option>
+                    <option value="inne">Inne</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Typ *</label>
+                <input id="product-type" placeholder="np. plugin, skrypt, mapa">
+            </div>
+
+            <div class="field">
+                <label>Cena *</label>
+                <input id="product-price" type="number" min="0" step="0.01">
+            </div>
+
+            <div class="field full" id="minecraft-versions-field">
+                <label>Wersje Minecraft * — możesz zaznaczyć kilka</label>
+                <div class="version-grid" id="minecraft-versions">
+                    <label class="version-option"><input type="checkbox" value="1.8.8"> 1.8.8</label>
+                    <label class="version-option"><input type="checkbox" value="1.12.2"> 1.12.2</label>
+                    <label class="version-option"><input type="checkbox" value="1.16.5"> 1.16.5</label>
+                    <label class="version-option"><input type="checkbox" value="1.17.1"> 1.17.1</label>
+                    <label class="version-option"><input type="checkbox" value="1.18.2"> 1.18.2</label>
+                    <label class="version-option"><input type="checkbox" value="1.19.4"> 1.19.4</label>
+                    <label class="version-option"><input type="checkbox" value="1.20.1"> 1.20.1</label>
+                    <label class="version-option"><input type="checkbox" value="1.20.2"> 1.20.2</label>
+                    <label class="version-option"><input type="checkbox" value="1.20.4"> 1.20.4</label>
+                    <label class="version-option"><input type="checkbox" value="1.20.6"> 1.20.6</label>
+                    <label class="version-option"><input type="checkbox" value="1.21"> 1.21</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.1"> 1.21.1</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.3"> 1.21.3</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.4"> 1.21.4</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.5"> 1.21.5</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.6"> 1.21.6</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.7"> 1.21.7</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.8"> 1.21.8</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.9"> 1.21.9</label>
+                    <label class="version-option"><input type="checkbox" value="1.21.10"> 1.21.10</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Wymagane pluginy *</label>
+                <input id="product-required-plugins"
+                       placeholder="np. WorldEdit, Vault">
+            </div>
+
+            <div class="field full">
+                <label>Plik produktu *</label>
+                <input id="product-file" type="file">
+                <small id="product-file-info" style="display:block;color:var(--muted);margin-top:7px">
+                    Wybierz plik produktu.
+                </small>
+            </div>
+
+            <div class="field">
+                <label>Link YouTube</label>
+                <input id="product-youtube"
+                       placeholder="Link do poradnika">
+            </div>
+
+
+            <div class="field full">
+                <label>Opis *</label>
+                <textarea id="product-description"></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Instrukcja użycia *</label>
+                <textarea id="product-instructions"></textarea>
+            </div>
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button class="btn"
+                    onclick="closeProductModal()">
+                Anuluj
+            </button>
+
+            <button class="btn green"
+                    id="save-product">
+                Zapisz produkt
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+<script>
+(function () {
+
+    "use strict";
+
+    if (!window.supabase) {
+        console.error("Brakuje biblioteki Supabase.");
+        document.getElementById("loading").textContent =
+            "Nie udało się załadować Supabase.";
+        return;
+    }
+
+    const CONFIG =
+        window.CONFIG ||
+        window.SHADOWTALE_CONFIG ||
+        {};
+
+    const SUPABASE_URL =
+        CONFIG.supabaseUrl ||
+        CONFIG.SUPABASE_URL;
+
+    const SUPABASE_KEY =
+        CONFIG.supabaseKey ||
+        CONFIG.SUPABASE_KEY;
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        document.getElementById("loading").textContent =
+            "Brak konfiguracji Supabase.";
+        return;
+    }
+
+    const db = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    let currentUser = null;
+    let currentProfile = null;
+    let currentTicket = null;
+    let allTickets = [];
+    let allOrders = [];
+    let allProducts = [];
+    let allUsers = [];
+
+    const ROLE_PERMISSIONS = {
+
+        owner: {
+            label: "Właściciel 👑",
+            categories: ["*"]
+        },
+
+        admin: {
+            label: "Admin 🛡️",
+            categories: ["*"]
+        },
+
+        administrator: {
+            label: "Administrator 🛡️",
+            categories: ["*"]
+        },
+
+        moderator: {
+            label: "Moderator 🔨",
+            categories: []
+        },
+
+        helper: {
+            label: "Helper 🧰",
+            categories: []
+        },
+
+        "programista skryptów": {
+            label: "Programista skryptów 💻",
+            categories: ["scripts"]
+        },
+
+        "programista configów": {
+            label: "Programista configów ⚙️",
+            categories: ["configs"]
+        },
+
+        "programista-budowlaniec": {
+            label: "Programista-budowlaniec 🏗️",
+            categories: ["maps", "schematics"]
+        },
+
+        grafik: {
+            label: "Grafik 🎨",
+            categories: ["textures"]
+        },
+
+        "programista undertale": {
+            label: "Programista Undertale ❤️",
+            categories: ["undertale"]
+        }
+    };
+
+    function normalize(value) {
+        return String(value || "")
+            .trim()
+            .toLowerCase();
+    }
+
+    function getRoles(profile) {
+
+        const roles = [];
+
+        if (Array.isArray(profile?.roles)) {
+            roles.push(...profile.roles);
+        }
+
+        if (profile?.role) {
+            roles.push(profile.role);
+        }
+
+        return [...new Set(
+            roles
+                .map(normalize)
+                .filter(Boolean)
+        )];
+    }
+
+    function isOwner() {
+
+        return getRoles(currentProfile).some(role =>
+            role === "owner"
+        );
+    }
+
+    function isAdministrator() {
+
+        return getRoles(currentProfile).some(role =>
+            [
+                "owner",
+                "admin",
+                "administrator"
+            ].includes(role)
+        );
+    }
+
+    function getAllowedCategories() {
+
+        const roles = getRoles(currentProfile);
+
+        if (
+            roles.includes("owner") ||
+            roles.includes("admin") ||
+            roles.includes("administrator")
+        ) {
+            return ["*"];
+        }
+
+        const result = [];
+
+        roles.forEach(role => {
+
+            const permission =
+                ROLE_PERMISSIONS[role];
+
+            if (!permission) return;
+
+            result.push(...permission.categories);
+
+        });
+
+        return [...new Set(result)];
+    }
+
+    function canonicalCategory(category) {
+        const value = normalize(category);
+
+        const aliases = {
+            "skrypty": "scripts",
+            "skrypty minecraft": "scripts",
+            "scripts": "scripts",
+            "mapy": "maps",
+            "maps": "maps",
+            "schematy": "schematics",
+            "schematics": "schematics",
+            "configi": "configs",
+            "configs": "configs",
+            "tekstury": "textures",
+            "teksty": "textures",
+            "textures": "textures",
+            "grafiki": "textures",
+            "undertale": "undertale",
+            "inne": "other",
+            "other": "other"
+        };
+
+        return aliases[value] || value;
+    }
+
+    function canHandleOrder(category) {
+
+        const allowed =
+            getAllowedCategories().map(canonicalCategory);
+
+        const wanted =
+            canonicalCategory(category);
+
+        return (
+            allowed.includes("*") ||
+            allowed.includes(wanted)
+        );
+    }
+
+    function formatMoney(value) {
+
+        return Number(value || 0)
+            .toLocaleString("pl-PL", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " zł";
+    }
+
+    function formatDate(value) {
+
+        if (!value) return "—";
+
+        return new Date(value)
+            .toLocaleString("pl-PL");
+    }
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function statusBadge(status) {
+
+        const map = {
+            open: ["Otwarte", "blue"],
+            accepted: ["Przyjęte", "green"],
+            rejected: ["Odrzucone", "red"],
+            closed: ["Zamknięte", "yellow"],
+            in_progress: ["W realizacji", "purple"]
+        };
+
+        const item = map[status] ||
+            [status || "Nieznany", "blue"];
+
+        return `
+            <span class="badge ${item[1]}">
+                ${escapeHtml(item[0])}
+            </span>
+        `;
+    }
+
+    function notify(message) {
+        alert(message);
+    }
+
+    async function invokeAction(action, payload = {}) {
+
+        const { data, error } =
+            await db.functions.invoke(
+                "admin-actions",
+                {
+                    body: {
+                        action,
+                        ...payload
+                    }
+                }
+            );
+
+        if (error) {
+            throw new Error(
+                error.message ||
+                "Błąd Edge Function."
+            );
+        }
+
+        if (data?.error) {
+            throw new Error(
+                data.error ||
+                "Operacja nie została wykonana."
+            );
+        }
+
+        return data || { ok:true };
+    }
+
+    async function loadSession() {
+
+        const {
+            data: {
+                session
+            }
+        } = await db.auth.getSession();
+
+        if (!session) {
+            location.href = "login.html";
+            return false;
+        }
+
+        currentUser = session.user;
+
+        const {
+            data: profile,
+            error
+        } = await db
+            .from("profiles")
+            .select(`
+                id,
+                username,
+                avatar_url,
+                role,
+                roles
+            `)
+            .eq("id", currentUser.id)
+            .maybeSingle();
+
+        if (error) {
+            console.error(error);
+            showDenied();
+            return false;
+        }
+
+        currentProfile = profile;
+
+        if (!isAdministrator()) {
+            showDenied();
+            return false;
+        }
+
+        return true;
+    }
+
+    function showDenied() {
+
+        document.getElementById("loading").style.display =
+            "none";
+
+        document.getElementById("admin-app").style.display =
+            "none";
+
+        document.getElementById("denied").style.display =
+            "block";
+    }
+
+    function showApp() {
+
+        document.getElementById("loading").style.display =
+            "none";
+
+        document.getElementById("admin-app").style.display =
+            "block";
+
+        document.getElementById("admin-username")
+            .textContent =
+            currentProfile?.username ||
+            currentUser?.email ||
+            "Administrator";
+
+        const roles =
+            getRoles(currentProfile);
+
+        const labels = roles.map(role =>
+            ROLE_PERMISSIONS[role]?.label ||
+            role
+        );
+
+        document.getElementById("admin-role")
+            .textContent =
+            labels.join(" • ");
+
+        renderPermissions();
+        renderTutorialButtonVisibility();
+    }
+
+    function renderPermissions() {
+
+        const allowed =
+            getAllowedCategories();
+
+        let html = `
+            <p>
+                🎫 <strong>Pomoc i pytania:</strong>
+                dostępne
+            </p>
+        `;
+
+        if (allowed.includes("*")) {
+
+            html += `
+                <p>
+                    🛒 <strong>Zamówienia:</strong>
+                    wszystkie
+                </p>
+            `;
+
+        } else if (allowed.length) {
+
+            html += `
+                <p>
+                    🛒 <strong>Zamówienia:</strong>
+                    ${allowed.map(escapeHtml).join(", ")}
+                </p>
+            `;
+
+        } else {
+
+            html += `
+                <p>
+                    🛒 <strong>Zamówienia:</strong>
+                    brak
+                </p>
+            `;
+        }
+
+        document.getElementById("permission-list")
+            .innerHTML = html;
+    }
+
+    async function loadDashboard() {
+
+        const [
+            products,
+            tickets,
+            orders,
+            earnings
+        ] = await Promise.all([
+
+            db
+                .from("products")
+                .select("id", {
+                    count: "exact",
+                    head: true
+                }),
+
+            db
+                .from("tickets")
+                .select("id", {
+                    count: "exact",
+                    head: true
+                })
+                .in("status", [
+                    "open",
+                    "accepted",
+                    "in_progress"
+                ]),
+
+            db
+                .from("tickets")
+                .select("id", {
+                    count: "exact",
+                    head: true
+                })
+                .eq("type", "order")
+                .in("status", [
+                    "open",
+                    "accepted",
+                    "in_progress"
+                ]),
+
+            db
+                .from("sales")
+                .select("amount")
+        ]);
+
+        document.getElementById("stat-products")
+            .textContent =
+            products.count || 0;
+
+        document.getElementById("stat-tickets")
+            .textContent =
+            tickets.count || 0;
+
+        document.getElementById("stat-orders")
+            .textContent =
+            orders.count || 0;
+
+        let total = 0;
+
+        for (const sale of earnings.data || []) {
+            total += Number(sale.amount || 0);
+        }
+
+        document.getElementById("stat-earnings")
+            .textContent =
+            formatMoney(total);
+    }
+
+    async function loadTickets() {
+
+        const { data, error } =
+            await db
+                .from("tickets")
+                .select(`
+                    *,
+                    ticket_messages(
+                        id,
+                        author_id,
+                        message,
+                        created_at
+                    ),
+                    ticket_actions(
+                        id,
+                        action,
+                        details,
+                        actor_id,
+                        created_at
+                    )
+                `)
+                .order("created_at", {
+                    ascending: false
+                });
+
+        if (error) {
+            console.error(error);
+
+            document.getElementById("tickets-body")
+                .innerHTML = `
+                    <tr>
+                        <td colspan="9" class="empty">
+                            Nie udało się pobrać ticketów.
+                        </td>
+                    </tr>
+                `;
+
+            return;
+        }
+
+        allTickets = data || [];
+
+        renderTickets();
+    }
+
+    function renderTickets() {
+
+        const search =
+            normalize(
+                document.getElementById("ticket-search").value
+            );
+
+        const status =
+            document.getElementById(
+                "ticket-status-filter"
+            ).value;
+
+        const type =
+            document.getElementById(
+                "ticket-type-filter"
+            ).value;
+
+        let tickets =
+            allTickets.filter(ticket => {
+
+                if (status &&
+                    ticket.status !== status) {
+                    return false;
+                }
+
+                if (type &&
+                    ticket.type !== type) {
+                    return false;
+                }
+
+                if (search) {
+
+                    const haystack =
+                        normalize(
+                            [
+                                ticket.id,
+                                ticket.subject,
+                                ticket.category,
+                                ticket.user_email,
+                                ticket.username
+                            ].join(" ")
+                        );
+
+                    if (!haystack.includes(search)) {
+                        return false;
+                    }
+                }
+
+                if (
+                    ticket.type === "order" &&
+                    !canHandleOrder(ticket.category)
+                ) {
+                    return false;
+                }
+
+                return true;
+            });
+
+        if (!tickets.length) {
+
+            document.getElementById("tickets-body")
+                .innerHTML = `
+                    <tr>
+                        <td colspan="9" class="empty">
+                            Brak ticketów dla Twoich uprawnień.
+                        </td>
+                    </tr>
+                `;
+
+            return;
+        }
+
+        document.getElementById("tickets-body")
+            .innerHTML =
+            tickets.map(ticket => {
+
+                const shortId =
+                    String(ticket.id).slice(0, 8);
+
+                const typeLabel =
+                    ticket.type === "order"
+                        ? "🛒 Zamówienie"
+                        : ticket.type === "help"
+                            ? "🆘 Pomoc"
+                            : "❓ Pytanie";
+
+                return `
+                    <tr>
+
+                        <td>
+                            <code>#${escapeHtml(shortId)}</code>
+                        </td>
+
+                        <td>
+                            <strong>
+                                ${escapeHtml(ticket.subject)}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                ticket.username ||
+                                ticket.user_email ||
+                                "Gracz"
+                            )}
+                        </td>
+
+                        <td>${typeLabel}</td>
+
+                        <td>
+                            ${escapeHtml(
+                                ticket.category || "—"
+                            )}
+                        </td>
+
+                        <td>
+                            ${statusBadge(ticket.status)}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                ticket.assigned_username ||
+                                "Nikt"
+                            )}
+                        </td>
+
+                        <td>
+                            ${formatDate(ticket.created_at)}
+                        </td>
+
+                        <td>
+                            <div class="ticket-actions">
+                                <button
+                                    class="btn"
+                                    onclick="openTicket('${ticket.id}')">
+                                    Otwórz
+                                </button>
+                            </div>
+                        </td>
+
+                    </tr>
+                `;
+
+            }).join("");
+    }
+
+    async function openTicket(id) {
+
+        const ticket =
+            allTickets.find(item =>
+                item.id === id
+            );
+
+        if (!ticket) return;
+
+        currentTicket = ticket;
+
+        document.getElementById(
+            "ticket-modal-title"
+        ).textContent =
+            ticket.subject || "Ticket";
+
+        document.getElementById(
+            "ticket-info"
+        ).innerHTML = `
+            <div class="card">
+
+                <p>
+                    <strong>Gracz:</strong>
+                    ${escapeHtml(
+                        ticket.username ||
+                        ticket.user_email ||
+                        "—"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    ${escapeHtml(
+                        ticket.user_email || "—"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Typ:</strong>
+                    ${escapeHtml(ticket.type || "—")}
+                </p>
+
+                <p>
+                    <strong>Kategoria:</strong>
+                    ${escapeHtml(
+                        ticket.category || "—"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    ${statusBadge(ticket.status)}
+                </p>
+
+            </div>
+        `;
+
+        renderTicketMessages(ticket);
+        renderTicketHistory(ticket);
+
+        const deleteTicketButton = document.getElementById("ticket-delete");
+        deleteTicketButton.style.display = isOwner() ? "inline-flex" : "none";
+
+        document.getElementById("ticket-modal")
+            .classList.add("open");
+    }
+
+    function renderTicketMessages(ticket) {
+
+        const messages =
+            ticket.ticket_messages || [];
+
+        if (!messages.length) {
+
+            document.getElementById(
+                "ticket-messages"
+            ).innerHTML = `
+                <div class="empty">
+                    Brak wiadomości.
+                </div>
+            `;
+
+            return;
+        }
+
+        document.getElementById(
+            "ticket-messages"
+        ).innerHTML =
+            messages
+                .sort((a,b) =>
+                    new Date(a.created_at) -
+                    new Date(b.created_at)
+                )
+                .map(message => {
+
+                    const isAdmin =
+                        message.author_id ===
+                        currentUser.id;
+
+                    return `
+                        <div class="ticket-message">
+
+                            <div class="meta">
+                                ${
+                                    isAdmin
+                                        ? "Ty"
+                                        : "Gracz"
+                                }
+                                •
+                                ${formatDate(
+                                    message.created_at
+                                )}
+                            </div>
+
+                            <div>
+                                ${escapeHtml(
+                                    message.message
+                                ).replaceAll(
+                                    "\n",
+                                    "<br>"
+                                )}
+                            </div>
+
+                        </div>
+                    `;
+
+                }).join("");
+    }
+
+    function renderTicketHistory(ticket) {
+
+        const events =
+            ticket.ticket_actions || [];
+
+        if (!events.length) {
+
+            document.getElementById(
+                "ticket-history"
+            ).innerHTML =
+                "Brak historii.";
+
+            return;
+        }
+
+        document.getElementById(
+            "ticket-history"
+        ).innerHTML =
+            events
+                .sort((a,b) =>
+                    new Date(b.created_at) -
+                    new Date(a.created_at)
+                )
+                .map(event => `
+                    <div class="history-item">
+
+                        <strong>
+                            ${escapeHtml(event.action)}
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            ${formatDate(event.created_at)}
+                        </small>
+
+                        ${
+                            event.details
+                                ? `
+                                    <div>
+                                        ${escapeHtml(
+                                            event.details
+                                        )}
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                    </div>
+                `)
+                .join("");
+    }
+
+    async function directTicketAction(action, ticketId) {
+
+        const statusMap = {
+            accept_ticket: "accepted",
+            reject_ticket: "rejected",
+            close_ticket: "closed",
+            reopen_ticket: "open"
+        };
+
+        if (action === "delete_ticket") {
+            if (!isOwner()) throw new Error("Tylko Owner może usuwać tickety.");
+
+            const messages = await db.from("ticket_messages").delete().eq("ticket_id", ticketId);
+            if (messages.error) throw messages.error;
+
+            const actions = await db.from("ticket_actions").delete().eq("ticket_id", ticketId);
+            if (actions.error) throw actions.error;
+
+            const ticket = await db.from("tickets").delete().eq("id", ticketId);
+            if (ticket.error) throw ticket.error;
+            return;
+        }
+
+        const nextStatus = statusMap[action];
+        if (!nextStatus) throw new Error("Nieznana akcja ticketu.");
+
+        const result = await db.from("tickets").update({ status: nextStatus }).eq("id", ticketId);
+        if (result.error) throw result.error;
+    }
+
+    async function directTicketReply(ticketId, message) {
+        const result = await db.from("ticket_messages").insert({
+            ticket_id: ticketId,
+            author_id: currentUser.id,
+            message
+        });
+        if (result.error) throw result.error;
+    }
+
+    async function ticketAction(action) {
+
+        if (!currentTicket) return;
+
+        try {
+            try {
+                await invokeAction(action, { ticket_id: currentTicket.id });
+            } catch (edgeError) {
+                console.warn("admin-actions nie wykonało akcji, próba bezpośrednia:", edgeError);
+                await directTicketAction(action, currentTicket.id);
+            }
+
+            notify(action === "delete_ticket" ? "Ticket został usunięty." : "Akcja została wykonana.");
+            closeTicketModal();
+            await loadTickets();
+            await loadDashboard();
+
+        } catch (error) {
+            console.error(error);
+            notify(error.message || "Nie udało się wykonać akcji ticketu.");
+        }
+    }
+
+    async function sendTicketReply() {
+
+        if (!currentTicket) return;
+
+        const textarea = document.getElementById("ticket-reply");
+        const message = textarea.value.trim();
+        if (!message) {
+            notify("Wpisz wiadomość.");
+            return;
+        }
+
+        try {
+            try {
+                await invokeAction("reply_ticket", { ticket_id: currentTicket.id, message });
+            } catch (edgeError) {
+                console.warn("admin-actions nie wysłało odpowiedzi, próba bezpośrednia:", edgeError);
+                await directTicketReply(currentTicket.id, message);
+            }
+
+            textarea.value = "";
+            notify("Wiadomość została wysłana.");
+            closeTicketModal();
+            await loadTickets();
+
+        } catch (error) {
+            console.error(error);
+            notify(error.message || "Nie udało się wysłać wiadomości.");
+        }
+    }
+
+    function closeTicketModal() {
+
+        document.getElementById(
+            "ticket-modal"
+        ).classList.remove("open");
+
+        currentTicket = null;
+    }
+
+    async function loadOrders() {
+
+        const { data, error } =
+            await db
+                .from("tickets")
+                .select("*")
+                .eq("type", "order")
+                .order("created_at", {
+                    ascending: false
+                });
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        allOrders =
+            (data || [])
+                .filter(order =>
+                    canHandleOrder(order.category)
+                );
+
+        renderOrders();
+    }
+
+    function renderOrders() {
+
+        const search =
+            normalize(
+                document.getElementById(
+                    "order-search"
+                ).value
+            );
+
+        const status =
+            document.getElementById(
+                "order-status-filter"
+            ).value;
+
+        const orders =
+            allOrders.filter(order => {
+
+                if (status &&
+                    order.status !== status) {
+                    return false;
+                }
+
+                if (search) {
+
+                    const haystack =
+                        normalize([
+                            order.subject,
+                            order.username,
+                            order.user_email,
+                            order.category
+                        ].join(" "));
+
+                    if (!haystack.includes(search)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+        if (!orders.length) {
+
+            document.getElementById(
+                "orders-body"
+            ).innerHTML = `
+                <tr>
+                    <td colspan="8" class="empty">
+                        Brak dostępnych zamówień.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        document.getElementById(
+            "orders-body"
+        ).innerHTML =
+            orders.map(order => `
+                <tr>
+
+                    <td>
+                        #${escapeHtml(
+                            String(order.id).slice(0,8)
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(order.subject)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            order.username ||
+                            order.user_email ||
+                            "Gracz"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            order.category
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            order.required_role ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${statusBadge(order.status)}
+                    </td>
+
+                    <td>
+                        ${formatDate(order.created_at)}
+                    </td>
+
+                    <td>
+                        <button
+                            class="btn"
+                            onclick="openTicket('${order.id}')">
+                            Otwórz
+                        </button>
+                    </td>
+
+                </tr>
+            `).join("");
+    }
+
+    async function loadProducts() {
+
+        const { data, error } =
+            await db
+                .from("products")
+                .select("*")
+                .order("created_at", {
+                    ascending: false
+                });
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        allProducts = data || [];
+
+        renderProducts();
+    }
+
+    function renderProducts() {
+
+        const search =
+            normalize(
+                document.getElementById(
+                    "product-search"
+                ).value
+            );
+
+        const status =
+            document.getElementById(
+                "product-status-filter"
+            ).value;
+
+        const products =
+            allProducts.filter(product => {
+
+                if (search) {
+
+                    const haystack =
+                        normalize([
+                            product.name,
+                            product.category,
+                            product.type
+                        ].join(" "));
+
+                    if (!haystack.includes(search)) {
+                        return false;
+                    }
+                }
+
+                if (status === "verified" &&
+                    !product.file_verified) {
+                    return false;
+                }
+
+                if (status === "unverified" &&
+                    product.file_verified) {
+                    return false;
+                }
+
+                if (status === "blocked" &&
+                    !product.blocked) {
+                    return false;
+                }
+
+                return true;
+            });
+
+        document.getElementById(
+            "products-body"
+        ).innerHTML =
+            products.length
+                ? products.map(product => {
+
+                    const isNew =
+                        Date.now() -
+                        new Date(
+                            product.created_at
+                        ).getTime()
+                        <= 3 * 24 * 60 * 60 * 1000;
+
+                    return `
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    ${escapeHtml(
+                                        product.name
+                                    )}
+                                </strong>
+
+                                ${
+                                    isNew
+                                        ? `
+                                            <span class="badge green">
+                                                NOWE
+                                            </span>
+                                        `
+                                        : ""
+                                }
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    product.owner_username ||
+                                    "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    product.category
+                                )}
+                            </td>
+
+                            <td>
+                                ${product.is_free
+                                    ? "Darmowy"
+                                    : formatMoney(
+                                        product.price
+                                    )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    product.minecraft_version ||
+                                    "—"
+                                )}
+                            </td>
+
+                            <td>
+
+                                ${
+                                    product.blocked
+                                        ? `
+                                            <span class="badge red">
+                                                Zablokowany
+                                            </span>
+                                        `
+                                        : product.file_verified
+                                            ? `
+                                                <span class="badge green">
+                                                    Zweryfikowany
+                                                </span>
+                                            `
+                                            : `
+                                                <span class="badge yellow">
+                                                    Niezweryfikowany
+                                                </span>
+                                            `
+                                }
+
+                            </td>
+
+                            <td>
+                                ${formatDate(
+                                    product.created_at
+                                )}
+                            </td>
+
+                            <td>
+
+                                ${
+                                    isOwner()
+                                        ? `
+                                            <button
+                                                class="btn green"
+                                                onclick="verifyProduct('${product.id}')">
+                                                ✓ Weryfikuj
+                                            </button>
+                                            <button
+                                                class="btn red"
+                                                onclick="deleteProduct('${product.id}')">
+                                                🗑 Usuń produkt
+                                            </button>
+                                        `
+                                        : ""
+                                }
+
+                            </td>
+
+                        </tr>
+                    `;
+
+                }).join("")
+                : `
+                    <tr>
+                        <td colspan="8" class="empty">
+                            Brak produktów.
+                        </td>
+                    </tr>
+                `;
+    }
+
+    async function verifyProduct(id) {
+
+        if (!isOwner()) {
+            notify(
+                "Tylko Owner może weryfikować pliki."
+            );
+            return;
+        }
+
+        try {
+
+            await invokeAction(
+                "verify_product",
+                {
+                    product_id: id
+                }
+            );
+
+            notify(
+                "Produkt został zweryfikowany."
+            );
+
+            await loadProducts();
+
+        } catch (error) {
+
+            notify(
+                error.message ||
+                "Nie udało się zweryfikować produktu."
+            );
+        }
+    }
+
+    async function deleteProduct(id) {
+
+        if (!isOwner()) {
+            notify("Tylko Owner może usuwać produkty.");
+            return;
+        }
+
+        const product = allProducts.find(item => String(item.id) === String(id));
+        if (!product) {
+            notify("Nie znaleziono produktu.");
+            return;
+        }
+
+        if (!confirm(`Usunąć produkt "${product.name}"?`)) return;
+        if (!confirm("Produkt zostanie usunięty ze sklepu. Jego kopia informacyjna trafi do Historii. Kontynuować?")) return;
+
+        try {
+            const historyPayload = {
+                product_id: product.id,
+                name: product.name || null,
+                slug: product.slug || null,
+                world: product.world || null,
+                category: product.category || null,
+                type: product.type || null,
+                price: Number(product.price || 0),
+                is_free: !!product.is_free,
+                minecraft_version: product.minecraft_version || null,
+                required_plugins: product.required_plugins || [],
+                owner_id: product.owner_id || null,
+                file_path: product.file_path || null,
+                youtube_url: product.youtube_url || null,
+                description: product.description || null,
+                instructions: product.instructions || null,
+                deleted_by: currentUser.id
+            };
+
+            const historyResult = await db.from("product_history").insert(historyPayload);
+            if (historyResult.error) {
+                throw new Error("Nie udało się zapisać produktu w Historii: " + historyResult.error.message);
+            }
+
+            const deleteResult = await db.from("products").delete().eq("id", product.id);
+            if (deleteResult.error) throw deleteResult.error;
+
+            if (product.file_path) {
+                const storageResult = await db.storage.from("products").remove([product.file_path]);
+                if (storageResult.error) console.warn("Nie udało się usunąć pliku ze Storage:", storageResult.error);
+            }
+
+            notify("Produkt został usunięty i zapisany w Historii.");
+            await loadProducts();
+            await loadProductHistory();
+            await loadDashboard();
+
+        } catch (error) {
+            console.error(error);
+            notify(error.message || "Nie udało się usunąć produktu.");
+        }
+    }
+
+    async function loadUsers() {
+
+        const { data, error } =
+            await db
+                .from("profiles")
+                .select(`
+                    id,
+                    username,
+                    role,
+                    roles
+                `)
+                .order("username");
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        allUsers = data || [];
+
+        renderUsers();
+    }
+
+    function renderUsers() {
+
+        const search =
+            normalize(
+                document.getElementById("user-search").value
+            );
+
+        const users = allUsers.filter(user => {
+            if (!search) return true;
+            return normalize([
+                user.username,
+                user.role,
+                ...(Array.isArray(user.roles) ? user.roles : [])
+            ].join(" ")).includes(search);
+        });
+
+        const body = document.getElementById("users-body");
+
+        if (!users.length) {
+            body.innerHTML = `<tr><td colspan="3" class="empty">Brak użytkowników.</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = users.map(user => {
+            const roles = [
+                user.role,
+                ...(Array.isArray(user.roles) ? user.roles : [])
+            ].filter(Boolean);
+
+            const uniqueRoles = [...new Set(roles)];
+
+            return `
+                <tr>
+                    <td><strong>${escapeHtml(user.username || "—")}</strong></td>
+                    <td>
+                        <div class="ticket-actions">
+                            ${uniqueRoles.length
+                                ? uniqueRoles.map(role => `<span class="badge blue">${escapeHtml(role)}</span>`).join("")
+                                : `<span class="badge">Brak roli</span>`}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ticket-actions">
+                            <button class="btn blue" onclick="forceUsername('${user.id}')">Wymuś nick</button>
+                            <button class="btn blue" onclick="forceAvatar('${user.id}')">Wymuś avatar</button>
+                            <button class="btn red" onclick="logoutAll('${user.id}')">Wyloguj wszędzie</button>
+                            ${isOwner() && user.id !== currentUser.id
+                                ? `<button class="btn red" onclick="deleteUser('${user.id}')">Usuń</button>`
+                                : ""}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    async function verifyUser(id) {
+        notify("Weryfikacja konta nie jest dostępna w tym panelu, ponieważ profiles nie posiada pola is_verified.");
+    }
+
+    async function forceUsername(id) {
+
+        try {
+
+            await invokeAction(
+                "force_username_change",
+                {
+                    user_id: id
+                }
+            );
+
+            notify(
+                "Użytkownik będzie musiał zmienić nick."
+            );
+
+        } catch (error) {
+
+            notify(error.message);
+        }
+    }
+
+    async function forceAvatar(id) {
+
+        try {
+
+            await invokeAction(
+                "force_avatar_change",
+                {
+                    user_id: id
+                }
+            );
+
+            notify(
+                "Użytkownik będzie musiał zmienić avatar."
+            );
+
+        } catch (error) {
+
+            notify(error.message);
+        }
+    }
+
+    async function logoutAll(id) {
+
+        if (!confirm(
+            "Wylogować użytkownika ze wszystkich urządzeń?"
+        )) {
+            return;
+        }
+
+        try {
+
+            await invokeAction(
+                "logout_all",
+                {
+                    user_id: id
+                }
+            );
+
+            notify(
+                "Użytkownik został wylogowany ze wszystkich urządzeń."
+            );
+
+        } catch (error) {
+
+            notify(error.message);
+        }
+    }
+
+    async function deleteUser(id) {
+
+        if (!confirm(
+            "Czy na pewno chcesz usunąć to konto?"
+        )) {
+            return;
+        }
+
+        if (!confirm(
+            "Ta operacja może być nieodwracalna. Kontynuować?"
+        )) {
+            return;
+        }
+
+        try {
+
+            await invokeAction(
+                "delete_user",
+                {
+                    user_id: id
+                }
+            );
+
+            notify(
+                "Konto zostało usunięte."
+            );
+
+            await loadUsers();
+
+        } catch (error) {
+
+            notify(error.message);
+        }
+    }
+
+    let editingTutorialId = null;
+    let editingTutorialOldPath = null;
+
+    function renderTutorialButtonVisibility() {
+        const button = document.getElementById("new-tutorial");
+        if (button) button.style.display = isOwner() ? "inline-flex" : "none";
+    }
+
+    async function loadTutorials() {
+        const list = document.getElementById("tutorials-list");
+        if (!list) return;
+
+        const { data, error } = await db
+            .from("tutorials")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            console.error(error);
+            list.innerHTML = `<div class="card empty">Nie udało się pobrać poradników.<br>${escapeHtml(error.message)}</div>`;
+            return;
+        }
+
+        if (!data?.length) {
+            list.innerHTML = `<div class="card empty">Brak poradników.</div>`;
+            return;
+        }
+
+        list.innerHTML = data.map(tutorial => {
+            const source = tutorial.video_url || tutorial.file_url || "";
+            return `
+                <article class="card video-card">
+                    <h3>${escapeHtml(tutorial.title || "Poradnik")}</h3>
+                    <p>${escapeHtml(tutorial.description || "")}</p>
+                    ${source ? `<video controls preload="metadata" src="${escapeHtml(source)}"></video>` : `<div class="empty">Brak filmu.</div>`}
+                    <small style="color:var(--muted)">${formatDate(tutorial.created_at)}</small>
+                    ${isOwner() ? `
+                        <div class="ticket-actions" style="margin-top:10px">
+                            <button class="btn blue" onclick="editTutorial('${tutorial.id}')">Edytuj</button>
+                            <button class="btn red" onclick="deleteTutorial('${tutorial.id}')">Usuń</button>
+                        </div>
+                    ` : ""}
+                </article>
+            `;
+        }).join("");
+
+        renderTutorialButtonVisibility();
+    }
+
+    function openTutorialModal(tutorial = null) {
+        if (!isOwner()) {
+            notify("Tylko Owner może dodawać i edytować poradniki.");
+            return;
+        }
+
+        editingTutorialId = tutorial?.id || null;
+        editingTutorialOldPath = tutorial?.storage_path || null;
+
+        document.getElementById("tutorial-modal-title").textContent = tutorial ? "Edytuj poradnik" : "Dodaj poradnik";
+        document.getElementById("tutorial-title").value = tutorial?.title || "";
+        document.getElementById("tutorial-description").value = tutorial?.description || "";
+        document.getElementById("tutorial-url").value = tutorial?.video_url || "";
+        document.getElementById("tutorial-file").value = "";
+        document.getElementById("tutorial-modal").classList.add("open");
+    }
+
+    async function saveTutorial() {
+        if (!isOwner()) return;
+
+        const title = document.getElementById("tutorial-title").value.trim();
+        const description = document.getElementById("tutorial-description").value.trim();
+        const url = document.getElementById("tutorial-url").value.trim();
+        const file = document.getElementById("tutorial-file").files[0];
+
+        if (!title || (!file && !url && !editingTutorialId)) {
+            notify("Podaj tytuł oraz plik MP4 albo adres filmu.");
+            return;
+        }
+
+        try {
+            let videoUrl = url || null;
+            let storagePath = editingTutorialOldPath || null;
+
+            if (file) {
+                if (file.type !== "video/mp4" && !file.name.toLowerCase().endsWith(".mp4")) {
+                    throw new Error("Poradnik musi być plikiem MP4.");
+                }
+
+                const safe = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]/g,"_").replace(/_+/g,"_");
+                storagePath = `tutorials/${currentUser.id}/${Date.now()}-${safe}`;
+                const upload = await db.storage.from("tutorials").upload(storagePath, file, { upsert:false, contentType:"video/mp4" });
+                if (upload.error) throw upload.error;
+
+                const publicResult = db.storage.from("tutorials").getPublicUrl(storagePath);
+                videoUrl = publicResult?.data?.publicUrl || null;
+            }
+
+            const payload = {
+                title,
+                description: description || null,
+                video_url: videoUrl,
+                storage_path: storagePath,
+                updated_at: new Date().toISOString()
+            };
+
+            let result;
+            if (editingTutorialId) {
+                result = await db.from("tutorials").update(payload).eq("id", editingTutorialId);
+            } else {
+                result = await db.from("tutorials").insert({ ...payload, created_by: currentUser.id });
+            }
+
+            if (result.error) {
+                if (file && storagePath) await db.storage.from("tutorials").remove([storagePath]);
+                throw result.error;
+            }
+
+            if (file && editingTutorialOldPath && editingTutorialOldPath !== storagePath) {
+                const removed = await db.storage.from("tutorials").remove([editingTutorialOldPath]);
+                if (removed.error) console.warn(removed.error);
+            }
+
+            document.getElementById("tutorial-modal").classList.remove("open");
+            editingTutorialId = null;
+            editingTutorialOldPath = null;
+            notify("Poradnik został zapisany.");
+            await loadTutorials();
+
+        } catch (error) {
+            console.error(error);
+            notify(error.message || "Nie udało się zapisać poradnika.");
+        }
+    }
+
+    async function editTutorial(id) {
+        if (!isOwner()) return;
+        const { data, error } = await db.from("tutorials").select("*").eq("id", id).maybeSingle();
+        if (error || !data) { notify(error?.message || "Nie znaleziono poradnika."); return; }
+        openTutorialModal(data);
+    }
+
+    async function deleteTutorial(id) {
+        if (!isOwner()) return;
+        if (!confirm("Usunąć ten poradnik?")) return;
+
+        try {
+            const { data, error } = await db.from("tutorials").select("storage_path").eq("id", id).maybeSingle();
+            if (error) throw error;
+            const removed = await db.from("tutorials").delete().eq("id", id);
+            if (removed.error) throw removed.error;
+            if (data?.storage_path) {
+                const storage = await db.storage.from("tutorials").remove([data.storage_path]);
+                if (storage.error) console.warn(storage.error);
+            }
+            notify("Poradnik został usunięty.");
+            await loadTutorials();
+        } catch (error) {
+            console.error(error);
+            notify(error.message || "Nie udało się usunąć poradnika.");
+        }
+    }
+
+    async function loadProductHistory() {
+        const body = document.getElementById("product-history-body");
+        if (!body) return;
+        if (!isOwner()) {
+            body.innerHTML = `<tr><td colspan="6" class="empty">Historia jest dostępna tylko dla Ownera.</td></tr>`;
+            return;
+        }
+
+        const { data, error } = await db.from("product_history").select("*").order("deleted_at", { ascending:false });
+        if (error) {
+            body.innerHTML = `<tr><td colspan="6" class="empty">Nie udało się pobrać Historii.<br>${escapeHtml(error.message)}</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = data?.length ? data.map(item => `
+            <tr>
+                <td><strong>${escapeHtml(item.name || "—")}</strong></td>
+                <td>${escapeHtml(item.slug || "—")}</td>
+                <td>${escapeHtml(item.category || "—")}</td>
+                <td>${escapeHtml(item.owner_username || item.owner_id || "—")}</td>
+                <td>${formatDate(item.deleted_at)}</td>
+                <td>${escapeHtml(item.deleted_by_username || item.deleted_by || "—")}</td>
+            </tr>
+        `).join("") : `<tr><td colspan="6" class="empty">Historia jest pusta.</td></tr>`;
+    }
+
+    async function loadEarnings() {
+
+        const { data, error } =
+            await db
+                .from("product_earnings_view")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
+        if (error) {
+
+            console.error(error);
+
+            document.getElementById(
+                "earnings-list"
+            ).textContent =
+                "Nie udało się pobrać zarobków.";
+
+            return;
+        }
+
+        let total = 0;
+
+        for (const item of data || []) {
+            total += Number(
+                item.earnings ||
+                item.user_earnings ||
+                0
+            );
+        }
+
+        document.getElementById(
+            "earnings-own"
+        ).textContent =
+            formatMoney(total);
+
+        document.getElementById(
+            "earnings-withdrawable"
+        ).textContent =
+            formatMoney(total);
+
+        document.getElementById(
+            "earnings-list"
+        ).innerHTML =
+            data?.length
+                ? data.map(item => `
+                    <div class="ticket-message">
+                        <strong>
+                            ${escapeHtml(
+                                item.product_name ||
+                                "Produkt"
+                            )}
+                        </strong>
+
+                        <div style="color:var(--muted)">
+                            Twój udział:
+                            ${Number(
+                                item.share_percent || 0
+                            )}%
+                        </div>
+
+                        <div>
+                            ${formatMoney(
+                                item.earnings ||
+                                item.user_earnings ||
+                                0
+                            )}
+                        </div>
+                    </div>
+                `).join("")
+                : `
+                    <div class="empty">
+                        Brak danych o zarobkach.
+                    </div>
+                `;
+    }
+
+    async function createProduct() {
+
+        const name =
+            document.getElementById(
+                "product-name"
+            ).value.trim();
+
+        const slug =
+            document.getElementById(
+                "product-slug"
+            ).value.trim();
+
+        const world =
+            document.getElementById(
+                "product-world"
+            ).value;
+
+        const category =
+            document.getElementById(
+                "product-category"
+            ).value;
+
+        const type =
+            document.getElementById(
+                "product-type"
+            ).value.trim();
+
+        const price =
+            Number(
+                document.getElementById(
+                    "product-price"
+                ).value
+            );
+
+        const versions = [
+            ...document.querySelectorAll(
+                '#minecraft-versions input[type="checkbox"]:checked'
+            )
+        ].map(input => input.value);
+
+        const plugins =
+            document.getElementById(
+                "product-required-plugins"
+            ).value.trim();
+
+        const file =
+            document.getElementById(
+                "product-file"
+            ).files[0];
+
+        const youtube =
+            document.getElementById(
+                "product-youtube"
+            ).value.trim();
+
+        const description =
+            document.getElementById(
+                "product-description"
+            ).value.trim();
+
+        const instructions =
+            document.getElementById(
+                "product-instructions"
+            ).value.trim();
+
+        if (
+            !name ||
+            !slug ||
+            !category ||
+            !type ||
+            !file ||
+            file.size <= 0 ||
+            !description ||
+            !instructions
+        ) {
+            notify(
+                "Uzupełnij wszystkie wymagane pola."
+            );
+            return;
+        }
+
+        if (world === "minecraft") {
+
+            if (!versions.length || !plugins) {
+
+                notify(
+                    "Dla produktu Minecraft zaznacz przynajmniej jedną wersję oraz podaj wymagane pluginy."
+                );
+
+                return;
+            }
+        }
+
+        try {
+
+            const safeFileName =
+                file.name
+                    .normalize("NFKD")
+                    .replace(/[^a-zA-Z0-9._-]/g, "_")
+                    .replace(/_+/g, "_");
+
+            const filePath =
+                `products/${currentUser.id}/${Date.now()}-${safeFileName}`;
+
+            const {
+                error: uploadError
+            } = await db.storage
+                .from("products")
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        upsert: false,
+                        cacheControl: "3600",
+                        contentType:
+                            file.type ||
+                            "application/octet-stream"
+                    }
+                );
+
+            if (uploadError) {
+                throw new Error(
+                    "Błąd wysyłania pliku do Storage: " +
+                    (uploadError.message || "nieznany błąd") +
+                    ". Sprawdź, czy istnieje bucket Storage o nazwie \"products\" oraz czy polityka INSERT pozwala zalogowanemu użytkownikowi wysyłać pliki."
+                );
+            }
+
+            const {
+                error
+            } = await db
+                .from("products")
+                .insert({
+                    owner_id: currentUser.id,
+                    name,
+                    slug,
+                    world,
+                    category,
+                    type,
+                    price: price || 0,
+                    is_free: !price,
+                    minecraft_version:
+                        world === "minecraft"
+                            ? versions.join(", ")
+                            : null,
+                    required_plugins:
+                        plugins
+                            ? plugins
+                                .split(",")
+                                .map(x => x.trim())
+                                .filter(Boolean)
+                            : [],
+                    file_path: filePath,
+                    file_verified: false,
+                    youtube_url:
+                        youtube || null,
+                    description,
+                    instructions,
+                    downloads_enabled: true,
+                    blocked: false
+                });
+
+            if (error) {
+                await db.storage
+                    .from("products")
+                    .remove([filePath]);
+
+                throw error;
+            }
+
+            notify(
+                "Produkt został dodany jako niezweryfikowany. Owner musi zweryfikować plik."
+            );
+
+            closeProductModal();
+
+            await loadProducts();
+            await loadDashboard();
+
+        } catch (error) {
+
+            console.error(error);
+
+            notify(
+                error.message ||
+                "Nie udało się dodać produktu."
+            );
+        }
+    }
+
+    function updateMinecraftVersionVisibility() {
+        const world = document.getElementById("product-world").value;
+        const field = document.getElementById("minecraft-versions-field");
+
+        if (world === "minecraft") {
+            field.style.display = "";
+        } else {
+            field.style.display = "none";
+            document.querySelectorAll(
+                '#minecraft-versions input[type="checkbox"]'
+            ).forEach(input => {
+                input.checked = false;
+            });
+        }
+    }
+
+    function openProductModal() {
+        document.getElementById("product-modal").classList.add("open");
+        updateMinecraftVersionVisibility();
+    }
+
+    window.closeProductModal = function () {
+
+        document.getElementById(
+            "product-modal"
+        ).classList.remove("open");
+
+        document.getElementById("product-file").value = "";
+
+        document.querySelectorAll(
+            '#minecraft-versions input[type="checkbox"]'
+        ).forEach(input => {
+            input.checked = false;
+        });
+
+        document.getElementById("product-file-info").textContent =
+            "Wybierz plik produktu.";
+    };
+
+    window.openTicket = openTicket;
+    window.verifyProduct = verifyProduct;
+    window.verifyUser = verifyUser;
+        window.forceUsername = forceUsername;
+    window.forceAvatar = forceAvatar;
+    window.logoutAll = logoutAll;
+    window.deleteUser = deleteUser;
+    window.deleteProduct = deleteProduct;
+    window.editTutorial = editTutorial;
+    window.deleteTutorial = deleteTutorial;
+
+    document.querySelectorAll(
+        ".nav button[data-section]"
+    ).forEach(button => {
+
+        button.addEventListener(
+            "click",
+            async () => {
+
+                const section =
+                    button.dataset.section;
+
+                document.querySelectorAll(
+                    ".nav button"
+                ).forEach(btn =>
+                    btn.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                document.querySelectorAll(
+                    ".section"
+                ).forEach(item =>
+                    item.classList.remove("active")
+                );
+
+                document.getElementById(
+                    `section-${section}`
+                ).classList.add("active");
+
+                document.getElementById(
+                    "page-title"
+                ).textContent =
+                    button.textContent.trim();
+
+                if (section === "tickets") {
+                    await loadTickets();
+                }
+
+                if (section === "orders") {
+                    await loadOrders();
+                }
+
+                if (section === "products") {
+                    await loadProducts();
+                }
+
+                if (section === "users") {
+                    await loadUsers();
+                }
+
+                if (section === "earnings") {
+                    await loadEarnings();
+                }
+
+                if (section === "tutorials") {
+                    await loadTutorials();
+                }
+
+                if (section === "history") {
+                    await loadProductHistory();
+                }
+
+            }
+        );
+
+    });
+
+    document.getElementById(
+        "refresh-tickets"
+    ).addEventListener(
+        "click",
+        loadTickets
+    );
+
+    document.getElementById(
+        "refresh-orders"
+    ).addEventListener(
+        "click",
+        loadOrders
+    );
+
+    document.getElementById(
+        "refresh-users"
+    ).addEventListener(
+        "click",
+        loadUsers
+    );
+
+    document.getElementById(
+        "ticket-search"
+    ).addEventListener(
+        "input",
+        renderTickets
+    );
+
+    document.getElementById(
+        "ticket-status-filter"
+    ).addEventListener(
+        "change",
+        renderTickets
+    );
+
+    document.getElementById(
+        "ticket-type-filter"
+    ).addEventListener(
+        "change",
+        renderTickets
+    );
+
+    document.getElementById(
+        "order-search"
+    ).addEventListener(
+        "input",
+        renderOrders
+    );
+
+    document.getElementById(
+        "order-status-filter"
+    ).addEventListener(
+        "change",
+        renderOrders
+    );
+
+    document.getElementById(
+        "product-search"
+    ).addEventListener(
+        "input",
+        renderProducts
+    );
+
+    document.getElementById(
+        "product-status-filter"
+    ).addEventListener(
+        "change",
+        renderProducts
+    );
+
+    document.getElementById(
+        "user-search"
+    ).addEventListener(
+        "input",
+        renderUsers
+    );
+
+    document.getElementById(
+        "new-product"
+    ).addEventListener(
+        "click",
+        openProductModal
+    );
+
+    document.getElementById(
+        "save-product"
+    ).addEventListener(
+        "click",
+        createProduct
+    );
+
+    document.getElementById(
+        "product-world"
+    ).addEventListener(
+        "change",
+        updateMinecraftVersionVisibility
+    );
+
+    document.getElementById(
+        "product-file"
+    ).addEventListener(
+        "change",
+        event => {
+            const file = event.target.files[0];
+            const info = document.getElementById("product-file-info");
+
+            if (!file) {
+                info.textContent = "Wybierz plik produktu.";
+                return;
+            }
+
+            info.textContent =
+                `Wybrano: ${file.name} • ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+        }
+    );
+
+
+    document.getElementById(
+        "ticket-close-modal"
+    ).addEventListener(
+        "click",
+        closeTicketModal
+    );
+
+    document.getElementById(
+        "ticket-send"
+    ).addEventListener(
+        "click",
+        sendTicketReply
+    );
+
+    document.getElementById(
+        "ticket-accept"
+    ).addEventListener(
+        "click",
+        () => ticketAction("accept_ticket")
+    );
+
+    document.getElementById(
+        "ticket-reject"
+    ).addEventListener(
+        "click",
+        () => ticketAction("reject_ticket")
+    );
+
+    document.getElementById(
+        "ticket-close"
+    ).addEventListener(
+        "click",
+        () => ticketAction("close_ticket")
+    );
+
+    document.getElementById(
+        "ticket-reopen"
+    ).addEventListener(
+        "click",
+        () => ticketAction("reopen_ticket")
+    );
+
+    document.getElementById("ticket-delete").addEventListener("click", () => ticketAction("delete_ticket"));
+
+    document.getElementById("new-tutorial").addEventListener("click", () => openTutorialModal());
+    document.getElementById("tutorial-save").addEventListener("click", saveTutorial);
+    document.getElementById("tutorial-cancel").addEventListener("click", () => document.getElementById("tutorial-modal").classList.remove("open"));
+
+    document.getElementById(
+        "logout"
+    ).addEventListener(
+        "click",
+        async () => {
+
+            await db.auth.signOut();
+
+            location.href =
+                "login.html";
+        }
+    );
+
+    document.getElementById(
+        "mobile-menu"
+    ).addEventListener(
+        "click",
+        () => {
+
+            document.getElementById(
+                "sidebar"
+            ).classList.toggle("open");
+
+        }
+    );
+
+    (async () => {
+
+        const ok =
+            await loadSession();
+
+        if (!ok) return;
+
+        showApp();
+
+        await Promise.all([
+            loadDashboard(),
+            loadTickets(),
+            loadOrders(),
+            loadProducts(),
+            loadUsers(),
+            loadEarnings(),
+            loadTutorials(),
+            loadProductHistory()
+        ]);
+
+    })();
+
+})();
+</script>
+
+</body>
+</html>
