@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShadowTale.pl — Spear of Justice</title>
+
+    <link rel="icon" href="assets/logo.png">
+
+    <style>
+        :root {
+            --bg: #050509;
+            --panel: rgba(15, 12, 25, 0.96);
+            --purple: #9b5cff;
+            --purple2: #6d35c9;
+            --text: #ffffff;
+            --muted: #aaa4b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(155, 92, 255, 0.16),
+                    transparent 45%
+                ),
+                #050509;
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        header {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(5, 5, 9, 0.95);
+            border-bottom: 1px solid rgba(155, 92, 255, 0.25);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .logo span {
+            color: var(--purple);
+        }
+
+        main {
+            width: min(1100px, calc(100% - 30px));
+            margin: 45px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #cdb7ff;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .back:hover {
+            color: white;
+        }
+
+        .music-box {
+            background: var(--panel);
+            border: 1px solid rgba(155, 92, 255, 0.25);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 25px;
+        }
+
+        .language {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 13px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: rgba(155, 92, 255, 0.12);
+            border: 1px solid rgba(155, 92, 255, 0.25);
+            color: #d9c8ff;
+            font-size: 14px;
+        }
+
+        video {
+            width: 100%;
+            max-height: 70vh;
+            display: block;
+            background: black;
+            border-radius: 14px;
+            border: 1px solid rgba(155, 92, 255, 0.25);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 10px;
+            background: linear-gradient(
+                135deg,
+                var(--purple),
+                var(--purple2)
+            );
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(155, 92, 255, 0.25);
+        }
+
+        .button.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 84, 112, 0.1);
+            border: 1px solid rgba(255, 84, 112, 0.3);
+            color: #ff8da0;
+        }
+
+        @media (max-width: 700px) {
+            header {
+                padding: 0 15px;
+            }
+
+            main {
+                width: calc(100% - 20px);
+                margin: 25px auto;
+            }
+
+            .music-box {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="index.html" class="logo">
+
+        <img
+            src="assets/logo.png"
+            alt="ShadowTale"
+        >
+
+        Shadow<span>Tale.pl</span>
+
+    </a>
+
+</header>
+
+
+<main>
+
+    <a href="muzyka.html" class="back">
+        ← Powrót do muzyki
+    </a>
+
+
+    <section class="music-box">
+
+        <h1>Spear of Justice</h1>
+
+        <p class="subtitle">
+            Undertale — Spear of Justice
+        </p>
+
+
+        <div class="language">
+            🇬🇧 Wersja angielska
+        </div>
+
+
+        <video
+            id="music-video"
+            controls
+            playsinline
+            preload="metadata"
+        >
+
+            <source
+                src="assets/music/spear-of-justice.mp4"
+                type="video/mp4"
+            >
+
+            Twoja przeglądarka nie obsługuje
+            odtwarzania plików MP4.
+
+        </video>
+
+
+        <div id="error" class="error">
+
+            Nie udało się znaleźć filmu.
+
+            Sprawdź, czy plik znajduje się w:
+
+            <strong>
+                assets/music/spear-of-justice.mp4
+            </strong>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <a
+                href="muzyka.html"
+                class="button"
+            >
+                🎵 Wszystkie utwory
+            </a>
+
+
+            <a
+                href="index.html"
+                class="button secondary"
+            >
+                🏠 Strona główna
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    const video = document.getElementById("music-video");
+
+    const error = document.getElementById("error");
+
+
+    video.addEventListener("error", function () {
+
+        error.style.display = "block";
+
+    });
+
+</script>
+
+</body>
+</html>

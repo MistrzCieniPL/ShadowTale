@@ -1,0 +1,3660 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>ShadowTale — Tajne Archiwum</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+    :root {
+        --bg: #050306;
+        --panel: rgba(15, 9, 18, .96);
+        --panel2: rgba(24, 12, 28, .96);
+
+        --red: #ff304b;
+        --red2: #9e172c;
+        --purple: #a75cff;
+
+        --text: #eee7f1;
+        --muted: #8d8192;
+
+        --paper: #c9b68f;
+        --paper-dark: #6e5637;
+        --paper-deep: #382718;
+        --paper-text: #241b13;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+    }
+
+    body {
+        min-height: 100vh;
+
+        color: var(--text);
+
+        font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 50% 0%,
+                rgba(120, 20, 40, .18),
+                transparent 38%
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                rgba(100, 30, 150, .08),
+                transparent 35%
+            ),
+            #050306;
+
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+
+        position: fixed;
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            repeating-linear-gradient(
+                0deg,
+                rgba(255,255,255,.012) 0px,
+                rgba(255,255,255,.012) 1px,
+                transparent 1px,
+                transparent 4px
+            );
+
+        opacity: .22;
+
+        z-index: 9999;
+    }
+
+    button,
+    input {
+        font: inherit;
+    }
+
+    /* =====================================================
+       TOPBAR
+    ===================================================== */
+
+    .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+        height: 72px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 28px;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(10, 5, 13, .99),
+                rgba(6, 4, 9, .97)
+            );
+
+        border-bottom:
+            1px solid
+            rgba(255, 48, 75, .17);
+
+        box-shadow:
+            0 10px 40px rgba(0,0,0,.5);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+
+        color: white;
+        text-decoration: none;
+
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 1px;
+    }
+
+    .logo-icon {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,48,75,.18),
+                rgba(167,92,255,.13)
+            );
+
+        border:
+            1px solid
+            rgba(255,48,75,.25);
+
+        box-shadow:
+            0 0 25px
+            rgba(255,48,75,.1);
+    }
+
+    .logo span {
+        color: var(--red);
+    }
+
+    .top-title {
+        position: absolute;
+        left: 50%;
+
+        transform:
+            translateX(-50%);
+
+        text-align: center;
+    }
+
+    .top-title strong {
+        display: block;
+
+        color: #ff5268;
+
+        font-size: 13px;
+        letter-spacing: 3px;
+
+        text-transform: uppercase;
+    }
+
+    .top-title small {
+        display: block;
+
+        margin-top: 4px;
+
+        color: #746a78;
+
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .back {
+        display: inline-flex;
+        align-items: center;
+
+        padding: 10px 14px;
+
+        border-radius: 9px;
+
+        border:
+            1px solid
+            rgba(255,255,255,.09);
+
+        background:
+            rgba(255,255,255,.025);
+
+        color: #c9c0cd;
+
+        text-decoration: none;
+
+        transition: .2s;
+    }
+
+    .back:hover {
+        color: white;
+
+        border-color:
+            rgba(255,48,75,.35);
+
+        background:
+            rgba(255,48,75,.07);
+    }
+
+    /* =====================================================
+       LOGIN SCREEN
+    ===================================================== */
+
+    #authScreen {
+        min-height: calc(100vh - 72px);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 30px;
+    }
+
+    .auth-box {
+        width: min(470px, 100%);
+
+        padding: 35px;
+
+        border-radius: 19px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(26,12,31,.97),
+                rgba(8,5,11,.98)
+            );
+
+        border:
+            1px solid
+            rgba(255,48,75,.2);
+
+        box-shadow:
+            0 30px 100px rgba(0,0,0,.65),
+            0 0 60px rgba(255,48,75,.04);
+
+        text-align: center;
+    }
+
+    .auth-symbol {
+        width: 78px;
+        height: 78px;
+
+        margin: 0 auto 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background:
+            rgba(255,48,75,.07);
+
+        border:
+            1px solid
+            rgba(255,48,75,.3);
+
+        font-size: 35px;
+
+        box-shadow:
+            0 0 40px
+            rgba(255,48,75,.09);
+    }
+
+    .auth-box h1 {
+        margin: 0;
+
+        font-size: 29px;
+        letter-spacing: 2px;
+    }
+
+    .auth-box h1 span {
+        color: var(--red);
+    }
+
+    .auth-box p {
+        margin: 11px 0 25px;
+
+        color: var(--muted);
+
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .password-field {
+        position: relative;
+    }
+
+    .password-field input {
+        width: 100%;
+
+        padding: 14px 48px 14px 14px;
+
+        border-radius: 10px;
+
+        border:
+            1px solid
+            rgba(255,255,255,.1);
+
+        background:
+            rgba(0,0,0,.35);
+
+        color: white;
+
+        outline: none;
+    }
+
+    .password-field input:focus {
+        border-color:
+            rgba(255,48,75,.5);
+
+        box-shadow:
+            0 0 0 3px
+            rgba(255,48,75,.06);
+    }
+
+    .password-toggle {
+        position: absolute;
+
+        right: 7px;
+        top: 50%;
+
+        transform:
+            translateY(-50%);
+
+        width: 35px;
+        height: 35px;
+
+        border: 0;
+
+        background: transparent;
+
+        color: #877b8c;
+
+        cursor: pointer;
+
+        border-radius: 7px;
+    }
+
+    .password-toggle:hover {
+        color: white;
+        background:
+            rgba(255,255,255,.05);
+    }
+
+    .enter-button {
+        width: 100%;
+
+        margin-top: 13px;
+
+        padding: 14px;
+
+        border-radius: 10px;
+
+        border:
+            1px solid
+            rgba(255,48,75,.42);
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,48,75,.16),
+                rgba(115,40,150,.13)
+            );
+
+        color: white;
+
+        font-weight: 900;
+        letter-spacing: 1px;
+
+        cursor: pointer;
+
+        transition: .2s;
+    }
+
+    .enter-button:hover {
+        transform: translateY(-1px);
+
+        border-color:
+            rgba(255,48,75,.7);
+
+        box-shadow:
+            0 10px 35px
+            rgba(255,48,75,.12);
+    }
+
+    .auth-error {
+        min-height: 22px;
+
+        margin-top: 15px;
+
+        color: #ff5067;
+
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .auth-countdown {
+        min-height: 20px;
+
+        margin-top: 4px;
+
+        color: #9d8999;
+
+        font-size: 12px;
+    }
+
+    /* =====================================================
+       LOADING / DENIED
+    ===================================================== */
+
+    #loadingScreen,
+    #deniedScreen {
+        position: fixed;
+        inset: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background:
+            radial-gradient(
+                circle at 50% 40%,
+                rgba(100,20,40,.13),
+                transparent 40%
+            ),
+            #050306;
+
+        z-index: 9000;
+    }
+
+    #deniedScreen {
+        display: none;
+    }
+
+    .system-box {
+        width: min(470px, calc(100% - 30px));
+
+        padding: 30px;
+
+        text-align: center;
+
+        border-radius: 18px;
+
+        background:
+            rgba(15,8,19,.97);
+
+        border:
+            1px solid
+            rgba(255,48,75,.17);
+
+        box-shadow:
+            0 30px 90px
+            rgba(0,0,0,.6);
+    }
+
+    .system-icon {
+        font-size: 42px;
+        margin-bottom: 14px;
+    }
+
+    .system-box h2 {
+        margin: 0 0 8px;
+    }
+
+    .system-box p {
+        margin: 0;
+
+        color: #837886;
+
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .system-button {
+        display: inline-block;
+
+        margin-top: 20px;
+
+        padding: 11px 16px;
+
+        border-radius: 9px;
+
+        background:
+            rgba(255,48,75,.09);
+
+        border:
+            1px solid
+            rgba(255,48,75,.25);
+
+        color: #ff7080;
+
+        text-decoration: none;
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    #mainPage {
+        display: none;
+    }
+
+    .container {
+        width: min(1180px, calc(100% - 30px));
+
+        margin: 0 auto;
+
+        padding: 45px 0 90px;
+    }
+
+    .heading {
+        margin-bottom: 28px;
+    }
+
+    .heading h1 {
+        margin: 0;
+
+        font-size: clamp(28px, 5vw, 43px);
+
+        letter-spacing: 2px;
+    }
+
+    .heading h1 span {
+        color: var(--red);
+    }
+
+    .heading p {
+        margin: 10px 0 0;
+
+        max-width: 680px;
+
+        color: var(--muted);
+
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* =====================================================
+       EXPERIMENT CONTROLS
+    ===================================================== */
+
+    .controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 25px;
+    }
+
+    .experiment-select {
+        flex: 1;
+
+        min-width: 0;
+
+        padding: 13px 14px;
+
+        border-radius: 10px;
+
+        border:
+            1px solid
+            rgba(255,255,255,.09);
+
+        background:
+            rgba(13,7,16,.95);
+
+        color: #eee;
+
+        outline: none;
+    }
+
+    .experiment-select:focus {
+        border-color:
+            rgba(255,48,75,.4);
+    }
+
+    .experiment-select option {
+        background: #110914;
+    }
+
+    .add-experiment {
+        flex-shrink: 0;
+
+        padding: 13px 17px;
+
+        border-radius: 10px;
+
+        border:
+            1px solid
+            rgba(167,92,255,.35);
+
+        background:
+            rgba(167,92,255,.08);
+
+        color: #d8baff;
+
+        font-weight: 800;
+
+        cursor: pointer;
+
+        transition: .2s;
+    }
+
+    .add-experiment:hover {
+        background:
+            rgba(167,92,255,.15);
+
+        border-color:
+            rgba(167,92,255,.6);
+    }
+
+    /* =====================================================
+       EXPERIMENT INFO
+    ===================================================== */
+
+    #experimentArea {
+        display: none;
+    }
+
+    .experiment-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+
+        margin-bottom: 20px;
+
+        padding: 18px 20px;
+
+        border-radius: 14px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(26,12,31,.92),
+                rgba(10,7,13,.94)
+            );
+
+        border:
+            1px solid
+            rgba(255,48,75,.13);
+    }
+
+    .experiment-info h2 {
+        margin: 0;
+
+        font-size: 21px;
+    }
+
+    .experiment-info p {
+        margin: 6px 0 0;
+
+        color: #847889;
+
+        font-size: 12px;
+    }
+
+    .delete-experiment {
+        padding: 9px 12px;
+
+        border-radius: 8px;
+
+        border:
+            1px solid
+            rgba(255,48,75,.18);
+
+        background:
+            rgba(255,48,75,.05);
+
+        color: #c75a6b;
+
+        cursor: pointer;
+    }
+
+    .delete-experiment:hover {
+        color: #ff6378;
+
+        background:
+            rgba(255,48,75,.1);
+
+        border-color:
+            rgba(255,48,75,.4);
+    }
+
+    /* =====================================================
+       FILES
+    ===================================================== */
+
+    .files-section {
+        padding: 22px;
+
+        border-radius: 15px;
+
+        background:
+            rgba(13,8,17,.82);
+
+        border:
+            1px solid
+            rgba(255,255,255,.06);
+    }
+
+    .files-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 18px;
+    }
+
+    .files-top h3 {
+        margin: 0;
+
+        font-size: 16px;
+    }
+
+    .files-top span {
+        color: #776b7c;
+
+        font-size: 11px;
+    }
+
+    .upload {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 9px 12px;
+
+        border-radius: 8px;
+
+        border:
+            1px solid
+            rgba(57,229,140,.22);
+
+        background:
+            rgba(57,229,140,.05);
+
+        color: #65dc9a;
+
+        cursor: pointer;
+
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .upload:hover {
+        background:
+            rgba(57,229,140,.1);
+    }
+
+    .upload input {
+        display: none;
+    }
+
+    .files-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(270px, 1fr)
+            );
+
+        gap: 15px;
+    }
+
+    .file-card {
+        position: relative;
+
+        padding: 19px;
+
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(28,15,33,.94),
+                rgba(10,7,14,.96)
+            );
+
+        border:
+            1px solid
+            rgba(255,255,255,.06);
+
+        overflow: hidden;
+
+        transition: .2s;
+    }
+
+    .file-card::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        bottom: 0;
+        left: 0;
+
+        width: 3px;
+
+        background:
+            linear-gradient(
+                180deg,
+                var(--red),
+                var(--purple)
+            );
+    }
+
+    .file-card:hover {
+        transform: translateY(-2px);
+
+        border-color:
+            rgba(255,48,75,.23);
+
+        box-shadow:
+            0 15px 35px
+            rgba(0,0,0,.3);
+    }
+
+    .file-icon {
+        font-size: 29px;
+
+        margin-bottom: 11px;
+    }
+
+    .file-card h4 {
+        margin: 0;
+
+        color: #eee6f0;
+
+        font-size: 14px;
+
+        overflow-wrap: anywhere;
+    }
+
+    .file-card p {
+        margin: 7px 0 14px;
+
+        color: #786d7d;
+
+        font-size: 10px;
+
+        line-height: 1.6;
+    }
+
+    .file-actions {
+        display: flex;
+        gap: 7px;
+    }
+
+    .file-action {
+        flex: 1;
+
+        padding: 9px;
+
+        border-radius: 8px;
+
+        border:
+            1px solid
+            rgba(255,255,255,.07);
+
+        background:
+            rgba(255,255,255,.025);
+
+        color: #bdb2c2;
+
+        cursor: pointer;
+
+        font-size: 11px;
+        font-weight: 700;
+
+        transition: .2s;
+    }
+
+    .file-action:hover {
+        color: white;
+
+        border-color:
+            rgba(255,48,75,.25);
+
+        background:
+            rgba(255,48,75,.06);
+    }
+
+    .file-action.delete:hover {
+        color: #ff6176;
+    }
+
+    .empty {
+        grid-column: 1 / -1;
+
+        padding: 55px 20px;
+
+        text-align: center;
+
+        border:
+            1px dashed
+            rgba(255,255,255,.08);
+
+        border-radius: 13px;
+
+        color: #766b7a;
+    }
+
+    .empty div {
+        margin-bottom: 10px;
+
+        font-size: 40px;
+
+        opacity: .55;
+    }
+
+    /* =====================================================
+       MODALS
+    ===================================================== */
+
+    .modal {
+        position: fixed;
+        inset: 0;
+
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+
+        background:
+            rgba(0,0,0,.78);
+
+        backdrop-filter:
+            blur(7px);
+
+        z-index: 5000;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal-box {
+        width: min(520px, 100%);
+
+        padding: 25px;
+
+        border-radius: 15px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #1b0e20,
+                #0b070d
+            );
+
+        border:
+            1px solid
+            rgba(255,48,75,.18);
+
+        box-shadow:
+            0 30px 90px
+            rgba(0,0,0,.7);
+    }
+
+    .modal-box h2 {
+        margin: 0 0 7px;
+
+        font-size: 20px;
+    }
+
+    .modal-box > p {
+        margin: 0 0 20px;
+
+        color: #817585;
+
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #a99dac;
+
+        font-size: 11px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1px;
+    }
+
+    .form-group input {
+        width: 100%;
+
+        padding: 12px;
+
+        border-radius: 9px;
+
+        border:
+            1px solid
+            rgba(255,255,255,.09);
+
+        background:
+            rgba(0,0,0,.28);
+
+        color: white;
+
+        outline: none;
+    }
+
+    .form-group input:focus {
+        border-color:
+            rgba(255,48,75,.4);
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        gap: 9px;
+
+        margin-top: 20px;
+    }
+
+    .modal-button {
+        padding: 10px 14px;
+
+        border-radius: 8px;
+
+        border:
+            1px solid
+            rgba(255,255,255,.08);
+
+        background:
+            rgba(255,255,255,.035);
+
+        color: #c8bfcb;
+
+        cursor: pointer;
+    }
+
+    .modal-button.primary {
+        border-color:
+            rgba(255,48,75,.35);
+
+        background:
+            rgba(255,48,75,.1);
+
+        color: #ff7080;
+    }
+
+    /* =====================================================
+       SPALONA KARTKA
+    ===================================================== */
+
+    #paperModal {
+        align-items: center;
+    }
+
+    .burned-paper {
+        position: relative;
+
+        width: min(900px, 100%);
+
+        max-height: 91vh;
+
+        display: flex;
+        flex-direction: column;
+
+        color: var(--paper-text);
+
+        /*
+         * Kilka warstw daje efekt starego,
+         * przypalonego dokumentu.
+         */
+        background:
+            radial-gradient(
+                ellipse at 0% 0%,
+                rgba(45,24,12,.72),
+                transparent 25%
+            ),
+            radial-gradient(
+                ellipse at 100% 0%,
+                rgba(55,27,12,.7),
+                transparent 24%
+            ),
+            radial-gradient(
+                ellipse at 0% 100%,
+                rgba(58,31,15,.8),
+                transparent 27%
+            ),
+            radial-gradient(
+                ellipse at 100% 100%,
+                rgba(48,24,10,.75),
+                transparent 26%
+            ),
+            linear-gradient(
+                135deg,
+                #d8c397,
+                #bca67b
+            );
+
+        box-shadow:
+            0 35px 110px
+            rgba(0,0,0,.85),
+
+            0 0 0 5px
+            rgba(31,18,10,.55),
+
+            0 0 45px
+            rgba(255,105,40,.05);
+
+        /*
+         * Nieregularny wygląd krawędzi.
+         */
+        clip-path:
+            polygon(
+                1% 2%,
+                7% 0%,
+                14% 2%,
+                21% 0%,
+                30% 2%,
+                39% 0%,
+                47% 2%,
+                57% 0%,
+                65% 2%,
+                75% 0%,
+                84% 2%,
+                93% 0%,
+                99% 3%,
+
+                100% 12%,
+                98% 20%,
+                100% 31%,
+                98% 42%,
+                100% 53%,
+                98% 64%,
+                100% 75%,
+                98% 88%,
+                100% 97%,
+
+                91% 100%,
+                80% 98%,
+                70% 100%,
+                61% 98%,
+                50% 100%,
+                40% 98%,
+                30% 100%,
+                20% 98%,
+                9% 100%,
+                0% 97%,
+
+                2% 87%,
+                0% 77%,
+                2% 67%,
+                0% 57%,
+                2% 46%,
+                0% 35%,
+                2% 24%,
+                0% 13%
+            );
+    }
+
+    .burned-paper::before {
+        content: "";
+
+        position: absolute;
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 31px,
+                rgba(75,62,43,.13) 32px
+            );
+
+        mix-blend-mode:
+            multiply;
+
+        opacity: .9;
+    }
+
+    .burned-paper::after {
+        content: "";
+
+        position: absolute;
+
+        inset: 8px;
+
+        pointer-events: none;
+
+        border:
+            1px solid
+            rgba(57,34,18,.18);
+
+        box-shadow:
+            inset 0 0 45px
+            rgba(48,25,10,.2);
+    }
+
+    .paper-head {
+        position: relative;
+
+        z-index: 2;
+
+        flex-shrink: 0;
+
+        padding: 27px 30px 17px 72px;
+
+        border-bottom:
+            1px solid
+            rgba(65,43,25,.25);
+    }
+
+    .paper-head-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+    .paper-head h2 {
+        margin: 0;
+
+        font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+        font-size: 25px;
+
+        color: #2c2117;
+
+        overflow-wrap: anywhere;
+    }
+
+    .paper-head p {
+        margin: 7px 0 0;
+
+        color: #695944;
+
+        font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+        font-size: 11px;
+    }
+
+    .paper-close {
+        flex-shrink: 0;
+
+        width: 36px;
+        height: 36px;
+
+        border-radius: 7px;
+
+        border:
+            1px solid
+            rgba(45,28,15,.25);
+
+        background:
+            rgba(50,30,15,.08);
+
+        color: #38291d;
+
+        cursor: pointer;
+
+        font-size: 20px;
+    }
+
+    .paper-close:hover {
+        background:
+            rgba(80,35,20,.15);
+    }
+
+    .paper-body {
+        position: relative;
+
+        z-index: 2;
+
+        overflow: auto;
+
+        flex: 1;
+
+        min-height: 0;
+
+        padding:
+            22px
+            35px
+            35px
+            72px;
+
+        font-family:
+            "Courier New",
+            Courier,
+            monospace;
+
+        font-size: 13px;
+
+        line-height: 2;
+
+        white-space: pre-wrap;
+
+        overflow-wrap: anywhere;
+
+        scrollbar-color:
+            #766047
+            transparent;
+    }
+
+    .paper-foot {
+        position: relative;
+
+        z-index: 2;
+
+        flex-shrink: 0;
+
+        padding:
+            10px
+            35px
+            14px
+            72px;
+
+        border-top:
+            1px solid
+            rgba(65,43,25,.2);
+
+        color: #76634b;
+
+        font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+        font-size: 9px;
+
+        text-align: right;
+    }
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    .toast {
+        position: fixed;
+
+        left: 50%;
+        bottom: 25px;
+
+        z-index: 10000;
+
+        transform:
+            translate(-50%, 20px);
+
+        opacity: 0;
+
+        pointer-events: none;
+
+        padding: 12px 17px;
+
+        border-radius: 9px;
+
+        background:
+            rgba(17,9,21,.97);
+
+        border:
+            1px solid
+            rgba(255,255,255,.1);
+
+        color: #e8dfe9;
+
+        font-size: 12px;
+
+        transition: .25s;
+    }
+
+    .toast.show {
+        opacity: 1;
+
+        transform:
+            translate(-50%, 0);
+    }
+
+    .toast.error {
+        color: #ff6377;
+
+        border-color:
+            rgba(255,48,75,.3);
+    }
+
+    .toast.success {
+        color: #63e59b;
+
+        border-color:
+            rgba(57,229,140,.25);
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+        .topbar {
+            height: 62px;
+
+            padding: 0 14px;
+        }
+
+        .top-title {
+            display: none;
+        }
+
+        .logo {
+            font-size: 17px;
+        }
+
+        .logo-icon {
+            width: 33px;
+            height: 33px;
+        }
+
+        #authScreen {
+            min-height:
+                calc(100vh - 62px);
+
+            padding: 18px;
+        }
+
+        .auth-box {
+            padding: 25px 20px;
+        }
+
+        .container {
+            width:
+                calc(100% - 20px);
+
+            padding-top: 30px;
+        }
+
+        .controls {
+            align-items: stretch;
+
+            flex-direction: column;
+        }
+
+        .add-experiment {
+            width: 100%;
+        }
+
+        .experiment-info {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+        .delete-experiment {
+            width: 100%;
+        }
+
+        .files-section {
+            padding: 16px;
+        }
+
+        .files-top {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+        .upload {
+            width: 100%;
+
+            justify-content: center;
+        }
+
+        .paper-head {
+            padding-left: 45px;
+        }
+
+        .paper-body {
+            padding-left: 45px;
+        }
+
+        .paper-foot {
+            padding-left: 45px;
+        }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<!-- ============================================================
+     LOADING
+============================================================= -->
+
+<div id="loadingScreen">
+
+
+<div class="system-box">
+
+    <div class="system-icon">
+        ☠️
+    </div>
+
+    <h2>
+        Sprawdzanie dostępu...
+    </h2>
+
+    <p>
+        Weryfikowanie sesji właściciela ShadowTale.
+    </p>
+
+</div>
+
+
+</div>
+
+<!-- ============================================================
+     DENIED
+============================================================= -->
+
+<div id="deniedScreen">
+
+
+<div class="system-box">
+
+    <div class="system-icon">
+        🔒
+    </div>
+
+    <h2>
+        Brak dostępu
+    </h2>
+
+    <p>
+        To miejsce jest dostępne wyłącznie dla właściciela
+        ShadowTale.
+    </p>
+
+    <a
+        href="index.html"
+        class="system-button"
+    >
+        Wróć na stronę
+    </a>
+
+</div>
+
+
+</div>
+
+<!-- ============================================================
+     GŁÓWNA STRONA
+============================================================= -->
+
+<div id="mainPage">
+
+
+<header class="topbar">
+
+    <a
+        href="index.html"
+        class="logo"
+    >
+
+        <span class="logo-icon">
+            ☠
+        </span>
+
+        SHADOW<span>TALE</span>
+
+    </a>
+
+    <div class="top-title">
+
+        <strong>
+            Tajne archiwum
+        </strong>
+
+        <small>
+            OWNER ACCESS ONLY
+        </small>
+
+    </div>
+
+    <a
+        href="index.html"
+        class="back"
+    >
+        ← Wróć
+    </a>
+
+</header>
+
+
+<!-- ========================================================
+     EKRAN HASŁA
+========================================================= -->
+
+<section id="authScreen">
+
+    <div class="auth-box">
+
+        <div class="auth-symbol">
+            🔐
+        </div>
+
+        <h1>
+            <span>TAJNE</span>
+            ARCHIWUM
+        </h1>
+
+        <p>
+            To miejsce nie jest częścią publicznego ShadowTale.
+            Wprowadź hasło dostępu, aby kontynuować.
+        </p>
+
+        <div class="password-field">
+
+            <input
+                type="password"
+                id="secretPassword"
+                placeholder="Hasło dostępu..."
+                autocomplete="off"
+            >
+
+            <button
+                type="button"
+                id="passwordToggle"
+                class="password-toggle"
+            >
+                👁
+            </button>
+
+        </div>
+
+        <button
+            type="button"
+            id="enterButton"
+            class="enter-button"
+        >
+            🔓 WEJDŹ DO ARCHIWUM
+        </button>
+
+        <div
+            id="authError"
+            class="auth-error"
+        ></div>
+
+        <div
+            id="authCountdown"
+            class="auth-countdown"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     ARCHIWUM
+========================================================= -->
+
+<main
+    id="archivePage"
+    class="container"
+>
+
+    <div class="heading">
+
+        <h1>
+            <span>Tajne</span> archiwum
+        </h1>
+
+        <p>
+            Prywatne eksperymenty oraz dokumenty właściciela
+            ShadowTale.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         WYBÓR EKSPERYMENTU
+    ====================================================== -->
+
+    <div class="controls">
+
+        <select
+            id="experimentSelect"
+            class="experiment-select"
+        >
+
+            <option value="">
+                — Wybierz eksperyment —
+            </option>
+
+        </select>
+
+
+        <button
+            type="button"
+            id="addExperimentButton"
+            class="add-experiment"
+        >
+            ＋ Dodaj eksperyment
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         OBSZAR EKSPERYMENTU
+    ====================================================== -->
+
+    <section
+        id="experimentArea"
+    >
+
+        <div class="experiment-info">
+
+            <div>
+
+                <h2
+                    id="selectedExperimentName"
+                >
+                    Eksperyment
+                </h2>
+
+                <p
+                    id="selectedExperimentDate"
+                >
+                    Data: —
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                id="deleteExperimentButton"
+                class="delete-experiment"
+            >
+                🗑 Usuń eksperyment
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             PLIKI
+        ================================================== -->
+
+        <div class="files-section">
+
+            <div class="files-top">
+
+                <div>
+
+                    <h3>
+                        📁 Dokumenty eksperymentu
+                    </h3>
+
+                    <span id="fileCount">
+                        0 plików
+                    </span>
+
+                </div>
+
+
+                <label class="upload">
+
+                    ＋ Dodaj plik .txt
+
+                    <input
+                        type="file"
+                        id="textFile"
+                        accept=".txt,text/plain"
+                    >
+
+                </label>
+
+            </div>
+
+
+            <div
+                id="filesGrid"
+                class="files-grid"
+            ></div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+</div>
+
+<!-- ============================================================
+     MODAL — DODAJ EKSPERYMENT
+============================================================= -->
+
+<div
+    id="experimentModal"
+    class="modal"
+>
+
+
+<div class="modal-box">
+
+    <h2>
+        ＋ Nowy eksperyment
+    </h2>
+
+    <p>
+        Utwórz nowe archiwum, do którego później będziesz
+        mógł dodawać pliki tekstowe.
+    </p>
+
+
+    <div class="form-group">
+
+        <label>
+            Nazwa eksperymentu
+        </label>
+
+        <input
+            type="text"
+            id="newExperimentName"
+            maxlength="100"
+            placeholder="np. Determinacja"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Data eksperymentu
+        </label>
+
+        <input
+            type="date"
+            id="newExperimentDate"
+        >
+
+    </div>
+
+
+    <div class="modal-buttons">
+
+        <button
+            type="button"
+            id="cancelExperiment"
+            class="modal-button"
+        >
+            Anuluj
+        </button>
+
+        <button
+            type="button"
+            id="saveExperiment"
+            class="modal-button primary"
+        >
+            Utwórz eksperyment
+        </button>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- ============================================================
+     MODAL — SPALONA KARTKA
+============================================================= -->
+
+<div
+    id="paperModal"
+    class="modal"
+>
+
+
+<article class="burned-paper">
+
+    <header class="paper-head">
+
+        <div class="paper-head-row">
+
+            <div>
+
+                <h2 id="paperTitle">
+                    Dokument
+                </h2>
+
+                <p id="paperSubtitle">
+                    ShadowTale — Tajne Archiwum
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                id="closePaper"
+                class="paper-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <div
+        id="paperBody"
+        class="paper-body"
+    ></div>
+
+
+    <footer class="paper-foot">
+
+        SHADOWTALE
+        —
+        TAJNE ARCHIWUM
+        —
+        OWNER ACCESS
+
+    </footer>
+
+</article>
+
+
+</div>
+
+<!-- ============================================================
+     TOAST
+============================================================= -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+<!-- ============================================================
+     SUPABASE
+============================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="config.js"></script>
+
+<script>
+"use strict";
+
+
+/* ============================================================
+   KONFIGURACJA
+============================================================ */
+
+const SECRET_PASSWORD =
+    "ShadowTale.pl";
+
+const EXPERIMENTS_KEY =
+    "shadowtale_secret_experiments_v2";
+
+let supabaseClient = null;
+
+let currentUser = null;
+
+let currentProfile = null;
+
+let selectedExperimentId = null;
+
+
+/* ============================================================
+   SUPABASE — IDENTYCZNIE JAK KONTO.HTML
+============================================================ */
+
+function getSupabaseConfig() {
+
+    const config =
+        window.CONFIG ||
+        window.SHADOWTALE_CONFIG ||
+        {};
+
+    return {
+
+        url:
+            config.supabaseUrl ||
+            config.SUPABASE_URL ||
+            "",
+
+        key:
+            config.supabaseKey ||
+            config.SUPABASE_KEY ||
+            ""
+
+    };
+}
+
+
+function initSupabase() {
+
+    if (
+        typeof window.supabase === "undefined" ||
+        !window.supabase.createClient
+    ) {
+
+        throw new Error(
+            "Biblioteka Supabase nie została załadowana."
+        );
+
+    }
+
+    const config =
+        getSupabaseConfig();
+
+    if (
+        !config.url ||
+        !config.key
+    ) {
+
+        throw new Error(
+            "Brakuje konfiguracji Supabase w config.js."
+        );
+
+    }
+
+    supabaseClient =
+        window.supabase.createClient(
+            config.url,
+            config.key
+        );
+}
+
+
+/* ============================================================
+   SPRAWDZENIE OWNERA
+============================================================ */
+
+async function checkOwner() {
+
+    initSupabase();
+
+
+    const {
+        data: sessionData,
+        error: sessionError
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    if (sessionError) {
+        throw sessionError;
+    }
+
+
+    const session =
+        sessionData?.session;
+
+
+    if (!session?.user) {
+
+        window.location.href =
+            "login.html";
+
+        return false;
+
+    }
+
+
+    currentUser =
+        session.user;
+
+
+    const {
+        data: profile,
+        error: profileError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "username, avatar_url, role"
+            )
+            .eq(
+                "id",
+                currentUser.id
+            )
+            .maybeSingle();
+
+
+    if (profileError) {
+
+        throw new Error(
+            "Nie udało się pobrać profilu: " +
+            profileError.message
+        );
+
+    }
+
+
+    currentProfile =
+        profile;
+
+
+    const role =
+        (
+            profile?.role ||
+            currentUser.user_metadata?.role ||
+            "klient"
+        )
+        .toString()
+        .trim()
+        .toLowerCase();
+
+
+    if (role !== "owner") {
+
+        document.getElementById(
+            "loadingScreen"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "deniedScreen"
+        ).style.display = "flex";
+
+
+        return false;
+
+    }
+
+
+    document.getElementById(
+        "loadingScreen"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "mainPage"
+    ).style.display = "block";
+
+
+    return true;
+}
+
+
+/* ============================================================
+   LOCAL STORAGE — EKSPERYMENTY
+============================================================ */
+
+function getExperiments() {
+
+    try {
+
+        const data =
+            localStorage.getItem(
+                EXPERIMENTS_KEY
+            );
+
+
+        if (!data) {
+            return [];
+        }
+
+
+        const parsed =
+            JSON.parse(data);
+
+
+        return Array.isArray(parsed)
+            ? parsed
+            : [];
+
+
+    } catch (error) {
+
+        console.error(
+            "Błąd odczytu eksperymentów:",
+            error
+        );
+
+        return [];
+
+    }
+}
+
+
+function saveExperiments(
+    experiments
+) {
+
+    localStorage.setItem(
+        EXPERIMENTS_KEY,
+        JSON.stringify(
+            experiments
+        )
+    );
+
+}
+
+
+/* ============================================================
+   TOAST
+============================================================ */
+
+function showToast(
+    message,
+    type = ""
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.className =
+        "toast show " +
+        type;
+
+
+    clearTimeout(
+        window.__toastTimeout
+    );
+
+
+    window.__toastTimeout =
+        setTimeout(
+            () => {
+
+                toast.className =
+                    "toast";
+
+            },
+            3000
+        );
+
+}
+
+
+/* ============================================================
+   FORMAT DATY
+============================================================ */
+
+function formatDate(
+    value
+) {
+
+    if (!value) {
+        return "Brak daty";
+    }
+
+
+    const date =
+        new Date(
+            value + "T00:00:00"
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return value;
+
+    }
+
+
+    return date.toLocaleDateString(
+        "pl-PL",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+/* ============================================================
+   LISTA EKSPERYMENTÓW
+============================================================ */
+
+function renderExperimentSelect() {
+
+    const select =
+        document.getElementById(
+            "experimentSelect"
+        );
+
+
+    const experiments =
+        getExperiments();
+
+
+    select.innerHTML = `
+        <option value="">
+            — Wybierz eksperyment —
+        </option>
+    `;
+
+
+    experiments.forEach(
+        experiment => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                experiment.id;
+
+
+            option.textContent =
+                `${experiment.name} — ${formatDate(
+                    experiment.date
+                )}`;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    if (
+        selectedExperimentId &&
+        experiments.some(
+            experiment =>
+                experiment.id ===
+                selectedExperimentId
+        )
+    ) {
+
+        select.value =
+            selectedExperimentId;
+
+    }
+
+}
+
+
+/* ============================================================
+   WYBRANIE EKSPERYMENTU
+============================================================ */
+
+function selectExperiment(
+    id
+) {
+
+    selectedExperimentId =
+        id || null;
+
+
+    const experiments =
+        getExperiments();
+
+
+    const experiment =
+        experiments.find(
+            item =>
+                item.id ===
+                selectedExperimentId
+        );
+
+
+    const area =
+        document.getElementById(
+            "experimentArea"
+        );
+
+
+    if (!experiment) {
+
+        area.style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    area.style.display =
+        "block";
+
+
+    document.getElementById(
+        "selectedExperimentName"
+    ).textContent =
+        experiment.name;
+
+
+    document.getElementById(
+        "selectedExperimentDate"
+    ).textContent =
+        "Data eksperymentu: " +
+        formatDate(
+            experiment.date
+        );
+
+
+    renderFiles(
+        experiment
+    );
+
+}
+
+
+/* ============================================================
+   RENDER PLIKÓW
+============================================================ */
+
+function renderFiles(
+    experiment
+) {
+
+    const grid =
+        document.getElementById(
+            "filesGrid"
+        );
+
+
+    const files =
+        Array.isArray(
+            experiment.files
+        )
+            ? experiment.files
+            : [];
+
+
+    document.getElementById(
+        "fileCount"
+    ).textContent =
+        `${files.length} ${
+            files.length === 1
+                ? "plik"
+                : "plików"
+        }`;
+
+
+    if (!files.length) {
+
+        grid.innerHTML = `
+            <div class="empty">
+
+                <div>
+                    📜
+                </div>
+
+                Ten eksperyment nie posiada jeszcze
+                żadnych dokumentów.
+
+                <br>
+
+                Dodaj pierwszy plik .txt.
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML = "";
+
+
+    files.forEach(
+        (file, index) => {
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "file-card";
+
+
+            card.innerHTML = `
+
+                <div class="file-icon">
+                    📄
+                </div>
+
+                <h4>
+                    ${escapeHTML(
+                        file.name
+                    )}
+                </h4>
+
+                <p>
+                    Dodano:
+                    ${new Date(
+                        file.addedAt
+                    ).toLocaleString(
+                        "pl-PL"
+                    )}
+
+                    <br>
+
+                    Rozmiar:
+                    ${formatSize(
+                        file.size
+                    )}
+                </p>
+
+                <div class="file-actions">
+
+                    <button
+                        type="button"
+                        class="file-action read"
+                    >
+                        📖 Czytaj
+                    </button>
+
+                    <button
+                        type="button"
+                        class="file-action delete"
+                    >
+                        🗑 Usuń
+                    </button>
+
+                </div>
+
+            `;
+
+
+            card
+                .querySelector(".read")
+                .addEventListener(
+                    "click",
+                    () => {
+
+                        openPaper(
+                            experiment,
+                            file
+                        );
+
+                    }
+                );
+
+
+            card
+                .querySelector(".delete")
+                .addEventListener(
+                    "click",
+                    () => {
+
+                        deleteFile(
+                            experiment.id,
+                            index
+                        );
+
+                    }
+                );
+
+
+            grid.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   DODAWANIE EKSPERYMENTU
+============================================================ */
+
+function openExperimentModal() {
+
+    document.getElementById(
+        "newExperimentName"
+    ).value = "";
+
+
+    const today =
+        new Date();
+
+
+    const year =
+        today.getFullYear();
+
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    document.getElementById(
+        "newExperimentDate"
+    ).value =
+        `${year}-${month}-${day}`;
+
+
+    document.getElementById(
+        "experimentModal"
+    ).classList.add(
+        "active"
+    );
+
+
+    setTimeout(
+        () => {
+
+            document.getElementById(
+                "newExperimentName"
+            ).focus();
+
+        },
+        50
+    );
+
+}
+
+
+function closeExperimentModal() {
+
+    document.getElementById(
+        "experimentModal"
+    ).classList.remove(
+        "active"
+    );
+
+}
+
+
+function createExperiment() {
+
+    const name =
+        document.getElementById(
+            "newExperimentName"
+        ).value.trim();
+
+
+    const date =
+        document.getElementById(
+            "newExperimentDate"
+        ).value;
+
+
+    if (!name) {
+
+        showToast(
+            "Podaj nazwę eksperymentu.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!date) {
+
+        showToast(
+            "Wybierz datę eksperymentu.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const experiments =
+        getExperiments();
+
+
+    const experiment = {
+
+        id:
+            "exp_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .slice(2, 8),
+
+        name,
+
+        date,
+
+        createdAt:
+            new Date().toISOString(),
+
+        files: []
+
+    };
+
+
+    experiments.push(
+        experiment
+    );
+
+
+    saveExperiments(
+        experiments
+    );
+
+
+    selectedExperimentId =
+        experiment.id;
+
+
+    renderExperimentSelect();
+
+
+    document.getElementById(
+        "experimentSelect"
+    ).value =
+        experiment.id;
+
+
+    selectExperiment(
+        experiment.id
+    );
+
+
+    closeExperimentModal();
+
+
+    showToast(
+        "Eksperyment został utworzony.",
+        "success"
+    );
+
+}
+
+
+/* ============================================================
+   USUWANIE EKSPERYMENTU
+============================================================ */
+
+function deleteExperiment() {
+
+    if (!selectedExperimentId) {
+        return;
+    }
+
+
+    const experiments =
+        getExperiments();
+
+
+    const experiment =
+        experiments.find(
+            item =>
+                item.id ===
+                selectedExperimentId
+        );
+
+
+    if (!experiment) {
+        return;
+    }
+
+
+    const confirmed =
+        window.confirm(
+            `Czy na pewno chcesz usunąć eksperyment "${experiment.name}" oraz wszystkie jego dokumenty?`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const remaining =
+        experiments.filter(
+            item =>
+                item.id !==
+                selectedExperimentId
+        );
+
+
+    saveExperiments(
+        remaining
+    );
+
+
+    selectedExperimentId =
+        null;
+
+
+    renderExperimentSelect();
+
+
+    selectExperiment(
+        null
+    );
+
+
+    showToast(
+        "Eksperyment został usunięty.",
+        "success"
+    );
+
+}
+
+
+/* ============================================================
+   DODAWANIE TXT
+============================================================ */
+
+async function addTextFile(
+    file
+) {
+
+    if (!selectedExperimentId) {
+
+        showToast(
+            "Najpierw wybierz eksperyment.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!file) {
+        return;
+    }
+
+
+    const fileName =
+        file.name.toLowerCase();
+
+
+    if (
+        !fileName.endsWith(
+            ".txt"
+        )
+    ) {
+
+        showToast(
+            "Dozwolone są wyłącznie pliki .txt.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        file.type &&
+        file.type !==
+            "text/plain"
+    ) {
+
+        showToast(
+            "Wybrany plik nie jest plikiem tekstowym.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const content =
+            await file.text();
+
+
+        const experiments =
+            getExperiments();
+
+
+        const experiment =
+            experiments.find(
+                item =>
+                    item.id ===
+                    selectedExperimentId
+            );
+
+
+        if (!experiment) {
+
+            showToast(
+                "Nie znaleziono eksperymentu.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !Array.isArray(
+                experiment.files
+            )
+        ) {
+
+            experiment.files =
+                [];
+
+        }
+
+
+        experiment.files.push({
+
+            id:
+                "file_" +
+                Date.now() +
+                "_" +
+                Math.random()
+                    .toString(36)
+                    .slice(2, 8),
+
+            name:
+                file.name,
+
+            size:
+                file.size,
+
+            content,
+
+            addedAt:
+                new Date().toISOString()
+
+        });
+
+
+        saveExperiments(
+            experiments
+        );
+
+
+        renderFiles(
+            experiment
+        );
+
+
+        showToast(
+            "Plik został dodany do eksperymentu.",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        showToast(
+            "Nie udało się odczytać pliku.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   USUWANIE PLIKU
+============================================================ */
+
+function deleteFile(
+    experimentId,
+    fileIndex
+) {
+
+    const experiments =
+        getExperiments();
+
+
+    const experiment =
+        experiments.find(
+            item =>
+                item.id ===
+                experimentId
+        );
+
+
+    if (!experiment) {
+        return;
+    }
+
+
+    const file =
+        experiment.files[
+            fileIndex
+        ];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    const confirmed =
+        window.confirm(
+            `Czy na pewno chcesz usunąć "${file.name}"?`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    experiment.files.splice(
+        fileIndex,
+        1
+    );
+
+
+    saveExperiments(
+        experiments
+    );
+
+
+    renderFiles(
+        experiment
+    );
+
+
+    showToast(
+        "Plik został usunięty.",
+        "success"
+    );
+
+}
+
+
+/* ============================================================
+   SPALONA KARTKA
+============================================================ */
+
+function openPaper(
+    experiment,
+    file
+) {
+
+    document.getElementById(
+        "paperTitle"
+    ).textContent =
+        file.name;
+
+
+    document.getElementById(
+        "paperSubtitle"
+    ).textContent =
+        `Eksperyment: ${experiment.name}
+         • Data: ${formatDate(
+             experiment.date
+         )}`;
+
+
+    document.getElementById(
+        "paperBody"
+    ).textContent =
+        file.content;
+
+
+    document.getElementById(
+        "paperModal"
+    ).classList.add(
+        "active"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+function closePaper() {
+
+    document.getElementById(
+        "paperModal"
+    ).classList.remove(
+        "active"
+    );
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* ============================================================
+   ROZMIAR PLIKU
+============================================================ */
+
+function formatSize(
+    bytes
+) {
+
+    if (
+        !bytes ||
+        bytes <= 0
+    ) {
+
+        return "0 B";
+
+    }
+
+
+    const units = [
+        "B",
+        "KB",
+        "MB"
+    ];
+
+
+    let size =
+        bytes;
+
+
+    let unit =
+        0;
+
+
+    while (
+        size >= 1024 &&
+        unit <
+            units.length - 1
+    ) {
+
+        size /=
+            1024;
+
+        unit++;
+
+    }
+
+
+    return (
+        Math.round(
+            size * 10
+        ) / 10
+    ) +
+    " " +
+    units[unit];
+
+}
+
+
+/* ============================================================
+   ESCAPE HTML
+============================================================ */
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* ============================================================
+   HASŁO
+============================================================ */
+
+function checkPassword() {
+
+    const input =
+        document.getElementById(
+            "secretPassword"
+        );
+
+
+    const error =
+        document.getElementById(
+            "authError"
+        );
+
+
+    const countdown =
+        document.getElementById(
+            "authCountdown"
+        );
+
+
+    const password =
+        input.value;
+
+
+    if (
+        password ===
+        SECRET_PASSWORD
+    ) {
+
+        error.textContent =
+            "Dostęp przyznany.";
+
+        error.style.color =
+            "#62eaa0";
+
+
+        countdown.textContent =
+            "Otwieranie archiwum...";
+
+
+        document.getElementById(
+            "authScreen"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "archivePage"
+        ).style.display =
+            "block";
+
+
+        renderExperimentSelect();
+
+
+        return;
+
+    }
+
+
+    /*
+     * BŁĘDNE HASŁO
+     */
+
+    error.textContent =
+        "BŁĄD DOSTĘPU — NIEPRAWIDŁOWE HASŁO.";
+
+    error.style.color =
+        "#ff304b";
+
+
+    input.value = "";
+
+
+    let seconds = 3;
+
+
+    countdown.textContent =
+        `Brak dostępu. Powrót do strony głównej za ${seconds}s.`;
+
+
+    input.disabled =
+        true;
+
+
+    document.getElementById(
+        "enterButton"
+    ).disabled =
+        true;
+
+
+    const timer =
+        setInterval(
+            () => {
+
+                seconds--;
+
+
+                if (seconds <= 0) {
+
+                    clearInterval(
+                        timer
+                    );
+
+
+                    window.location.href =
+                        "index.html";
+
+
+                    return;
+
+                }
+
+
+                countdown.textContent =
+                    `Brak dostępu. Powrót do strony głównej za ${seconds}s.`;
+
+            },
+            1000
+        );
+
+}
+
+
+/* ============================================================
+   START
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        try {
+
+            const owner =
+                await checkOwner();
+
+
+            if (!owner) {
+                return;
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Błąd tajnego archiwum:",
+                error
+            );
+
+
+            document.getElementById(
+                "loadingScreen"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "deniedScreen"
+            ).style.display =
+                "flex";
+
+
+            const message =
+                document.querySelector(
+                    "#deniedScreen .system-box p"
+                );
+
+
+            if (message) {
+
+                message.textContent =
+                    "Nie udało się zweryfikować dostępu: " +
+                    error.message;
+
+            }
+
+
+            return;
+
+        }
+
+
+        /* HASŁO */
+
+        document.getElementById(
+            "enterButton"
+        ).addEventListener(
+            "click",
+            checkPassword
+        );
+
+
+        document.getElementById(
+            "secretPassword"
+        ).addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    checkPassword();
+
+                }
+
+            }
+        );
+
+
+        document.getElementById(
+            "passwordToggle"
+        ).addEventListener(
+            "click",
+            () => {
+
+                const input =
+                    document.getElementById(
+                        "secretPassword"
+                    );
+
+
+                input.type =
+                    input.type ===
+                    "password"
+                        ? "text"
+                        : "password";
+
+            }
+        );
+
+
+        /* EKSPERYMENTY */
+
+        document.getElementById(
+            "addExperimentButton"
+        ).addEventListener(
+            "click",
+            openExperimentModal
+        );
+
+
+        document.getElementById(
+            "cancelExperiment"
+        ).addEventListener(
+            "click",
+            closeExperimentModal
+        );
+
+
+        document.getElementById(
+            "saveExperiment"
+        ).addEventListener(
+            "click",
+            createExperiment
+        );
+
+
+        document.getElementById(
+            "experimentSelect"
+        ).addEventListener(
+            "change",
+            event => {
+
+                selectExperiment(
+                    event.target.value
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            "deleteExperimentButton"
+        ).addEventListener(
+            "click",
+            deleteExperiment
+        );
+
+
+        /* TXT */
+
+        document.getElementById(
+            "textFile"
+        ).addEventListener(
+            "change",
+            event => {
+
+                const file =
+                    event.target.files?.[0];
+
+
+                if (file) {
+
+                    addTextFile(
+                        file
+                    );
+
+                }
+
+
+                event.target.value =
+                    "";
+
+            }
+        );
+
+
+        /* KARTKA */
+
+        document.getElementById(
+            "closePaper"
+        ).addEventListener(
+            "click",
+            closePaper
+        );
+
+
+        document.getElementById(
+            "paperModal"
+        ).addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target.id ===
+                    "paperModal"
+                ) {
+
+                    closePaper();
+
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Escape"
+                ) {
+
+                    closePaper();
+
+                    closeExperimentModal();
+
+                }
+
+            }
+        );
+
+
+        /* MODAL EKSPERYMENTU */
+
+        document.getElementById(
+            "experimentModal"
+        ).addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target.id ===
+                    "experimentModal"
+                ) {
+
+                    closeExperimentModal();
+
+                }
+
+            }
+        );
+
+    }
+);
+</script>
+<script src="stats-tracker.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
