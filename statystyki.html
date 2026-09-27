@@ -1,0 +1,2862 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShadowTale — Statystyki</title>
+
+    <link rel="stylesheet" href="style.css">
+
+<style>
+    :root {
+        --bg: #05050b;
+        --panel: rgba(13, 13, 27, .94);
+        --panel2: rgba(18, 14, 31, .95);
+
+        --accent: #9b5cff;
+        --accent2: #c18cff;
+
+        --green: #39e58c;
+        --red: #ff5470;
+        --yellow: #ffd166;
+        --blue: #59aaff;
+
+        --text: #f1edf5;
+        --muted: #8d8597;
+
+        --border: rgba(255,255,255,.07);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+    }
+
+    body {
+        min-height: 100vh;
+
+        color: var(--text);
+
+        font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 50% -10%,
+                rgba(155,92,255,.16),
+                transparent 38%
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                rgba(255,84,112,.07),
+                transparent 35%
+            ),
+            #05050b;
+
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+
+        position: fixed;
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            repeating-linear-gradient(
+                0deg,
+                rgba(255,255,255,.012) 0px,
+                rgba(255,255,255,.012) 1px,
+                transparent 1px,
+                transparent 4px
+            );
+
+        opacity: .25;
+
+        z-index: 9999;
+    }
+
+    button,
+    input {
+        font: inherit;
+    }
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    #loading {
+        position: fixed;
+        inset: 0;
+
+        z-index: 10000;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background:
+            radial-gradient(
+                circle at center,
+                rgba(155,92,255,.12),
+                transparent 40%
+            ),
+            #05050b;
+    }
+
+    .loading-box {
+        width: min(400px, calc(100% - 30px));
+
+        padding: 30px;
+
+        text-align: center;
+
+        border-radius: 18px;
+
+        background:
+            rgba(13,13,27,.97);
+
+        border:
+            1px solid
+            rgba(155,92,255,.18);
+
+        box-shadow:
+            0 30px 100px
+            rgba(0,0,0,.65);
+    }
+
+    .loading-icon {
+        font-size: 38px;
+
+        margin-bottom: 15px;
+    }
+
+    .loading-box h2 {
+        margin: 0 0 8px;
+
+        font-size: 20px;
+    }
+
+    .loading-box p {
+        margin: 0;
+
+        color: var(--muted);
+
+        font-size: 12px;
+    }
+
+    /* =====================================================
+       TOPBAR
+    ===================================================== */
+
+    .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+        height: 72px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 28px;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(8,8,16,.98),
+                rgba(5,5,11,.96)
+            );
+
+        border-bottom:
+            1px solid
+            rgba(155,92,255,.13);
+
+        box-shadow:
+            0 10px 40px
+            rgba(0,0,0,.42);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        color: white;
+
+        text-decoration: none;
+
+        font-size: 20px;
+        font-weight: 900;
+
+        letter-spacing: 1px;
+    }
+
+    .logo-icon {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(155,92,255,.18),
+                rgba(89,170,255,.08)
+            );
+
+        border:
+            1px solid
+            rgba(155,92,255,.25);
+
+        box-shadow:
+            0 0 25px
+            rgba(155,92,255,.08);
+    }
+
+    .logo span {
+        color: var(--accent);
+    }
+
+    .top-title {
+        position: absolute;
+
+        left: 50%;
+
+        transform:
+            translateX(-50%);
+
+        text-align: center;
+    }
+
+    .top-title strong {
+        display: block;
+
+        font-size: 13px;
+
+        letter-spacing: 3px;
+
+        text-transform: uppercase;
+
+        color: #b991ff;
+    }
+
+    .top-title small {
+        display: block;
+
+        margin-top: 4px;
+
+        color: #6e6678;
+
+        font-size: 9px;
+
+        letter-spacing: 2px;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        padding: 10px 14px;
+
+        border-radius: 9px;
+
+        color: #c9c2d1;
+
+        text-decoration: none;
+
+        background:
+            rgba(255,255,255,.025);
+
+        border:
+            1px solid
+            rgba(255,255,255,.08);
+
+        transition: .2s;
+    }
+
+    .back-button:hover {
+        color: white;
+
+        border-color:
+            rgba(155,92,255,.35);
+
+        background:
+            rgba(155,92,255,.07);
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    #app {
+        display: none;
+    }
+
+    .container {
+        width: min(1180px, calc(100% - 30px));
+
+        margin: 0 auto;
+
+        padding:
+            45px 0
+            90px;
+    }
+
+    .page-heading {
+        margin-bottom: 30px;
+    }
+
+    .page-heading h1 {
+        margin: 0;
+
+        font-size:
+            clamp(
+                29px,
+                5vw,
+                44px
+            );
+
+        letter-spacing: 1px;
+    }
+
+    .page-heading h1 span {
+        color: var(--accent);
+    }
+
+    .page-heading p {
+        max-width: 700px;
+
+        margin: 10px 0 0;
+
+        color: var(--muted);
+
+        font-size: 13px;
+
+        line-height: 1.6;
+    }
+
+    /* =====================================================
+       PROFILE HEADER
+    ===================================================== */
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+
+        padding: 22px;
+
+        margin-bottom: 25px;
+
+        border-radius: 16px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(24,17,39,.96),
+                rgba(11,10,20,.96)
+            );
+
+        border:
+            1px solid
+            rgba(155,92,255,.13);
+
+        box-shadow:
+            0 20px 60px
+            rgba(0,0,0,.28);
+    }
+
+    .profile-left {
+        display: flex;
+        align-items: center;
+
+        gap: 16px;
+
+        min-width: 0;
+    }
+
+    .avatar {
+        width: 68px;
+        height: 68px;
+
+        flex-shrink: 0;
+
+        border-radius: 50%;
+
+        object-fit: cover;
+
+        border:
+            2px solid
+            rgba(155,92,255,.45);
+
+        background:
+            rgba(155,92,255,.08);
+
+        box-shadow:
+            0 0 30px
+            rgba(155,92,255,.1);
+    }
+
+    .profile-name {
+        min-width: 0;
+    }
+
+    .profile-name h2 {
+        margin: 0;
+
+        font-size: 20px;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+    .profile-name p {
+        margin: 6px 0 0;
+
+        color: var(--muted);
+
+        font-size: 12px;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+    .role-badge {
+        flex-shrink: 0;
+
+        padding: 9px 13px;
+
+        border-radius: 999px;
+
+        color: #d9c1ff;
+
+        background:
+            rgba(155,92,255,.1);
+
+        border:
+            1px solid
+            rgba(155,92,255,.25);
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .8px;
+    }
+
+    /* =====================================================
+       STAT GRID
+    ===================================================== */
+
+    .stats-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(0, 1fr)
+            );
+
+        gap: 15px;
+
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        position: relative;
+
+        min-height: 145px;
+
+        padding: 21px;
+
+        overflow: hidden;
+
+        border-radius: 15px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(16,15,29,.97),
+                rgba(10,9,18,.97)
+            );
+
+        border:
+            1px solid
+            var(--border);
+
+        transition:
+            transform .2s,
+            border-color .2s,
+            box-shadow .2s;
+    }
+
+    .stat-card::before {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        width: 3px;
+
+        background:
+            var(--accent);
+    }
+
+    .stat-card:hover {
+        transform:
+            translateY(-2px);
+
+        border-color:
+            rgba(155,92,255,.2);
+
+        box-shadow:
+            0 18px 40px
+            rgba(0,0,0,.25);
+    }
+
+    .stat-icon {
+        font-size: 24px;
+
+        margin-bottom: 12px;
+    }
+
+    .stat-label {
+        color: var(--muted);
+
+        font-size: 11px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1px;
+    }
+
+    .stat-value {
+        margin-top: 7px;
+
+        font-size: 25px;
+
+        font-weight: 900;
+
+        color: #f6f1fa;
+
+        overflow-wrap: anywhere;
+    }
+
+    .stat-description {
+        margin-top: 5px;
+
+        color: #655e6c;
+
+        font-size: 10px;
+    }
+
+    .stat-card.green::before {
+        background: var(--green);
+    }
+
+    .stat-card.red::before {
+        background: var(--red);
+    }
+
+    .stat-card.yellow::before {
+        background: var(--yellow);
+    }
+
+    .stat-card.blue::before {
+        background: var(--blue);
+    }
+
+    /* =====================================================
+       SECTIONS
+    ===================================================== */
+
+    .section-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 20px;
+    }
+
+    .section {
+        padding: 22px;
+
+        border-radius: 15px;
+
+        background:
+            rgba(13,13,27,.9);
+
+        border:
+            1px solid
+            var(--border);
+    }
+
+    .section.full {
+        grid-column:
+            1 / -1;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 18px;
+    }
+
+    .section-heading h3 {
+        margin: 0;
+
+        font-size: 16px;
+    }
+
+    .section-heading span {
+        color: #655e6d;
+
+        font-size: 10px;
+    }
+
+    /* =====================================================
+       INFO ROWS
+    ===================================================== */
+
+    .info-list {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 2px;
+    }
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+
+        padding: 13px 0;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.045);
+    }
+
+    .info-row:last-child {
+        border-bottom: 0;
+    }
+
+    .info-label {
+        color: #837a8d;
+
+        font-size: 12px;
+    }
+
+    .info-value {
+        max-width: 60%;
+
+        color: #eee8f1;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        text-align: right;
+
+        overflow-wrap: anywhere;
+    }
+
+    /* =====================================================
+       ACTIVITY
+    ===================================================== */
+
+    .activity-box {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                7,
+                1fr
+            );
+
+        gap: 7px;
+    }
+
+    .day {
+        min-width: 0;
+
+        text-align: center;
+    }
+
+    .day-label {
+        margin-bottom: 7px;
+
+        color: #696171;
+
+        font-size: 9px;
+    }
+
+    .day-bar {
+        height: 80px;
+
+        display: flex;
+        align-items: flex-end;
+
+        overflow: hidden;
+
+        border-radius: 6px;
+
+        background:
+            rgba(255,255,255,.025);
+    }
+
+    .day-fill {
+        width: 100%;
+
+        min-height: 3px;
+
+        background:
+            linear-gradient(
+                180deg,
+                var(--accent2),
+                var(--accent)
+            );
+
+        border-radius:
+            6px 6px 0 0;
+    }
+
+    .day-value {
+        margin-top: 5px;
+
+        color: #716879;
+
+        font-size: 8px;
+    }
+
+    .activity-note {
+        margin-top: 14px;
+
+        color: #625a69;
+
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+
+    /* =====================================================
+       FUN FACT
+    ===================================================== */
+
+    .fact {
+        position: relative;
+
+        min-height: 125px;
+
+        display: flex;
+        align-items: center;
+
+        padding: 25px 25px 25px 90px;
+
+        border-radius: 13px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(155,92,255,.08),
+                rgba(89,170,255,.035)
+            );
+
+        border:
+            1px solid
+            rgba(155,92,255,.1);
+    }
+
+    .fact-icon {
+        position: absolute;
+
+        left: 23px;
+
+        width: 45px;
+        height: 45px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background:
+            rgba(155,92,255,.1);
+
+        border:
+            1px solid
+            rgba(155,92,255,.18);
+
+        font-size: 21px;
+    }
+
+    .fact strong {
+        display: block;
+
+        margin-bottom: 6px;
+
+        color: #e8d8ff;
+
+        font-size: 13px;
+    }
+
+    .fact p {
+        margin: 0;
+
+        color: #82788c;
+
+        font-size: 11px;
+
+        line-height: 1.6;
+    }
+
+    /* =====================================================
+       TIME BAR
+    ===================================================== */
+
+    .time-big {
+        display: flex;
+        align-items: baseline;
+
+        gap: 9px;
+
+        margin-bottom: 15px;
+    }
+
+    .time-big strong {
+        font-size: 35px;
+    }
+
+    .time-big span {
+        color: #766d7c;
+
+        font-size: 11px;
+    }
+
+    .progress {
+        width: 100%;
+        height: 8px;
+
+        overflow: hidden;
+
+        border-radius: 999px;
+
+        background:
+            rgba(255,255,255,.05);
+    }
+
+    .progress-fill {
+        width: 0%;
+        height: 100%;
+
+        border-radius: inherit;
+
+        background:
+            linear-gradient(
+                90deg,
+                var(--accent),
+                var(--blue)
+            );
+
+        transition:
+            width .5s ease;
+    }
+
+    .time-note {
+        margin-top: 10px;
+
+        color: #675f6d;
+
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    #errorBox {
+        display: none;
+
+        max-width: 600px;
+
+        margin: 80px auto;
+
+        padding: 25px;
+
+        border-radius: 15px;
+
+        background:
+            rgba(255,84,112,.05);
+
+        border:
+            1px solid
+            rgba(255,84,112,.2);
+
+        text-align: center;
+    }
+
+    #errorBox h2 {
+        margin: 0 0 8px;
+
+        color: var(--red);
+    }
+
+    #errorBox p {
+        margin: 0;
+
+        color: #a68d95;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+    #errorBox a {
+        display: inline-block;
+
+        margin-top: 17px;
+
+        padding: 10px 15px;
+
+        border-radius: 8px;
+
+        color: white;
+
+        text-decoration: none;
+
+        background:
+            rgba(255,84,112,.1);
+
+        border:
+            1px solid
+            rgba(255,84,112,.25);
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 950px) {
+
+        .stats-grid {
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+        }
+
+    }
+
+    @media (max-width: 700px) {
+
+        .topbar {
+            height: 62px;
+
+            padding:
+                0 14px;
+        }
+
+        .top-title {
+            display: none;
+        }
+
+        .logo {
+            font-size: 17px;
+        }
+
+        .logo-icon {
+            width: 33px;
+            height: 33px;
+        }
+
+        .container {
+            width:
+                calc(100% - 20px);
+
+            padding-top: 30px;
+        }
+
+        .profile-header {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+        .role-badge {
+            align-self: flex-start;
+        }
+
+        .stats-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+        .section-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+        .section.full {
+            grid-column:
+                auto;
+        }
+
+        .info-row {
+            align-items: flex-start;
+
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+        .info-value {
+            max-width: 100%;
+
+            text-align: left;
+        }
+
+        .activity-box {
+            gap: 4px;
+        }
+
+        .day-bar {
+            height: 55px;
+        }
+
+        .fact {
+            padding-left: 75px;
+        }
+
+        .fact-icon {
+            left: 17px;
+        }
+
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- ============================================================
+     LOADING
+============================================================= -->
+
+<div id="loading">
+
+    <div class="loading-box">
+
+        <div class="loading-icon">
+            📊
+        </div>
+
+        <h2>
+            Ładowanie statystyk...
+        </h2>
+
+        <p>
+            Pobieranie informacji o Twoim koncie.
+        </p>
+
+    </div>
+
+</div>
+
+<!-- ============================================================
+     APP
+============================================================= -->
+
+<div id="app">
+
+<header class="topbar">
+
+    <a
+        href="konto.html"
+        class="logo"
+    >
+
+        <span class="logo-icon">
+            ◈
+        </span>
+
+        SHADOW<span>TALE</span>
+
+    </a>
+
+    <div class="top-title">
+
+        <strong>
+            Statystyki
+        </strong>
+
+        <small>
+            TWOJE KONTO
+        </small>
+
+    </div>
+
+    <a
+        href="konto.html"
+        class="back-button"
+    >
+        ← Konto
+    </a>
+
+</header>
+
+<main class="container">
+
+    <div class="page-heading">
+
+        <h1>
+            Twoje <span>statystyki</span>
+        </h1>
+
+        <p>
+            Ciekawostki, aktywność i informacje dotyczące
+            Twojego konta ShadowTale.
+        </p>
+
+    </div>
+
+    <section class="profile-header">
+
+        <div class="profile-left">
+
+            <img
+                id="avatar"
+                class="avatar"
+                src="assets/logo.png"
+                alt="Avatar"
+            >
+
+            <div class="profile-name">
+
+                <h2
+                    id="username"
+                >
+                    Ładowanie...
+                </h2>
+
+                <p
+                    id="email"
+                >
+                    —
+                </p>
+
+            </div>
+
+        </div>
+
+        <div
+            id="roleBadge"
+            class="role-badge"
+        >
+            KLIENT
+        </div>
+
+    </section>
+
+    <section class="stats-grid">
+
+        <article class="stat-card">
+
+            <div class="stat-icon">
+                🕐
+            </div>
+
+            <div class="stat-label">
+                Ostatni login
+            </div>
+
+            <div
+                id="lastLogin"
+                class="stat-value"
+            >
+                —
+            </div>
+
+            <div class="stat-description">
+                Ostatnie zalogowanie na konto
+            </div>
+
+        </article>
+
+        <article class="stat-card green">
+
+            <div class="stat-icon">
+                ⏱️
+            </div>
+
+            <div class="stat-label">
+                Czas na stronie
+            </div>
+
+            <div
+                id="totalTime"
+                class="stat-value"
+            >
+                0 min
+            </div>
+
+            <div class="stat-description">
+                Łączny zapisany czas
+            </div>
+
+        </article>
+
+        <article class="stat-card blue">
+
+            <div class="stat-icon">
+                🌐
+            </div>
+
+            <div class="stat-label">
+                Wizyty
+            </div>
+
+            <div
+                id="visitCount"
+                class="stat-value"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Liczba rozpoczętych sesji
+            </div>
+
+        </article>
+
+        <article class="stat-card yellow">
+
+            <div class="stat-icon">
+                📄
+            </div>
+
+            <div class="stat-label">
+                Podstrony
+            </div>
+
+            <div
+                id="pageViews"
+                class="stat-value"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Odwiedzone strony
+            </div>
+
+        </article>
+
+    </section>
+
+    <div class="section-grid">
+
+        <section class="section">
+
+            <div class="section-heading">
+
+                <h3>
+                    ⏱️ Czas aktywności
+                </h3>
+
+                <span>
+                    SESJA
+                </span>
+
+            </div>
+
+            <div class="time-big">
+
+                <strong
+                    id="timeBig"
+                >
+                    0 min
+                </strong>
+
+                <span>
+                    łącznie
+                </span>
+
+            </div>
+
+            <div class="progress">
+
+                <div
+                    id="timeProgress"
+                    class="progress-fill"
+                ></div>
+
+            </div>
+
+            <div class="time-note">
+
+                Pasek pokazuje orientacyjnie aktywność
+                zapisaną w tej przeglądarce.
+
+            </div>
+
+        </section>
+
+        <section class="section">
+
+            <div class="section-heading">
+
+                <h3>
+                    👤 Informacje o koncie
+                </h3>
+
+                <span>
+                    SUPABASE
+                </span>
+
+            </div>
+
+            <div class="info-list">
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Data utworzenia
+                    </span>
+
+                    <span
+                        id="createdAt"
+                        class="info-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Ostatnia aktywność
+                    </span>
+
+                    <span
+                        id="lastActivity"
+                        class="info-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        ID konta
+                    </span>
+
+                    <span
+                        id="userId"
+                        class="info-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Ranga
+                    </span>
+
+                    <span
+                        id="roleInfo"
+                        class="info-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="section full">
+
+            <div class="section-heading">
+
+                <h3>
+                    📈 Aktywność w ostatnich dniach
+                </h3>
+
+                <span>
+                    LOKALNIE
+                </span>
+
+            </div>
+
+            <div
+                id="activityBox"
+                class="activity-box"
+            ></div>
+
+            <div class="activity-note">
+
+                Aktywność jest liczona na podstawie sesji
+                rozpoczętych w tej przeglądarce.
+
+            </div>
+
+        </section>
+
+        <section class="section full">
+
+            <div class="section-heading">
+
+                <h3>
+                    ✨ Ciekawostka
+                </h3>
+
+                <span>
+                    SHADOWTALE
+                </span>
+
+            </div>
+
+            <div class="fact">
+
+                <div
+                    id="factIcon"
+                    class="fact-icon"
+                >
+                    💜
+                </div>
+
+                <div>
+
+                    <strong
+                        id="factTitle"
+                    >
+                        Twoja historia właśnie się tworzy
+                    </strong>
+
+                    <p
+                        id="factText"
+                    >
+                        ShadowTale zapisuje podstawowe
+                        informacje o Twojej aktywności.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="section full">
+
+            <div class="section-heading">
+
+                <h3>
+                    🔎 Więcej statystyk
+                </h3>
+
+                <span>
+                    CIEKAWOSTKI
+                </span>
+
+            </div>
+
+            <div class="info-list">
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Pierwsza zarejestrowana wizyta
+                    </span>
+
+                    <span
+                        id="firstVisit"
+                        class="info-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Ostatnia zarejestrowana wizyta
+                    </span>
+
+                    <span
+                        id="lastVisit"
+                        class="info-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Najaktywniejszy dzień
+                    </span>
+
+                    <span
+                        id="bestDay"
+                        class="info-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Aktualna sesja
+                    </span>
+
+                    <span
+                        id="currentSession"
+                        class="info-value"
+                    >
+                        0 min
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Typ konta
+                    </span>
+
+                    <span
+                        id="accountType"
+                        class="info-value"
+                    >
+                        Standard
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+</div>
+
+<!-- ============================================================
+     ERROR
+============================================================= -->
+
+<div id="errorBox">
+
+    <h2>
+        Nie udało się załadować statystyk
+    </h2>
+
+    <p id="errorText">
+        Wystąpił nieznany błąd.
+    </p>
+
+    <a href="konto.html">
+        ← Wróć do konta
+    </a>
+
+</div>
+
+<!-- ============================================================
+     SUPABASE
+============================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="config.js"></script>
+
+<!-- ============================================================
+     WSPÓLNY LICZNIK
+     
+     MUSI BYĆ ZAŁADOWANY PRZED KODEM PONIŻEJ.
+============================================================= -->
+
+<script src="stats-tracker.js"></script>
+
+<script>
+"use strict";
+
+
+/* ============================================================
+   SUPABASE
+============================================================ */
+
+let supabaseClient = null;
+
+let currentUser = null;
+
+let currentProfile = null;
+
+
+/*
+ * To jest tylko zegar wyświetlany na ekranie.
+ *
+ * Faktyczny zapis czasu wykonuje
+ * stats-tracker.js.
+ *
+ * Dzięki temu nie ma podwójnego naliczania.
+ */
+
+let displaySessionStartedAt = Date.now();
+
+
+/*
+ * Ten klucz musi być taki sam jak w stats-tracker.js.
+ */
+
+const STATS_KEY =
+    "shadowtale_user_statistics_v1";
+
+
+/* ============================================================
+   SUPABASE CONFIG
+============================================================ */
+
+function getSupabaseConfig() {
+
+    const config =
+        window.CONFIG ||
+        window.SHADOWTALE_CONFIG ||
+        {};
+
+    return {
+
+        url:
+            config.supabaseUrl ||
+            config.SUPABASE_URL ||
+            "",
+
+        key:
+            config.supabaseKey ||
+            config.SUPABASE_KEY ||
+            ""
+
+    };
+
+}
+
+
+function initSupabase() {
+
+    if (
+        typeof window.supabase ===
+        "undefined" ||
+        !window.supabase.createClient
+    ) {
+
+        throw new Error(
+            "Biblioteka Supabase nie została załadowana."
+        );
+
+    }
+
+
+    const config =
+        getSupabaseConfig();
+
+
+    if (
+        !config.url ||
+        !config.key
+    ) {
+
+        throw new Error(
+            "Brakuje konfiguracji Supabase w config.js."
+        );
+
+    }
+
+
+    supabaseClient =
+        window.supabase.createClient(
+            config.url,
+            config.key
+        );
+
+}
+
+
+/* ============================================================
+   LOCAL STATS
+============================================================ */
+
+function getLocalStats() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(
+                STATS_KEY
+            );
+
+
+        if (!raw) {
+
+            return {
+
+                visits: 0,
+
+                pageViews: 0,
+
+                totalTime: 0,
+
+                firstVisit: null,
+
+                lastVisit: null,
+
+                daily: {},
+
+                pages: {}
+
+            };
+
+        }
+
+
+        const parsed =
+            JSON.parse(raw);
+
+
+        return {
+
+            visits:
+                Number(
+                    parsed.visits
+                ) || 0,
+
+            pageViews:
+                Number(
+                    parsed.pageViews
+                ) || 0,
+
+            totalTime:
+                Number(
+                    parsed.totalTime
+                ) || 0,
+
+            firstVisit:
+                parsed.firstVisit ||
+                null,
+
+            lastVisit:
+                parsed.lastVisit ||
+                null,
+
+            daily:
+                parsed.daily ||
+                {},
+
+            pages:
+                parsed.pages ||
+                {}
+
+        };
+
+
+    } catch (error) {
+
+        console.error(
+            "Błąd statystyk:",
+            error
+        );
+
+
+        return {
+
+            visits: 0,
+
+            pageViews: 0,
+
+            totalTime: 0,
+
+            firstVisit: null,
+
+            lastVisit: null,
+
+            daily: {},
+
+            pages: {}
+
+        };
+
+    }
+
+}
+
+
+/* ============================================================
+   DATA KEY
+============================================================ */
+
+function getDateKey(date) {
+
+    return [
+
+        date.getFullYear(),
+
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        ),
+
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        )
+
+    ].join("-");
+
+}
+
+
+/* ============================================================
+   FORMAT CZASU
+============================================================ */
+
+function formatDuration(seconds) {
+
+    seconds =
+        Math.max(
+            0,
+            Math.floor(
+                Number(seconds) || 0
+            )
+        );
+
+
+    const days =
+        Math.floor(
+            seconds /
+            86400
+        );
+
+
+    const hours =
+        Math.floor(
+            (seconds % 86400) /
+            3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (seconds % 3600) /
+            60
+        );
+
+
+    const secs =
+        seconds %
+        60;
+
+
+    if (days > 0) {
+
+        return `${days} d ${hours} h`;
+
+    }
+
+
+    if (hours > 0) {
+
+        return `${hours} h ${minutes} min`;
+
+    }
+
+
+    if (minutes > 0) {
+
+        return `${minutes} min`;
+
+    }
+
+
+    return `${secs} s`;
+
+}
+
+
+/* ============================================================
+   FORMAT DATY
+============================================================ */
+
+function formatDateTime(value) {
+
+    if (!value) {
+        return "—";
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "—";
+
+    }
+
+
+    return date.toLocaleString(
+        "pl-PL",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+/* ============================================================
+   ROLE
+============================================================ */
+
+function formatRole(role) {
+
+    if (!role) {
+        return "Klient";
+    }
+
+
+    const roles = {
+
+        owner:
+            "Właściciel",
+
+        admin:
+            "Administrator",
+
+        administrator:
+            "Administrator",
+
+        moderator:
+            "Moderator",
+
+        helper:
+            "Helper",
+
+        klient:
+            "Klient",
+
+        friend:
+            "Znajomy",
+
+        grafik:
+            "Grafik",
+
+        media:
+            "Media",
+
+        programista:
+            "Programista"
+
+    };
+
+
+    const normalized =
+        role
+            .toString()
+            .trim()
+            .toLowerCase();
+
+
+    return (
+        roles[normalized] ||
+        role
+    );
+
+}
+
+
+/* ============================================================
+   POBRANIE PROFILU
+============================================================ */
+
+async function loadProfile() {
+
+    const {
+        data: sessionData,
+        error: sessionError
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    if (sessionError) {
+
+        throw sessionError;
+
+    }
+
+
+    const session =
+        sessionData?.session;
+
+
+    if (!session?.user) {
+
+        window.location.href =
+            "login.html";
+
+        return false;
+
+    }
+
+
+    currentUser =
+        session.user;
+
+
+    const {
+        data: profile,
+        error: profileError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "username, avatar_url, role"
+            )
+            .eq(
+                "id",
+                currentUser.id
+            )
+            .maybeSingle();
+
+
+    if (profileError) {
+
+        throw new Error(
+            "Nie udało się pobrać profilu: " +
+            profileError.message
+        );
+
+    }
+
+
+    currentProfile =
+        profile;
+
+
+    return true;
+
+}
+
+
+/* ============================================================
+   RENDER PROFILU
+============================================================ */
+
+function renderProfile() {
+
+    const username =
+        currentProfile?.username ||
+        currentUser.user_metadata?.username ||
+        currentUser.email?.split("@")[0] ||
+        "Klient";
+
+
+    const email =
+        currentUser.email ||
+        "Brak adresu";
+
+
+    const avatar =
+        currentProfile?.avatar_url ||
+        currentUser.user_metadata?.avatar_url ||
+        "assets/logo.png";
+
+
+    const role =
+        currentProfile?.role ||
+        currentUser.user_metadata?.role ||
+        "klient";
+
+
+    document.getElementById(
+        "username"
+    ).textContent =
+        username;
+
+
+    document.getElementById(
+        "email"
+    ).textContent =
+        email;
+
+
+    document.getElementById(
+        "avatar"
+    ).src =
+        avatar;
+
+
+    document.getElementById(
+        "roleBadge"
+    ).textContent =
+        formatRole(
+            role
+        ).toUpperCase();
+
+
+    document.getElementById(
+        "roleInfo"
+    ).textContent =
+        formatRole(
+            role
+        );
+
+
+    document.getElementById(
+        "accountType"
+    ).textContent =
+        formatRole(
+            role
+        );
+
+
+    document.getElementById(
+        "createdAt"
+    ).textContent =
+        formatDateTime(
+            currentUser.created_at
+        );
+
+
+    document.getElementById(
+        "lastLogin"
+    ).textContent =
+        formatDateTime(
+            currentUser.last_sign_in_at
+        );
+
+
+    document.getElementById(
+        "lastActivity"
+    ).textContent =
+        formatDateTime(
+            currentUser.last_sign_in_at
+        );
+
+
+    document.getElementById(
+        "userId"
+    ).textContent =
+        currentUser.id;
+
+}
+
+
+/* ============================================================
+   AKTUALNA SESJA — TYLKO WYŚWIETLANIE
+============================================================ */
+
+function getCurrentDisplaySessionSeconds() {
+
+    return Math.max(
+        0,
+        Math.floor(
+            (
+                Date.now() -
+                displaySessionStartedAt
+            ) / 1000
+        )
+    );
+
+}
+
+
+/* ============================================================
+   AKTYWNOŚĆ
+============================================================ */
+
+function updateStatistics() {
+
+    const stats =
+        getLocalStats();
+
+
+    /*
+     * Faktycznie zapisany czas pochodzi
+     * ze wszystkich stron, które używają
+     * stats-tracker.js.
+     */
+
+    const currentSeconds =
+        getCurrentDisplaySessionSeconds();
+
+
+    const totalSeconds =
+        Number(
+            stats.totalTime
+        ) +
+        currentSeconds;
+
+
+    const formatted =
+        formatDuration(
+            totalSeconds
+        );
+
+
+    document.getElementById(
+        "totalTime"
+    ).textContent =
+        formatted;
+
+
+    document.getElementById(
+        "timeBig"
+    ).textContent =
+        formatted;
+
+
+    document.getElementById(
+        "visitCount"
+    ).textContent =
+        stats.visits;
+
+
+    document.getElementById(
+        "pageViews"
+    ).textContent =
+        stats.pageViews;
+
+
+    document.getElementById(
+        "firstVisit"
+    ).textContent =
+        formatDateTime(
+            stats.firstVisit
+        );
+
+
+    document.getElementById(
+        "lastVisit"
+    ).textContent =
+        formatDateTime(
+            stats.lastVisit
+        );
+
+
+    document.getElementById(
+        "currentSession"
+    ).textContent =
+        formatDuration(
+            currentSeconds
+        );
+
+
+    /*
+     * 2 godziny = 100%.
+     */
+
+    const percentage =
+        Math.min(
+            100,
+            (
+                totalSeconds /
+                7200
+            ) * 100
+        );
+
+
+    document.getElementById(
+        "timeProgress"
+    ).style.width =
+        percentage + "%";
+
+
+    renderActivity(
+        stats
+    );
+
+
+    renderFunFact(
+        stats,
+        totalSeconds
+    );
+
+
+    renderBestDay(
+        stats
+    );
+
+}
+
+
+/* ============================================================
+   TYGODNIOWA AKTYWNOŚĆ
+============================================================ */
+
+function renderActivity(stats) {
+
+    const container =
+        document.getElementById(
+            "activityBox"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const days = [];
+
+
+    const now =
+        new Date();
+
+
+    for (
+        let i = 6;
+        i >= 0;
+        i--
+    ) {
+
+        const date =
+            new Date(now);
+
+
+        date.setDate(
+            date.getDate() -
+            i
+        );
+
+
+        days.push(
+            date
+        );
+
+    }
+
+
+    let maxTime =
+        1;
+
+
+    days.forEach(
+        date => {
+
+            const key =
+                getDateKey(
+                    date
+                );
+
+
+            const seconds =
+                Number(
+                    stats.daily?.[key]?.time
+                ) || 0;
+
+
+            maxTime =
+                Math.max(
+                    maxTime,
+                    seconds
+                );
+
+        }
+    );
+
+
+    days.forEach(
+        date => {
+
+            const key =
+                getDateKey(
+                    date
+                );
+
+
+            const data =
+                stats.daily?.[key] ||
+                {
+                    visits: 0,
+                    time: 0
+                };
+
+
+            const seconds =
+                Number(
+                    data.time
+                ) || 0;
+
+
+            const percentage =
+                seconds > 0
+                    ? Math.max(
+                        6,
+                        (
+                            seconds /
+                            maxTime
+                        ) * 100
+                    )
+                    : 3;
+
+
+            const day =
+                document.createElement(
+                    "div"
+                );
+
+
+            day.className =
+                "day";
+
+
+            const label =
+                date.toLocaleDateString(
+                    "pl-PL",
+                    {
+                        weekday: "short"
+                    }
+                )
+                .replace(
+                    ".",
+                    ""
+                );
+
+
+            day.innerHTML = `
+
+                <div class="day-label">
+                    ${label}
+                </div>
+
+                <div class="day-bar">
+
+                    <div
+                        class="day-fill"
+                        style="height:${percentage}%"
+                    ></div>
+
+                </div>
+
+                <div class="day-value">
+                    ${formatShortTime(seconds)}
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                day
+            );
+
+        });
+
+}
+
+
+/* ============================================================
+   KRÓTKI CZAS
+============================================================ */
+
+function formatShortTime(seconds) {
+
+    seconds =
+        Math.floor(
+            Number(seconds) || 0
+        );
+
+
+    const minutes =
+        Math.floor(
+            seconds /
+            60
+        );
+
+
+    if (
+        minutes < 1
+    ) {
+
+        return "<1m";
+
+    }
+
+
+    if (
+        minutes < 60
+    ) {
+
+        return `${minutes}m`;
+
+    }
+
+
+    return (
+        Math.floor(
+            minutes /
+            60
+        ) +
+        "h"
+    );
+
+}
+
+
+/* ============================================================
+   CIEKAWOSTKI
+============================================================ */
+
+function renderFunFact(
+    stats,
+    totalSeconds
+) {
+
+    const title =
+        document.getElementById(
+            "factTitle"
+        );
+
+
+    const text =
+        document.getElementById(
+            "factText"
+        );
+
+
+    const icon =
+        document.getElementById(
+            "factIcon"
+        );
+
+
+    if (
+        stats.visits === 1
+    ) {
+
+        icon.textContent =
+            "🌱";
+
+
+        title.textContent =
+            "To dopiero początek";
+
+
+        text.textContent =
+            "To Twoja pierwsza zarejestrowana wizyta w tym urządzeniu. Statystyki będą rosły wraz z korzystaniem z ShadowTale.";
+
+        return;
+
+    }
+
+
+    if (
+        totalSeconds >=
+        3600
+    ) {
+
+        icon.textContent =
+            "⏳";
+
+
+        title.textContent =
+            "Spędziłeś już sporo czasu w ShadowTale";
+
+
+        text.textContent =
+            `Łączny czas przekroczył godzinę. To już ${formatDuration(totalSeconds)} aktywności.`;
+
+        return;
+
+    }
+
+
+    if (
+        stats.visits >=
+        10
+    ) {
+
+        icon.textContent =
+            "🔥";
+
+
+        title.textContent =
+            "Stały bywalec";
+
+
+        text.textContent =
+            `Masz już ${stats.visits} zarejestrowanych sesji.`;
+
+        return;
+
+    }
+
+
+    if (
+        stats.pageViews >=
+        25
+    ) {
+
+        icon.textContent =
+            "🗺️";
+
+
+        title.textContent =
+            "Zwiedzasz ShadowTale";
+
+
+        text.textContent =
+            `Odwiedziłeś już ${stats.pageViews} stron.`;
+
+        return;
+
+    }
+
+
+    icon.textContent =
+        "💜";
+
+
+    title.textContent =
+        "Twoja historia właśnie się tworzy";
+
+
+    text.textContent =
+        "Im dłużej korzystasz z ShadowTale, tym więcej statystyk będzie tutaj dostępnych.";
+
+}
+
+
+/* ============================================================
+   NAJAKTYWNIEJSZY DZIEŃ
+============================================================ */
+
+function renderBestDay(stats) {
+
+    const entries =
+        Object.entries(
+            stats.daily || {}
+        );
+
+
+    if (!entries.length) {
+
+        document.getElementById(
+            "bestDay"
+        ).textContent =
+            "Brak danych";
+
+        return;
+
+    }
+
+
+    entries.sort(
+        (
+            a,
+            b
+        ) =>
+            (
+                Number(
+                    b[1]?.time
+                ) || 0
+            ) -
+            (
+                Number(
+                    a[1]?.time
+                ) || 0
+            )
+    );
+
+
+    const best =
+        entries[0];
+
+
+    const date =
+        new Date(
+            best[0] +
+            "T00:00:00"
+        );
+
+
+    document.getElementById(
+        "bestDay"
+    ).textContent =
+        `${date.toLocaleDateString(
+            "pl-PL",
+            {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            }
+        )} — ${formatDuration(
+            best[1]?.time || 0
+        )}`;
+
+}
+
+
+/* ============================================================
+   START
+============================================================ */
+
+async function start() {
+
+    try {
+
+        initSupabase();
+
+
+        const loggedIn =
+            await loadProfile();
+
+
+        if (!loggedIn) {
+            return;
+        }
+
+
+        renderProfile();
+
+
+        document.getElementById(
+            "loading"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "app"
+        ).style.display =
+            "block";
+
+
+        updateStatistics();
+
+
+        /*
+         * Odświeżamy tylko wygląd.
+         *
+         * NIE zapisujemy tutaj czasu.
+         * Zapisem zajmuje się stats-tracker.js.
+         */
+
+        setInterval(
+            () => {
+
+                updateStatistics();
+
+            },
+            1000
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Błąd statystyk:",
+            error
+        );
+
+
+        document.getElementById(
+            "loading"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "errorBox"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "errorText"
+        ).textContent =
+            error.message ||
+            "Wystąpił nieznany błąd.";
+
+    }
+
+}
+
+
+start();
+
+</script>
+<script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,2056 @@
+<!doctype html>
+
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Propozycje — ShadowTale.pl</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="config.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #05050d;
+      color: #f5f3ff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: linear-gradient(
+        180deg,
+        rgba(12, 13, 30, .98),
+        rgba(7, 8, 20, .97)
+      );
+      border-bottom: 1px solid rgba(157, 124, 255, .20);
+      box-shadow: 0 6px 28px rgba(0, 0, 0, .38);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      width: min(1250px, calc(100% - 40px));
+      height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .logo {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      color: white;
+      text-decoration: none;
+    }
+
+    .logo img {
+      width: 42px;
+      height: 42px;
+      display: block;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .logo-text {
+      display: flex;
+      align-items: baseline;
+      white-space: nowrap;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .6px;
+    }
+
+    .logo-shadow {
+      color: #fff;
+    }
+
+    .logo-tale {
+      color: #a487ff;
+    }
+
+    .logo-pl {
+      color: #77738f;
+    }
+
+    .header-search {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    #global-search-form {
+      width: 100%;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .055);
+      border: 1px solid rgba(255, 255, 255, .11);
+    }
+
+    #global-search-form:focus-within {
+      border-color: rgba(164, 135, 255, .55);
+      box-shadow: 0 0 0 3px rgba(164, 135, 255, .08);
+      background: rgba(255, 255, 255, .07);
+    }
+
+    #global-search {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      padding: 0 15px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    #global-search::placeholder {
+      color: #858199;
+    }
+
+    #search-button {
+      width: 44px;
+      height: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #search-button:hover {
+      background: rgba(255, 255, 255, .06);
+    }
+
+    #search-results {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      z-index: 2000;
+    }
+
+    .header-actions {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+
+    .header-button {
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 13px;
+      border-radius: 11px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .045);
+      color: #eeeeff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .header-button:hover {
+      background: rgba(164, 135, 255, .10);
+      border-color: rgba(164, 135, 255, .35);
+    }
+
+    #account-button {
+      padding-left: 7px;
+      padding-right: 13px;
+    }
+
+    #account-avatar {
+      width: 30px;
+      height: 30px;
+      display: block;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(157, 124, 255, .30);
+    }
+
+    .suggestions-page {
+      width: min(1100px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 55px 0 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .page-hero {
+      margin-bottom: 30px;
+    }
+
+    .page-hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -.8px;
+    }
+
+    .page-hero h1 span {
+      color: #a487ff;
+    }
+
+    .page-hero p {
+      margin: 0;
+      max-width: 760px;
+      color: #aaa5bd;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .notice {
+      margin-bottom: 25px;
+      padding: 17px 19px;
+      border-radius: 14px;
+      background: linear-gradient(
+        135deg,
+        rgba(164, 135, 255, .10),
+        rgba(255, 255, 255, .035)
+      );
+      border: 1px solid rgba(164, 135, 255, .20);
+      color: #d8d3e8;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .notice strong {
+      color: #fff;
+    }
+
+    .suggestion-form {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .form-card {
+      padding: 24px;
+      border-radius: 18px;
+      background: linear-gradient(
+        145deg,
+        rgba(16, 17, 36, .96),
+        rgba(9, 10, 23, .96)
+      );
+      border: 1px solid rgba(255, 255, 255, .08);
+      box-shadow: 0 14px 45px rgba(0, 0, 0, .22);
+    }
+
+    .form-card h2 {
+      margin: 0 0 7px;
+      font-size: 19px;
+      color: #fff;
+    }
+
+    .form-card-description {
+      margin: 0 0 20px;
+      color: #88849d;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 17px;
+    }
+
+    .form-group {
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #e9e6f3;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .required {
+      color: #a487ff;
+    }
+
+    .form-control {
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 13px;
+      border-radius: 11px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      outline: 0;
+      background: rgba(255, 255, 255, .045);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      border-color: rgba(164, 135, 255, .55);
+      background: rgba(255, 255, 255, .065);
+      box-shadow: 0 0 0 3px rgba(164, 135, 255, .08);
+    }
+
+    textarea.form-control {
+      min-height: 125px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    option {
+      background: #101021;
+      color: #fff;
+    }
+
+    .help-text,
+    .file-info {
+      margin-top: 7px;
+      color: #77738a;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .file-control {
+      padding: 9px;
+      cursor: pointer;
+    }
+
+    .file-control::file-selector-button {
+      margin-right: 10px;
+      padding: 9px 13px;
+      border: 1px solid rgba(164, 135, 255, .30);
+      border-radius: 8px;
+      background: rgba(164, 135, 255, .12);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .versions {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .version-option {
+      position: relative;
+    }
+
+    .version-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .version-option label {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      background: rgba(255, 255, 255, .035);
+      color: #aaa5bb;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .version-option label:hover {
+      border-color: rgba(164, 135, 255, .30);
+      color: #fff;
+    }
+
+    .version-option input:checked + label {
+      background: rgba(164, 135, 255, .14);
+      border-color: rgba(164, 135, 255, .60);
+      color: #fff;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .check-row input {
+      width: 17px;
+      height: 17px;
+      margin-top: 2px;
+      accent-color: #a487ff;
+      flex-shrink: 0;
+    }
+
+    .check-row label {
+      margin: 0;
+      color: #aaa5bb;
+      font-size: 12px;
+      line-height: 1.6;
+      cursor: pointer;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      border-radius: 11px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .05);
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: linear-gradient(
+        135deg,
+        #8f6cff,
+        #b39aff
+      );
+      color: #100b20;
+      box-shadow: 0 8px 25px rgba(143, 108, 255, .18);
+    }
+
+    .button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    #form-status {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    #form-status.success {
+      display: block;
+      background: rgba(72, 190, 125, .09);
+      border: 1px solid rgba(72, 190, 125, .25);
+      color: #9de7bb;
+    }
+
+    #form-status.error {
+      display: block;
+      background: rgba(235, 85, 100, .09);
+      border: 1px solid rgba(235, 85, 100, .25);
+      color: #ffadb7;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255, 255, 255, .07);
+      background: linear-gradient(
+        180deg,
+        rgba(7, 8, 19, .96),
+        rgba(4, 5, 12, 1)
+      );
+    }
+
+    .footer-inner {
+      width: min(1250px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 45px 0 25px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+      gap: 30px;
+    }
+
+    .footer-column {
+      min-width: 0;
+    }
+
+    .footer-column p {
+      margin: 0;
+      max-width: 250px;
+      color: #77738a;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .footer-column h3 {
+      margin: 4px 0 13px;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .footer-column > a:not(.logo) {
+      display: block;
+      width: fit-content;
+      margin: 0 0 9px;
+      color: #858198;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .footer-column > a:not(.logo):hover {
+      color: #b39aff;
+    }
+
+    .footer-bottom {
+      margin-top: 35px;
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      color: #5f5b70;
+      font-size: 11px;
+    }
+
+    @media (max-width: 950px) {
+      .header-inner {
+        width: min(1250px, calc(100% - 24px));
+      }
+
+      .logo-text {
+        display: none;
+      }
+
+      .header-button span {
+        display: none;
+      }
+
+      .header-button {
+        width: 42px;
+        padding: 0;
+      }
+
+      #account-button {
+        width: auto;
+        padding: 0 7px;
+      }
+
+      #account-name {
+        display: none;
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .versions {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 650px) {
+      .header-inner {
+        height: 60px;
+        gap: 9px;
+      }
+
+      .logo {
+        height: 38px;
+      }
+
+      .logo img {
+        width: 38px;
+        height: 38px;
+      }
+
+      #global-search-form {
+        height: 38px;
+      }
+
+      .header-button {
+        height: 38px;
+      }
+
+      .suggestions-page {
+        width: min(100% - 24px, 1100px);
+        padding-top: 35px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .form-card {
+        padding: 18px;
+      }
+
+      .versions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .footer-inner {
+        width: min(100% - 24px, 1250px);
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .versions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="stars"></div>
+
+  <header class="site-header">
+    <div class="header-inner">
+
+
+  <a href="index.html" class="logo">
+    <img src="assets/logo.png" alt="ShadowTale">
+
+    <span class="logo-text">
+      <span class="logo-shadow">SHADOW</span>
+      <span class="logo-tale">TALE</span>
+      <span class="logo-pl">.PL</span>
+    </span>
+  </a>
+
+  <div class="header-search">
+
+    <form id="global-search-form" autocomplete="off">
+
+      <input
+        type="search"
+        id="global-search"
+        placeholder="Szukaj plików, skryptów, map..."
+        autocomplete="off"
+      >
+
+      <button
+        id="search-button"
+        type="submit"
+        aria-label="Szukaj"
+      >🔎</button>
+
+    </form>
+
+    <div id="search-results"></div>
+
+  </div>
+
+  <div class="header-actions">
+
+    <a
+      href="admin.html"
+      id="panel-button"
+      class="header-button"
+      style="display:none;"
+    >
+      🛡️ <span>Panel</span>
+    </a>
+
+    <a
+      href="media.html"
+      class="header-button blocked-feature"
+      data-blocked="media"
+    >
+      🎬 <span>Media</span>
+    </a>
+
+    <a
+      href="login.html"
+      id="account-button"
+      class="header-button"
+      aria-label="Zaloguj się"
+    >
+      <img
+        id="account-avatar"
+        src="assets/logo.png"
+        alt="ShadowTale"
+      >
+
+      <span id="account-name">
+        Zaloguj się
+      </span>
+    </a>
+
+  </div>
+
+</div>
+
+
+  </header>
+
+  <main class="suggestions-page">
+
+
+<section class="page-hero">
+
+  <h1>
+    Zaproponuj <span>produkt</span>
+  </h1>
+
+  <p>
+    Masz pomysł na produkt, którego brakuje w ShadowTale?
+    Wypełnij formularz, a propozycja trafi do administracji
+    do sprawdzenia.
+  </p>
+
+</section>
+
+<div class="notice">
+  <strong>Ważne:</strong>
+  wysłanie propozycji nie oznacza automatycznego dodania produktu
+  do sklepu. Każda propozycja zostanie sprawdzona przez administrację.
+</div>
+
+<form
+  id="suggestion-form"
+  class="suggestion-form"
+>
+
+  <section class="form-card">
+
+    <h2>Podstawowe informacje</h2>
+
+    <p class="form-card-description">
+      Podaj podstawowe informacje dotyczące proponowanego produktu.
+    </p>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+
+        <label for="product-name">
+          Nazwa produktu <span class="required">*</span>
+        </label>
+
+        <input
+          class="form-control"
+          id="product-name"
+          name="product_name"
+          type="text"
+          maxlength="150"
+          placeholder="np. Region"
+          required
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="product-slug">
+          Slug / identyfikator
+        </label>
+
+        <input
+          class="form-control"
+          id="product-slug"
+          name="slug"
+          type="text"
+          maxlength="150"
+          placeholder="np. region"
+        >
+
+        <div class="help-text">
+          Możesz zostawić puste.
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="product-world">
+          Kategoria <span class="required">*</span>
+        </label>
+
+        <select
+          class="form-control"
+          id="product-world"
+          name="world"
+          required
+        >
+
+          <option value="">
+            Wybierz kategorię
+          </option>
+
+          <option value="minecraft">
+            Minecraft
+          </option>
+
+          <option value="undertale">
+            Undertale
+          </option>
+
+          <option value="inne">
+            Inne
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="product-type">
+          Typ produktu
+        </label>
+
+        <select
+          class="form-control"
+          id="product-type"
+          name="product_type"
+        >
+
+          <option value="">
+            Wybierz typ
+          </option>
+
+          <option value="skrypt">
+            Skrypt
+          </option>
+
+          <option value="mapa">
+            Mapa
+          </option>
+
+          <option value="schemat">
+            Schemat
+          </option>
+
+          <option value="config">
+            Config
+          </option>
+
+          <option value="txt">
+            TXT / Resource Pack
+          </option>
+
+          <option value="skin">
+            Skin
+          </option>
+
+          <option value="save">
+            Save
+          </option>
+
+          <option value="mod">
+            Mod
+          </option>
+
+          <option value="grafika">
+            Grafika
+          </option>
+
+          <option value="dane">
+            Dane / wykres
+          </option>
+
+          <option value="lore">
+            Lore
+          </option>
+
+          <option value="inne">
+            Inne
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="product-price">
+          Proponowana cena
+        </label>
+
+        <input
+          class="form-control"
+          id="product-price"
+          name="price"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="np. 14.99"
+        >
+
+        <div class="help-text">
+          Cena w PLN. Możesz pozostawić puste.
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section
+    class="form-card"
+    id="minecraft-versions-card"
+  >
+
+    <h2>Wersje Minecraft</h2>
+
+    <p class="form-card-description">
+      Zaznacz wszystkie wersje, z którymi produkt ma działać.
+      Możesz wybrać kilka wersji jednocześnie.
+    </p>
+
+    <div class="versions">
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v1"
+          name="versions"
+          value="1.21.10"
+        >
+        <label for="v1">1.21.10</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v2"
+          name="versions"
+          value="1.21.9"
+        >
+        <label for="v2">1.21.9</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v3"
+          name="versions"
+          value="1.21.8"
+        >
+        <label for="v3">1.21.8</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v4"
+          name="versions"
+          value="1.21.7"
+        >
+        <label for="v4">1.21.7</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v5"
+          name="versions"
+          value="1.21.6"
+        >
+        <label for="v5">1.21.6</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v6"
+          name="versions"
+          value="1.21.5"
+        >
+        <label for="v6">1.21.5</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v7"
+          name="versions"
+          value="1.21.4"
+        >
+        <label for="v7">1.21.4</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v8"
+          name="versions"
+          value="1.21.3"
+        >
+        <label for="v8">1.21.3</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v9"
+          name="versions"
+          value="1.21.2"
+        >
+        <label for="v9">1.21.2</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v10"
+          name="versions"
+          value="1.21.1"
+        >
+        <label for="v10">1.21.1</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v11"
+          name="versions"
+          value="1.21"
+        >
+        <label for="v11">1.21</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v12"
+          name="versions"
+          value="1.20.6"
+        >
+        <label for="v12">1.20.6</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v13"
+          name="versions"
+          value="1.20.4"
+        >
+        <label for="v13">1.20.4</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v14"
+          name="versions"
+          value="1.20.2"
+        >
+        <label for="v14">1.20.2</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v15"
+          name="versions"
+          value="1.20.1"
+        >
+        <label for="v15">1.20.1</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v16"
+          name="versions"
+          value="1.20"
+        >
+        <label for="v16">1.20</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v17"
+          name="versions"
+          value="1.19.4"
+        >
+        <label for="v17">1.19.4</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v18"
+          name="versions"
+          value="1.19.2"
+        >
+        <label for="v18">1.19.2</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v19"
+          name="versions"
+          value="1.19"
+        >
+        <label for="v19">1.19</label>
+      </div>
+
+      <div class="version-option">
+        <input
+          type="checkbox"
+          id="v20"
+          name="versions"
+          value="1.18.2"
+        >
+        <label for="v20">1.18.2</label>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="form-card">
+
+    <h2>Dodatkowe informacje</h2>
+
+    <p class="form-card-description">
+      Dodaj plik oraz informacje, które pomogą administracji
+      zrozumieć Twoją propozycję.
+    </p>
+
+    <div class="form-grid">
+
+      <div class="form-group full">
+
+        <label for="requirements">
+          Wymagane pluginy / mody / zależności
+        </label>
+
+        <input
+          class="form-control"
+          id="requirements"
+          name="requirements"
+          type="text"
+          maxlength="500"
+          placeholder="np. WorldEdit, Vault, Skript"
+        >
+
+      </div>
+
+      <div class="form-group full">
+
+        <label for="proposal-file">
+          Plik produktu
+        </label>
+
+        <input
+          class="form-control file-control"
+          id="proposal-file"
+          name="proposal_file"
+          type="file"
+          accept=".zip,.rar,.7z,.mcworld,.mcpack,.mcaddon,.schem,.schematic,.sk,.yml,.yaml,.json,.txt,.mcfunction,.png,.jpg,.jpeg"
+        >
+
+        <div class="file-info">
+          Możesz dodać ZIP, RAR, 7Z, MCWORLD, MCPACK,
+          schemat, config, skrypt, TXT lub grafikę.
+          Maksymalny rozmiar pliku: 50 MB.
+        </div>
+
+      </div>
+
+      <div class="form-group full">
+
+        <label for="description">
+          Opis produktu <span class="required">*</span>
+        </label>
+
+        <textarea
+          class="form-control"
+          id="description"
+          name="description"
+          maxlength="5000"
+          placeholder="Opisz dokładnie, czym ma być ten produkt, co ma robić i jakie funkcje powinien posiadać..."
+          required
+        ></textarea>
+
+      </div>
+
+      <div class="form-group full">
+
+        <label for="instructions">
+          Instrukcja / sposób działania
+        </label>
+
+        <textarea
+          class="form-control"
+          id="instructions"
+          name="instructions"
+          maxlength="5000"
+          placeholder="Napisz, jak według Ciebie powinno wyglądać używanie lub konfiguracja produktu..."
+        ></textarea>
+
+      </div>
+
+      <div class="form-group full">
+
+        <label for="extra">
+          Dodatkowe informacje
+        </label>
+
+        <textarea
+          class="form-control"
+          id="extra"
+          name="extra"
+          maxlength="5000"
+          placeholder="Wszystko inne, co może być przydatne przy rozpatrywaniu propozycji..."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="form-card">
+
+    <h2>Wyślij propozycję</h2>
+
+    <p class="form-card-description">
+      Sprawdź dane przed wysłaniem. Propozycja zostanie przekazana
+      administracji do sprawdzenia.
+    </p>
+
+    <div class="check-row">
+
+      <input
+        type="checkbox"
+        id="confirmation"
+        required
+      >
+
+      <label for="confirmation">
+        Potwierdzam, że podane informacje są zgodne z moją propozycją
+        i rozumiem, że wysłanie formularza nie gwarantuje dodania
+        produktu do sklepu.
+      </label>
+
+    </div>
+
+  </section>
+
+  <div id="form-status"></div>
+
+  <div class="form-actions">
+
+    <a
+      href="index.html"
+      class="button"
+    >
+      Anuluj
+    </a>
+
+    <button
+      type="submit"
+      id="submit-suggestion"
+      class="button button-primary"
+    >
+      📤 Wyślij propozycję
+    </button>
+
+  </div>
+
+</form>
+
+
+  </main>
+
+  <footer class="site-footer">
+
+
+<div class="footer-inner">
+
+  <div class="footer-grid">
+
+    <div class="footer-column">
+
+      <a
+        href="index.html"
+        class="logo"
+      >
+
+        <img
+          src="assets/logo.png"
+          alt="ShadowTale"
+        >
+
+        <span class="logo-text">
+          <span class="logo-shadow">SHADOW</span>
+          <span class="logo-tale">TALE</span>
+          <span class="logo-pl">.PL</span>
+        </span>
+
+      </a>
+
+      <p>
+        ShadowTale.pl — Twój świat, twoje zasady.
+      </p>
+
+    </div>
+
+    <div class="footer-column">
+
+      <h3>Minecraft</h3>
+
+      <a href="minecraft.html">
+        Wszystkie
+      </a>
+
+      <a href="mc-skrypty.html">
+        Skrypty
+      </a>
+
+      <a href="mc-mapy.html">
+        Mapy
+      </a>
+
+      <a href="mc-configi.html">
+        Configi
+      </a>
+
+      <a href="mc-txt.html">
+        TXT
+      </a>
+
+      <a href="mc-skiny.html">
+        Skiny
+      </a>
+
+    </div>
+
+    <div class="footer-column">
+
+      <h3>Undertale</h3>
+
+      <a
+        href="undertale.html"
+        class="blocked-feature"
+        data-blocked="undertale"
+      >
+        Wszystkie
+      </a>
+
+      <a
+        href="ut-postacie.html"
+        class="blocked-feature"
+        data-blocked="undertale"
+      >
+        Lore postaci
+      </a>
+
+      <a
+        href="ut-przedmioty.html"
+        class="blocked-feature"
+        data-blocked="undertale"
+      >
+        Lore przedmiotów
+      </a>
+
+      <a
+        href="ut-dane.html"
+        class="blocked-feature"
+        data-blocked="undertale"
+      >
+        Dane / wykresy
+      </a>
+
+      <a
+        href="ut-save.html"
+        class="blocked-feature"
+        data-blocked="undertale"
+      >
+        Save'y
+      </a>
+
+      <a
+        href="ut-mody.html"
+        class="blocked-feature"
+        data-blocked="undertale"
+      >
+        Mody
+      </a>
+
+    </div>
+
+    <div class="footer-column">
+
+      <h3>Konto</h3>
+
+      <a href="konto.html">
+        Konto
+      </a>
+
+      <a href="ustawienia.html">
+        Ustawienia
+      </a>
+
+      <a href="statystyki.html">
+        Statystyki
+      </a>
+
+      <a href="historia.html">
+        Historia
+      </a>
+
+      <a href="platnosci.html">
+        Płatności
+      </a>
+
+    </div>
+
+    <div class="footer-column">
+
+      <h3>Pomoc</h3>
+
+      <a href="pomoc.html">
+        Centrum pomocy
+      </a>
+
+      <a href="ticket.html">
+        Ticket
+      </a>
+
+      <a href="propozycje.html">
+        Propozycje
+      </a>
+
+      <a href="regulaminy.html">
+        Regulaminy
+      </a>
+
+      <a href="prywatnosc.html">
+        Prywatność
+      </a>
+
+      <a href="cookies.html">
+        Cookies
+      </a>
+
+      <a href="zasady-zakupow.html">
+        Zasady zakupów
+      </a>
+
+      <a href="discord.html">
+        Discord
+      </a>
+
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+
+    <span>
+      © 2026 ShadowTale.pl
+    </span>
+
+    <span>
+      Twój świat, twoje zasady.
+    </span>
+
+  </div>
+
+</div>
+
+
+  </footer>
+
+  <script>
+    let supabaseClient = null;
+
+    const worldSelect =
+      document.getElementById("product-world");
+
+    const versionsCard =
+      document.getElementById("minecraft-versions-card");
+
+    const form =
+      document.getElementById("suggestion-form");
+
+    const statusBox =
+      document.getElementById("form-status");
+
+    const submitButton =
+      document.getElementById("submit-suggestion");
+
+    const proposalFile =
+      document.getElementById("proposal-file");
+
+    const MAX_FILE_SIZE =
+      50 * 1024 * 1024;
+
+    function getSupabase() {
+
+      if (
+        window.shadowSupabase &&
+        window.shadowSupabase.auth
+      ) {
+        return window.shadowSupabase;
+      }
+
+      if (
+        window.supabaseClient &&
+        window.supabaseClient.auth
+      ) {
+        return window.supabaseClient;
+      }
+
+      if (
+        typeof window.supabase === "undefined" ||
+        typeof window.supabase.createClient !== "function"
+      ) {
+        return null;
+      }
+
+      const config =
+        window.SUPABASE_CONFIG ||
+        window.supabaseConfig ||
+        {};
+
+      const url =
+        window.SUPABASE_URL ||
+        window.supabaseUrl ||
+        config.url ||
+        config.supabaseUrl;
+
+      const key =
+        window.SUPABASE_ANON_KEY ||
+        window.supabaseAnonKey ||
+        config.anonKey ||
+        config.supabaseAnonKey;
+
+      if (!url || !key) {
+        return null;
+      }
+
+      return window.supabase.createClient(
+        url,
+        key
+      );
+    }
+
+    function showStatus(
+      message,
+      type
+    ) {
+
+      statusBox.textContent =
+        message;
+
+      statusBox.className =
+        type;
+
+      statusBox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    async function getCurrentUser() {
+
+      if (!supabaseClient) {
+        return null;
+      }
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth.getUser();
+
+      if (error) {
+
+        console.error(
+          "Błąd pobierania użytkownika:",
+          error
+        );
+
+        return null;
+      }
+
+      return data?.user || null;
+    }
+
+    function sanitizeFileName(
+      name
+    ) {
+
+      return name
+        .normalize("NFD")
+        .replace(
+          /[\u0300-\u036f]/g,
+          ""
+        )
+        .replace(
+          /[^a-zA-Z0-9._-]/g,
+          "_"
+        )
+        .replace(
+          /_+/g,
+          "_"
+        );
+    }
+
+    async function uploadProposalFile(
+      file,
+      user
+    ) {
+
+      if (!file) {
+        return null;
+      }
+
+      if (
+        file.size >
+        MAX_FILE_SIZE
+      ) {
+
+        throw new Error(
+          "Wybrany plik jest za duży. Maksymalny rozmiar to 50 MB."
+        );
+      }
+
+      const safeName =
+        sanitizeFileName(
+          file.name
+        );
+
+      const extension =
+        safeName.includes(".")
+          ? safeName.substring(
+              safeName.lastIndexOf(".")
+            )
+          : "";
+
+      const baseName =
+        safeName
+          .replace(
+            /\.[^/.]+$/,
+            ""
+          )
+          .substring(
+            0,
+            80
+          );
+
+      const uniqueName =
+        `${Date.now()}_${baseName}${extension}`;
+
+      const filePath =
+        `proposals/${user.id}/${uniqueName}`;
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .storage
+          .from("products")
+          .upload(
+            filePath,
+            file,
+            {
+              upsert: false,
+              contentType:
+                file.type ||
+                "application/octet-stream"
+            }
+          );
+
+      if (error) {
+
+        console.error(
+          "Błąd wysyłania pliku:",
+          error
+        );
+
+        throw new Error(
+          "Nie udało się wysłać pliku: " +
+          error.message
+        );
+      }
+
+      return filePath;
+    }
+
+    worldSelect.addEventListener(
+      "change",
+      () => {
+
+        if (
+          worldSelect.value === "minecraft"
+        ) {
+
+          versionsCard.style.display =
+            "";
+
+        } else {
+
+          versionsCard.style.display =
+            "none";
+
+          document
+            .querySelectorAll(
+              'input[name="versions"]'
+            )
+            .forEach(
+              input => {
+                input.checked = false;
+              }
+            );
+        }
+      }
+    );
+
+    const productName =
+      document.getElementById(
+        "product-name"
+      );
+
+    const productSlug =
+      document.getElementById(
+        "product-slug"
+      );
+
+    productName.addEventListener(
+      "input",
+      () => {
+
+        if (
+          document.activeElement ===
+            productSlug &&
+          productSlug.value.trim() !== ""
+        ) {
+          return;
+        }
+
+        productSlug.value =
+          productName.value
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(
+              /[\u0300-\u036f]/g,
+              ""
+            )
+            .replace(
+              /[^a-z0-9]+/g,
+              "-"
+            )
+            .replace(
+              /^-+|-+$/g,
+              ""
+            );
+      }
+    );
+
+    form.addEventListener(
+      "submit",
+      async event => {
+
+        event.preventDefault();
+
+        statusBox.className = "";
+        statusBox.textContent = "";
+
+        submitButton.disabled =
+          true;
+
+        submitButton.textContent =
+          "⏳ Wysyłanie...";
+
+        try {
+
+          if (!supabaseClient) {
+            supabaseClient =
+              getSupabase();
+          }
+
+          if (!supabaseClient) {
+
+            throw new Error(
+              "Nie udało się połączyć z Supabase. Sprawdź config.js."
+            );
+          }
+
+          const user =
+            await getCurrentUser();
+
+          if (!user) {
+
+            throw new Error(
+              "Musisz być zalogowany, aby wysłać propozycję."
+            );
+          }
+
+          const versions =
+            Array.from(
+              document.querySelectorAll(
+                'input[name="versions"]:checked'
+              )
+            ).map(
+              input => input.value
+            );
+
+          const file =
+            proposalFile.files?.[0] ||
+            null;
+
+          let uploadedFilePath =
+            null;
+
+          if (file) {
+
+            submitButton.textContent =
+              "⏳ Wysyłanie pliku...";
+
+            uploadedFilePath =
+              await uploadProposalFile(
+                file,
+                user
+              );
+          }
+
+          const extra =
+            document
+              .getElementById("extra")
+              .value
+              .trim();
+
+          let finalExtra =
+            extra;
+
+          if (uploadedFilePath) {
+
+            finalExtra =
+              `${extra}${extra ? "\n\n" : ""}Załączony plik: ${uploadedFilePath}`;
+          }
+
+          const proposal = {
+
+            user_id:
+              user.id,
+
+            product_name:
+              document
+                .getElementById(
+                  "product-name"
+                )
+                .value
+                .trim(),
+
+            slug:
+              document
+                .getElementById(
+                  "product-slug"
+                )
+                .value
+                .trim(),
+
+            world:
+              document
+                .getElementById(
+                  "product-world"
+                )
+                .value,
+
+            product_type:
+              document
+                .getElementById(
+                  "product-type"
+                )
+                .value,
+
+            price:
+              document
+                .getElementById(
+                  "product-price"
+                )
+                .value
+                ? Number(
+                    document
+                      .getElementById(
+                        "product-price"
+                      )
+                      .value
+                  )
+                : null,
+
+            versions:
+              versions,
+
+            requirements:
+              document
+                .getElementById(
+                  "requirements"
+                )
+                .value
+                .trim(),
+
+            description:
+              document
+                .getElementById(
+                  "description"
+                )
+                .value
+                .trim(),
+
+            instructions:
+              document
+                .getElementById(
+                  "instructions"
+                )
+                .value
+                .trim(),
+
+            extra:
+              finalExtra,
+
+            status:
+              "pending"
+          };
+
+          submitButton.textContent =
+            "⏳ Zapisywanie...";
+
+          const {
+            error
+          } =
+            await supabaseClient
+              .from(
+                "product_proposals"
+              )
+              .insert(
+                proposal
+              );
+
+          if (error) {
+
+            console.error(
+              "Błąd zapisu propozycji:",
+              error
+            );
+
+            throw new Error(
+              "Nie udało się wysłać propozycji: " +
+              error.message
+            );
+          }
+
+          showStatus(
+            "Propozycja została wysłana. Administracja może ją teraz sprawdzić w panelu.",
+            "success"
+          );
+
+          form.reset();
+
+          versionsCard.style.display =
+            "none";
+
+        } catch (error) {
+
+          console.error(error);
+
+          showStatus(
+            error.message ||
+            "Wystąpił nieznany błąd.",
+            "error"
+          );
+
+        } finally {
+
+          submitButton.disabled =
+            false;
+
+          submitButton.textContent =
+            "📤 Wyślij propozycję";
+        }
+      }
+    );
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        supabaseClient =
+          getSupabase();
+
+        if (
+          worldSelect.value !==
+          "minecraft"
+        ) {
+
+          versionsCard.style.display =
+            "none";
+        }
+
+      }
+    );
+  </script>
+
+  <script src="app.js"></script>
+  <script src="stats-tracker.js"></script>
+
+</body>
+</html>
