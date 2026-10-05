@@ -13,14 +13,12 @@
             --bg2: #090614;
             --panel: rgba(15, 12, 29, 0.94);
             --panel2: rgba(22, 17, 42, 0.96);
-
             --purple: #9b5cff;
             --purple2: #6f32d9;
             --blue: #5865f2;
             --green: #39e58c;
             --red: #ff5470;
             --yellow: #ffd166;
-
             --text: #ffffff;
             --muted: #a9a4bd;
 
@@ -83,8 +81,13 @@
                 radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1px),
                 radial-gradient(circle, rgba(155,92,255,.5) 1px, transparent 1px);
 
-            background-size: 90px 90px, 140px 140px;
-            background-position: 10px 20px, 50px 70px;
+            background-size:
+                90px 90px,
+                140px 140px;
+
+            background-position:
+                10px 20px,
+                50px 70px;
         }
 
         button {
@@ -102,9 +105,12 @@
 
             width: 100%;
 
-            border-bottom: 1px solid rgba(155, 92, 255, 0.18);
+            border-bottom:
+                1px solid rgba(155, 92, 255, 0.18);
 
-            background: rgba(5, 5, 11, 0.86);
+            background:
+                rgba(5, 5, 11, 0.86);
+
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
         }
@@ -112,17 +118,20 @@
         .topbar-inner {
             width: min(1180px, calc(100% - 30px));
             min-height: 72px;
+
             margin: 0 auto;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             gap: 20px;
         }
 
         .logo {
             display: flex;
             align-items: center;
+
             gap: 11px;
 
             color: white;
@@ -131,6 +140,7 @@
             font-size: 20px;
             font-weight: 900;
             letter-spacing: 1px;
+
             white-space: nowrap;
         }
 
@@ -139,7 +149,6 @@
             height: 40px;
 
             object-fit: contain;
-
             border-radius: 10px;
 
             box-shadow:
@@ -154,14 +163,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+
             gap: 8px;
 
             padding: 10px 16px;
 
-            border: 1px solid rgba(155, 92, 255, 0.45);
+            border:
+                1px solid rgba(155, 92, 255, 0.45);
+
             border-radius: 12px;
 
             color: white;
+
             background:
                 linear-gradient(
                     135deg,
@@ -184,7 +197,8 @@
         .back-button:hover {
             transform: translateY(-2px);
 
-            border-color: rgba(155, 92, 255, 0.85);
+            border-color:
+                rgba(155, 92, 255, 0.85);
 
             background:
                 linear-gradient(
@@ -237,6 +251,7 @@
 
             -webkit-background-clip: text;
             background-clip: text;
+
             color: transparent;
 
             text-shadow:
@@ -247,7 +262,6 @@
             margin-top: 12px;
 
             color: var(--muted);
-
             font-size: 14px;
         }
 
@@ -258,19 +272,25 @@
         .score-row {
             display: flex;
             justify-content: center;
-            gap: 12px;
+
+            gap: 10px;
 
             margin: 25px auto 20px;
         }
 
         .score-box {
-            min-width: 130px;
+            flex: 1;
+            min-width: 0;
 
-            padding: 12px 18px;
+            max-width: 175px;
+
+            padding: 12px 14px;
 
             text-align: center;
 
-            border: 1px solid rgba(155, 92, 255, 0.20);
+            border:
+                1px solid rgba(155, 92, 255, 0.20);
+
             border-radius: 15px;
 
             background:
@@ -287,7 +307,7 @@
         .score-label {
             color: var(--muted);
 
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
 
             text-transform: uppercase;
@@ -299,7 +319,7 @@
 
             color: white;
 
-            font-size: 24px;
+            font-size: 23px;
             font-weight: 1000;
         }
 
@@ -316,7 +336,9 @@
         .board-shell {
             padding: 10px;
 
-            border: 1px solid rgba(155, 92, 255, 0.22);
+            border:
+                1px solid rgba(155, 92, 255, 0.22);
+
             border-radius: 20px;
 
             background:
@@ -363,7 +385,8 @@
                     rgba(17, 14, 30, .9)
                 );
 
-            border: 1px solid rgba(255,255,255,.025);
+            border:
+                1px solid rgba(255,255,255,.025);
 
             transition:
                 background .12s ease,
@@ -372,7 +395,8 @@
         }
 
         .cell.filled {
-            border-color: rgba(255,255,255,.18);
+            border-color:
+                rgba(255,255,255,.18);
 
             box-shadow:
                 inset 0 2px 0 rgba(255,255,255,.18),
@@ -380,15 +404,35 @@
                 0 3px 10px rgba(0,0,0,.28);
         }
 
+        /*
+         * WAŻNE:
+         * preview nie zmienia tła istniejącego klocka.
+         */
+
         .cell.preview {
-            opacity: .75;
+            opacity: .82;
 
             transform: scale(.92);
 
-            border-color: rgba(255,255,255,.2);
+            border-color:
+                rgba(255,255,255,.30);
 
             box-shadow:
                 0 0 15px currentColor;
+        }
+
+        .cell.preview-on-filled {
+            opacity: 1;
+
+            transform: scale(1);
+
+            border-color:
+                rgba(255,84,112,.75);
+
+            box-shadow:
+                inset 0 2px 0 rgba(255,255,255,.18),
+                inset 0 -3px 5px rgba(0,0,0,.22),
+                0 0 12px rgba(255,84,112,.25);
         }
 
         .cell.invalid {
@@ -418,12 +462,12 @@
 
         .pieces {
             width: min(600px, 100%);
-
             min-height: 125px;
 
             display: flex;
             align-items: center;
             justify-content: center;
+
             gap: 18px;
 
             padding: 15px;
@@ -477,6 +521,7 @@
 
         .piece.dragging {
             position: fixed;
+
             z-index: 1000;
 
             pointer-events: none;
@@ -499,7 +544,8 @@
 
             border-radius: 5px;
 
-            border: 1px solid rgba(255,255,255,.16);
+            border:
+                1px solid rgba(255,255,255,.16);
 
             box-shadow:
                 inset 0 2px 0 rgba(255,255,255,.16),
@@ -532,6 +578,7 @@
         .overlay {
             position: fixed;
             inset: 0;
+
             z-index: 500;
 
             display: flex;
@@ -582,19 +629,22 @@
                 0 30px 100px rgba(0,0,0,.6),
                 0 0 50px rgba(155,92,255,.12);
 
-            transform: translateY(15px) scale(.96);
+            transform:
+                translateY(15px)
+                scale(.96);
 
             transition:
                 transform .25s ease;
         }
 
         .overlay.show .game-over {
-            transform: translateY(0) scale(1);
+            transform:
+                translateY(0)
+                scale(1);
         }
 
         .game-over-icon {
             font-size: 50px;
-
             margin-bottom: 10px;
         }
 
@@ -605,7 +655,6 @@
 
         .game-over p {
             margin-top: 8px;
-
             color: var(--muted);
         }
 
@@ -616,6 +665,16 @@
             font-weight: 1000;
 
             color: var(--purple);
+        }
+
+        .final-record {
+            margin-top: -10px;
+            margin-bottom: 20px;
+
+            color: var(--green);
+
+            font-size: 13px;
+            font-weight: 800;
         }
 
         .overlay-buttons {
@@ -673,6 +732,7 @@
 
         .score-popup {
             position: fixed;
+
             z-index: 300;
 
             pointer-events: none;
@@ -692,17 +752,23 @@
         @keyframes scoreUp {
             0% {
                 opacity: 0;
-                transform: translateY(10px) scale(.8);
+                transform:
+                    translateY(10px)
+                    scale(.8);
             }
 
             20% {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform:
+                    translateY(0)
+                    scale(1);
             }
 
             100% {
                 opacity: 0;
-                transform: translateY(-45px) scale(1.05);
+                transform:
+                    translateY(-45px)
+                    scale(1.05);
             }
         }
 
@@ -711,6 +777,7 @@
         ========================= */
 
         @media (max-width: 650px) {
+
             :root {
                 --cell: calc((100vw - 54px) / 8);
                 --gap: 4px;
@@ -750,15 +817,19 @@
 
             .score-row {
                 margin-top: 20px;
+                gap: 6px;
             }
 
             .score-box {
-                min-width: 110px;
-                padding: 10px 12px;
+                padding: 10px 7px;
+            }
+
+            .score-label {
+                font-size: 8px;
             }
 
             .score-value {
-                font-size: 21px;
+                font-size: 20px;
             }
 
             .board-shell {
@@ -799,6 +870,7 @@
         }
 
         @media (max-width: 390px) {
+
             .piece-cell {
                 width: 15px;
                 height: 15px;
@@ -830,6 +902,7 @@
 
             <a href="index.html" class="logo">
                 <img src="assets/logo.png" alt="ShadowTale">
+
                 <div class="logo-text">
                     SHADOW<span>TALE</span>
                 </div>
@@ -850,8 +923,13 @@
     <main>
 
         <section class="game-title">
+
             <h1>💥 BLOCK BLAST</h1>
-            <p>Układaj klocki, niszcz linie i zdobywaj jak najwięcej punktów.</p>
+
+            <p>
+                Układaj klocki, niszcz linie i zdobywaj jak najwięcej punktów.
+            </p>
+
         </section>
 
 
@@ -860,23 +938,50 @@
         <div class="score-row">
 
             <div class="score-box">
+
                 <div class="score-label">
-                    Wynik
+                    Teraz
                 </div>
 
-                <div class="score-value" id="score">
+                <div
+                    class="score-value"
+                    id="score"
+                >
                     0
                 </div>
+
             </div>
 
+
             <div class="score-box">
+
                 <div class="score-label">
-                    Rekord
+                    Rekord sesji
                 </div>
 
-                <div class="score-value" id="best-score">
+                <div
+                    class="score-value"
+                    id="session-best-score"
+                >
                     0
                 </div>
+
+            </div>
+
+
+            <div class="score-box">
+
+                <div class="score-label">
+                    Rekord all time
+                </div>
+
+                <div
+                    class="score-value"
+                    id="best-score"
+                >
+                    0
+                </div>
+
             </div>
 
         </div>
@@ -909,9 +1014,13 @@
 
 
             <div class="info">
+
                 <strong>Jak grać?</strong><br>
+
                 Przeciągnij klocek na planszę.
-                Wypełnij cały rząd lub kolumnę, aby ją usunąć.
+                Wypełnij cały rząd lub kolumnę,
+                aby ją usunąć.
+
             </div>
 
         </section>
@@ -934,7 +1043,9 @@
                 💥
             </div>
 
-            <h2>Koniec gry!</h2>
+            <h2>
+                Koniec gry!
+            </h2>
 
             <p>
                 Nie ma już miejsca na kolejny klocek.
@@ -945,6 +1056,13 @@
                 class="final-score"
             >
                 0
+            </div>
+
+            <div
+                id="final-record"
+                class="final-record"
+            >
+                Rekord sesji: 0
             </div>
 
             <div class="overlay-buttons">
@@ -972,6 +1090,7 @@
 
 
     <script>
+
         /*
          * ==========================================
          * SHADOWTALE — BLOCK BLAST
@@ -989,6 +1108,9 @@
         const scoreElement =
             document.getElementById("score");
 
+        const sessionBestScoreElement =
+            document.getElementById("session-best-score");
+
         const bestScoreElement =
             document.getElementById("best-score");
 
@@ -998,6 +1120,9 @@
         const finalScoreElement =
             document.getElementById("final-score");
 
+        const finalRecordElement =
+            document.getElementById("final-record");
+
         const restartButton =
             document.getElementById("restart-button");
 
@@ -1006,8 +1131,24 @@
 
         let score = 0;
 
+        /*
+         * REKORD SESJI
+         * Resetuje się po odświeżeniu strony.
+         */
+        let sessionBestScore = 0;
+
+
+        /*
+         * REKORD ALL TIME
+         * Zostaje zapisany w przeglądarce.
+         */
         let bestScore =
-            Number(localStorage.getItem("shadowtale_block_best") || 0);
+            Number(
+                localStorage.getItem(
+                    "shadowtale_block_best"
+                ) || 0
+            );
+
 
         let pieces = [];
 
@@ -1155,8 +1296,11 @@
          */
 
         function randomItem(array) {
+
             return array[
-                Math.floor(Math.random() * array.length)
+                Math.floor(
+                    Math.random() * array.length
+                )
             ];
         }
 
@@ -1169,11 +1313,20 @@
 
             board = [];
 
-            for (let row = 0; row < SIZE; row++) {
+            for (
+                let row = 0;
+                row < SIZE;
+                row++
+            ) {
 
                 const line = [];
 
-                for (let col = 0; col < SIZE; col++) {
+                for (
+                    let col = 0;
+                    col < SIZE;
+                    col++
+                ) {
+
                     line.push(null);
                 }
 
@@ -1190,9 +1343,17 @@
 
             boardElement.innerHTML = "";
 
-            for (let row = 0; row < SIZE; row++) {
+            for (
+                let row = 0;
+                row < SIZE;
+                row++
+            ) {
 
-                for (let col = 0; col < SIZE; col++) {
+                for (
+                    let col = 0;
+                    col < SIZE;
+                    col++
+                ) {
 
                     const cell =
                         document.createElement("div");
@@ -1201,6 +1362,7 @@
 
                     cell.dataset.row = row;
                     cell.dataset.col = col;
+
 
                     if (board[row][col]) {
 
@@ -1214,6 +1376,7 @@
                         cell.style.color =
                             board[row][col];
                     }
+
 
                     boardElement.appendChild(cell);
                 }
@@ -1246,13 +1409,22 @@
             hex = hex.replace("#", "");
 
             let r =
-                parseInt(hex.substring(0,2), 16);
+                parseInt(
+                    hex.substring(0,2),
+                    16
+                );
 
             let g =
-                parseInt(hex.substring(2,4), 16);
+                parseInt(
+                    hex.substring(2,4),
+                    16
+                );
 
             let b =
-                parseInt(hex.substring(4,6), 16);
+                parseInt(
+                    hex.substring(4,6),
+                    16
+                );
 
             r = Math.max(0, r - amount);
             g = Math.max(0, g - amount);
@@ -1275,22 +1447,113 @@
                 randomItem(SHAPES);
 
             return {
-                shape: shape.map(cell => [...cell]),
-                color: randomItem(COLORS)
+
+                shape:
+                    shape.map(cell => [...cell]),
+
+                color:
+                    randomItem(COLORS)
             };
         }
 
 
         /*
          * NOWA TRÓJKA KLOCKÓW
+         *
+         * Najważniejsza zmiana:
+         *
+         * Nie losujemy bezmyślnie trzech klocków.
+         * Sprawdzamy cały zestaw i jeśli żaden
+         * klocek nie może zostać położony,
+         * losujemy ponownie.
          */
 
         function generatePieces() {
 
+            const MAX_ATTEMPTS = 100;
+
+            for (
+                let attempt = 0;
+                attempt < MAX_ATTEMPTS;
+                attempt++
+            ) {
+
+                const newPieces = [
+                    createPiece(),
+                    createPiece(),
+                    createPiece()
+                ];
+
+
+                /*
+                 * Sprawdzamy, czy przynajmniej jeden
+                 * z trzech klocków ma miejsce.
+                 */
+
+                let playable = false;
+
+                for (const piece of newPieces) {
+
+                    for (
+                        let row = 0;
+                        row < SIZE && !playable;
+                        row++
+                    ) {
+
+                        for (
+                            let col = 0;
+                            col < SIZE;
+                            col++
+                        ) {
+
+                            if (
+                                canPlace(
+                                    piece,
+                                    row,
+                                    col
+                                )
+                            ) {
+
+                                playable = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (playable) {
+                        break;
+                    }
+                }
+
+
+                if (playable) {
+
+                    pieces = newPieces;
+
+                    renderPieces();
+
+                    return;
+                }
+            }
+
+
+            /*
+             * Awaryjnie tworzymy małe, łatwe klocki.
+             */
+
             pieces = [
-                createPiece(),
-                createPiece(),
-                createPiece()
+                {
+                    shape: [[0,0]],
+                    color: randomItem(COLORS)
+                },
+                {
+                    shape: [[0,0],[0,1]],
+                    color: randomItem(COLORS)
+                },
+                {
+                    shape: [[0,0],[1,0]],
+                    color: randomItem(COLORS)
+                }
             ];
 
             renderPieces();
@@ -1312,10 +1575,14 @@
 
                 slot.className = "piece-slot";
 
+
                 if (!piece) {
+
                     piecesElement.appendChild(slot);
+
                     return;
                 }
+
 
                 const pieceElement =
                     document.createElement("div");
@@ -1324,11 +1591,21 @@
 
                 pieceElement.dataset.index = index;
 
+
                 const maxRow =
-                    Math.max(...piece.shape.map(x => x[0]));
+                    Math.max(
+                        ...piece.shape.map(
+                            x => x[0]
+                        )
+                    );
 
                 const maxCol =
-                    Math.max(...piece.shape.map(x => x[1]));
+                    Math.max(
+                        ...piece.shape.map(
+                            x => x[1]
+                        )
+                    );
+
 
                 pieceElement.style.gridTemplateColumns =
                     `repeat(${maxCol + 1}, 26px)`;
@@ -1336,31 +1613,39 @@
                 pieceElement.style.gridTemplateRows =
                     `repeat(${maxRow + 1}, 26px)`;
 
-                piece.shape.forEach(([row, col]) => {
 
-                    const block =
-                        document.createElement("div");
+                piece.shape.forEach(
+                    ([row, col]) => {
 
-                    block.className = "piece-cell";
+                        const block =
+                            document.createElement("div");
 
-                    block.style.gridRow =
-                        row + 1;
+                        block.className =
+                            "piece-cell";
 
-                    block.style.gridColumn =
-                        col + 1;
+                        block.style.gridRow =
+                            row + 1;
 
-                    block.style.background =
-                        createBlockGradient(
-                            piece.color
+                        block.style.gridColumn =
+                            col + 1;
+
+                        block.style.background =
+                            createBlockGradient(
+                                piece.color
+                            );
+
+                        pieceElement.appendChild(
+                            block
                         );
+                    }
+                );
 
-                    pieceElement.appendChild(block);
-                });
 
                 setupPieceDrag(
                     pieceElement,
                     index
                 );
+
 
                 slot.appendChild(pieceElement);
 
@@ -1373,12 +1658,23 @@
          * SPRAWDZANIE CZY KLOCEK MOŻNA POŁOŻYĆ
          */
 
-        function canPlace(piece, startRow, startCol) {
+        function canPlace(
+            piece,
+            startRow,
+            startCol
+        ) {
 
-            for (const [row, col] of piece.shape) {
+            for (
+                const [row, col]
+                of piece.shape
+            ) {
 
-                const r = startRow + row;
-                const c = startCol + col;
+                const r =
+                    startRow + row;
+
+                const c =
+                    startCol + col;
+
 
                 if (
                     r < 0 ||
@@ -1386,10 +1682,15 @@
                     c < 0 ||
                     c >= SIZE
                 ) {
+
                     return false;
                 }
 
-                if (board[r][c] !== null) {
+
+                if (
+                    board[r][c] !== null
+                ) {
+
                     return false;
                 }
             }
@@ -1402,18 +1703,30 @@
          * POŁOŻENIE KLOCKA
          */
 
-        function placePiece(piece, startRow, startCol) {
+        function placePiece(
+            piece,
+            startRow,
+            startCol
+        ) {
 
-            piece.shape.forEach(([row, col]) => {
+            piece.shape.forEach(
+                ([row, col]) => {
 
-                board[startRow + row][startCol + col] =
-                    piece.color;
-            });
+                    board[
+                        startRow + row
+                    ][
+                        startCol + col
+                    ] = piece.color;
+                }
+            );
+
 
             const blocks =
                 piece.shape.length;
 
+
             score += blocks;
+
 
             showScorePopup(
                 `+${blocks}`,
@@ -1421,25 +1734,38 @@
                 startCol
             );
 
+
             const cleared =
                 clearLines();
 
+
             if (cleared > 0) {
 
-                score +=
+                const linePoints =
                     cleared * 10;
 
+                score += linePoints;
+
+
+                /*
+                 * Bonus za usunięcie wielu
+                 * linii jednocześnie.
+                 */
+
                 if (cleared >= 2) {
+
                     score +=
                         cleared * 10;
                 }
 
+
                 showScorePopup(
-                    `+${cleared * 10}`,
+                    `+${linePoints}`,
                     Math.floor(SIZE / 2),
                     Math.floor(SIZE / 2)
                 );
             }
+
 
             updateScore();
 
@@ -1456,13 +1782,25 @@
             const rowsToClear = [];
             const colsToClear = [];
 
-            for (let row = 0; row < SIZE; row++) {
+
+            for (
+                let row = 0;
+                row < SIZE;
+                row++
+            ) {
 
                 let full = true;
 
-                for (let col = 0; col < SIZE; col++) {
+                for (
+                    let col = 0;
+                    col < SIZE;
+                    col++
+                ) {
 
-                    if (board[row][col] === null) {
+                    if (
+                        board[row][col] === null
+                    ) {
+
                         full = false;
                         break;
                     }
@@ -1474,13 +1812,24 @@
             }
 
 
-            for (let col = 0; col < SIZE; col++) {
+            for (
+                let col = 0;
+                col < SIZE;
+                col++
+            ) {
 
                 let full = true;
 
-                for (let row = 0; row < SIZE; row++) {
+                for (
+                    let row = 0;
+                    row < SIZE;
+                    row++
+                ) {
 
-                    if (board[row][col] === null) {
+                    if (
+                        board[row][col] === null
+                    ) {
+
                         full = false;
                         break;
                     }
@@ -1492,29 +1841,45 @@
             }
 
 
-            rowsToClear.forEach(row => {
+            rowsToClear.forEach(
+                row => {
 
-                for (let col = 0; col < SIZE; col++) {
-                    board[row][col] = null;
+                    for (
+                        let col = 0;
+                        col < SIZE;
+                        col++
+                    ) {
+
+                        board[row][col] = null;
+                    }
                 }
-            });
+            );
 
 
-            colsToClear.forEach(col => {
+            colsToClear.forEach(
+                col => {
 
-                for (let row = 0; row < SIZE; row++) {
-                    board[row][col] = null;
+                    for (
+                        let row = 0;
+                        row < SIZE;
+                        row++
+                    ) {
+
+                        board[row][col] = null;
+                    }
                 }
-            });
+            );
 
 
-            return rowsToClear.length +
-                   colsToClear.length;
+            return (
+                rowsToClear.length +
+                colsToClear.length
+            );
         }
 
 
         /*
-         * AKTUALIZACJA PUNKTÓW
+         * AKTUALIZACJA WYNIKÓW
          */
 
         function updateScore() {
@@ -1522,7 +1887,33 @@
             scoreElement.textContent =
                 score.toLocaleString("pl-PL");
 
-            if (score > bestScore) {
+
+            /*
+             * REKORD SESJI
+             */
+
+            if (
+                score > sessionBestScore
+            ) {
+
+                sessionBestScore =
+                    score;
+            }
+
+
+            sessionBestScoreElement.textContent =
+                sessionBestScore.toLocaleString(
+                    "pl-PL"
+                );
+
+
+            /*
+             * REKORD ALL TIME
+             */
+
+            if (
+                score > bestScore
+            ) {
 
                 bestScore = score;
 
@@ -1532,8 +1923,11 @@
                 );
             }
 
+
             bestScoreElement.textContent =
-                bestScore.toLocaleString("pl-PL");
+                bestScore.toLocaleString(
+                    "pl-PL"
+                );
         }
 
 
@@ -1552,10 +1946,15 @@
                     `[data-row="${row}"][data-col="${col}"]`
                 );
 
-            if (!cell) return;
+
+            if (!cell) {
+                return;
+            }
+
 
             const rect =
                 cell.getBoundingClientRect();
+
 
             const popup =
                 document.createElement("div");
@@ -1566,16 +1965,23 @@
             popup.textContent =
                 text;
 
+
             popup.style.left =
                 `${rect.left + rect.width / 2}px`;
 
             popup.style.top =
                 `${rect.top}px`;
 
-            document.body.appendChild(popup);
+
+            document.body.appendChild(
+                popup
+            );
+
 
             setTimeout(() => {
+
                 popup.remove();
+
             }, 800);
         }
 
@@ -1588,11 +1994,22 @@
 
             for (const piece of pieces) {
 
-                if (!piece) continue;
+                if (!piece) {
+                    continue;
+                }
 
-                for (let row = 0; row < SIZE; row++) {
 
-                    for (let col = 0; col < SIZE; col++) {
+                for (
+                    let row = 0;
+                    row < SIZE;
+                    row++
+                ) {
+
+                    for (
+                        let col = 0;
+                        col < SIZE;
+                        col++
+                    ) {
 
                         if (
                             canPlace(
@@ -1601,11 +2018,13 @@
                                 col
                             )
                         ) {
+
                             return true;
                         }
                     }
                 }
             }
+
 
             return false;
         }
@@ -1617,39 +2036,65 @@
 
         function checkGameOver() {
 
+            /*
+             * Jeżeli wszystkie trzy klocki
+             * zostały wykorzystane, generujemy
+             * następną trójkę.
+             */
+
             if (
-                pieces.every(piece => !piece)
+                pieces.every(
+                    piece => !piece
+                )
             ) {
+
                 return;
             }
+
+
+            /*
+             * Jeżeli nie ma żadnego ruchu,
+             * dopiero wtedy jest Game Over.
+             */
 
             if (!hasAnyMove()) {
 
                 finalScoreElement.textContent =
                     score.toLocaleString("pl-PL");
 
-                overlay.classList.add("show");
+
+                finalRecordElement.textContent =
+                    `Rekord sesji: ${sessionBestScore.toLocaleString("pl-PL")} • All time: ${bestScore.toLocaleString("pl-PL")}`;
+
+
+                overlay.classList.add(
+                    "show"
+                );
             }
         }
 
 
         /*
-         * RESET
+         * RESET GRY
          */
 
         function restartGame() {
 
-            overlay.classList.remove("show");
+            overlay.classList.remove(
+                "show"
+            );
+
 
             score = 0;
 
             updateScore();
 
+
             createBoard();
 
-            generatePieces();
-
             renderBoard();
+
+            generatePieces();
         }
 
 
@@ -1664,34 +2109,48 @@
 
             let pointerId = null;
 
+
             function startDrag(event) {
 
-                if (!pieces[index]) return;
+                if (!pieces[index]) {
+                    return;
+                }
+
 
                 event.preventDefault();
+
 
                 pointerId =
                     event.pointerId;
 
+
                 const piece =
                     pieces[index];
 
+
                 dragging = {
+
                     index,
+
                     piece,
+
                     element,
 
                     x: event.clientX,
+
                     y: event.clientY
                 };
+
 
                 element.classList.add(
                     "dragging"
                 );
 
+
                 document.body.appendChild(
                     element
                 );
+
 
                 element.style.position =
                     "fixed";
@@ -1702,9 +2161,11 @@
                 element.style.top =
                     event.clientY + "px";
 
+
                 element.setPointerCapture(
                     pointerId
                 );
+
 
                 updatePreview(
                     event.clientX,
@@ -1719,10 +2180,13 @@
                     !dragging ||
                     event.pointerId !== pointerId
                 ) {
+
                     return;
                 }
 
+
                 event.preventDefault();
+
 
                 dragging.x =
                     event.clientX;
@@ -1730,11 +2194,13 @@
                 dragging.y =
                     event.clientY;
 
+
                 element.style.left =
                     event.clientX + "px";
 
                 element.style.top =
                     event.clientY + "px";
+
 
                 updatePreview(
                     event.clientX,
@@ -1749,10 +2215,13 @@
                     !dragging ||
                     event.pointerId !== pointerId
                 ) {
+
                     return;
                 }
 
+
                 event.preventDefault();
+
 
                 const position =
                     getBoardPosition(
@@ -1760,19 +2229,24 @@
                         event.clientY
                     );
 
+
                 clearPreview();
+
 
                 element.classList.remove(
                     "dragging"
                 );
 
+
                 element.style.position = "";
                 element.style.left = "";
                 element.style.top = "";
 
+
                 piecesElement
                     .children[index]
                     ?.appendChild(element);
+
 
                 if (
                     position &&
@@ -1789,9 +2263,17 @@
                         position.col
                     );
 
+
                     pieces[index] = null;
 
                     renderPieces();
+
+
+                    /*
+                     * Po wykorzystaniu wszystkich
+                     * trzech klocków dostajemy nową
+                     * trójkę.
+                     */
 
                     if (
                         pieces.every(
@@ -1802,6 +2284,11 @@
                         generatePieces();
 
                     } else {
+
+                        /*
+                         * Sprawdzamy, czy nadal
+                         * istnieje możliwy ruch.
+                         */
 
                         setTimeout(
                             checkGameOver,
@@ -1814,7 +2301,9 @@
                     renderPieces();
                 }
 
+
                 dragging = null;
+
                 pointerId = null;
             }
 
@@ -1853,11 +2342,13 @@
             const rect =
                 boardElement.getBoundingClientRect();
 
+
             const x =
                 clientX - rect.left;
 
             const y =
                 clientY - rect.top;
+
 
             if (
                 x < 0 ||
@@ -1865,8 +2356,10 @@
                 x > rect.width ||
                 y > rect.height
             ) {
+
                 return null;
             }
+
 
             const cellWidth =
                 rect.width / SIZE;
@@ -1874,11 +2367,17 @@
             const cellHeight =
                 rect.height / SIZE;
 
+
             const col =
-                Math.floor(x / cellWidth);
+                Math.floor(
+                    x / cellWidth
+                );
 
             const row =
-                Math.floor(y / cellHeight);
+                Math.floor(
+                    y / cellHeight
+                );
+
 
             if (
                 row < 0 ||
@@ -1886,8 +2385,10 @@
                 col < 0 ||
                 col >= SIZE
             ) {
+
                 return null;
             }
+
 
             return {
                 row,
@@ -1898,6 +2399,11 @@
 
         /*
          * PODGLĄD KLOCKA
+         *
+         * WAŻNA POPRAWKA:
+         *
+         * Nie zmieniamy background istniejącego
+         * klocka podczas podglądu.
          */
 
         function updatePreview(
@@ -1907,7 +2413,11 @@
 
             clearPreview();
 
-            if (!dragging) return;
+
+            if (!dragging) {
+                return;
+            }
+
 
             const position =
                 getBoardPosition(
@@ -1915,10 +2425,15 @@
                     clientY
                 );
 
-            if (!position) return;
+
+            if (!position) {
+                return;
+            }
+
 
             const piece =
                 dragging.piece;
+
 
             const valid =
                 canPlace(
@@ -1926,6 +2441,7 @@
                     position.row,
                     position.col
                 );
+
 
             piece.shape.forEach(
                 ([row, col]) => {
@@ -1936,40 +2452,77 @@
                     const c =
                         position.col + col;
 
+
                     if (
                         r < 0 ||
                         r >= SIZE ||
                         c < 0 ||
                         c >= SIZE
                     ) {
+
                         return;
                     }
+
 
                     const cell =
                         boardElement.querySelector(
                             `[data-row="${r}"][data-col="${c}"]`
                         );
 
-                    if (!cell) return;
 
-                    cell.classList.add(
-                        valid
-                            ? "preview"
-                            : "invalid"
-                    );
-
-                    if (valid) {
-
-                        cell.style.background =
-                            createBlockGradient(
-                                piece.color
-                            );
-
-                        cell.style.color =
-                            piece.color;
+                    if (!cell) {
+                        return;
                     }
 
-                    previewCells.push(cell);
+
+                    /*
+                     * Jeżeli pole jest już zajęte,
+                     * NIE NADPISUJEMY jego koloru.
+                     */
+
+                    if (
+                        board[r][c] !== null
+                    ) {
+
+                        cell.classList.add(
+                            "preview-on-filled"
+                        );
+
+                        if (!valid) {
+
+                            cell.classList.add(
+                                "invalid"
+                            );
+                        }
+
+                    } else {
+
+                        if (valid) {
+
+                            cell.classList.add(
+                                "preview"
+                            );
+
+                            cell.style.background =
+                                createBlockGradient(
+                                    piece.color
+                                );
+
+                            cell.style.color =
+                                piece.color;
+
+                        } else {
+
+                            cell.classList.add(
+                                "invalid"
+                            );
+                        }
+                    }
+
+
+                    previewCells.push(
+                        cell
+                    );
                 }
             );
         }
@@ -1977,20 +2530,52 @@
 
         /*
          * CZYSZCZENIE PODGLĄDU
+         *
+         * Ważne:
+         * Przywracamy kolor tylko pustym
+         * polom. Postawione klocki zachowują
+         * swój normalny wygląd.
          */
 
         function clearPreview() {
 
-            previewCells.forEach(cell => {
+            previewCells.forEach(
+                cell => {
 
-                cell.classList.remove(
-                    "preview",
-                    "invalid"
-                );
+                    const row =
+                        Number(
+                            cell.dataset.row
+                        );
 
-                cell.style.background = "";
-                cell.style.color = "";
-            });
+                    const col =
+                        Number(
+                            cell.dataset.col
+                        );
+
+
+                    cell.classList.remove(
+                        "preview",
+                        "invalid",
+                        "preview-on-filled"
+                    );
+
+
+                    /*
+                     * Jeśli pole jest puste,
+                     * możemy wyczyścić styl
+                     * podglądu.
+                     */
+
+                    if (
+                        board[row][col] === null
+                    ) {
+
+                        cell.style.background = "";
+                        cell.style.color = "";
+                    }
+                }
+            );
+
 
             previewCells = [];
         }
@@ -2000,15 +2585,24 @@
          * START GRY
          */
 
+        sessionBestScoreElement.textContent =
+            "0";
+
+
         bestScoreElement.textContent =
-            bestScore.toLocaleString("pl-PL");
+            bestScore.toLocaleString(
+                "pl-PL"
+            );
+
 
         restartButton.addEventListener(
             "click",
             restartGame
         );
 
+
         restartGame();
+
     </script>
 
 </body>
