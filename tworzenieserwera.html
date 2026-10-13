@@ -1,0 +1,920 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080914">
+<title>ShadowTale — Discord Manager</title>
+<style>
+:root {
+  --bg:#080914;--panel:#101222;--panel2:#171a30;--border:#292d49;
+  --purple:#9b5cff;--blue:#5865f2;--green:#39e58c;--red:#ff5470;
+  --text:#f4f3ff;--muted:#9a9cb8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;flex-shrink:0;background:#0c0e1c;border-right:1px solid var(--border);padding:22px 14px;display:flex;flex-direction:column;gap:22px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px}
+.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),var(--blue));font-weight:900}
+.brand-name{font-weight:850;letter-spacing:.4px}
+.brand-sub{color:var(--muted);font-size:11px;margin-top:3px}
+.section-label{color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1.5px;padding:0 10px;margin-bottom:8px}
+.nav{display:flex;flex-direction:column;gap:5px}
+.nav button{border:1px solid transparent;border-radius:10px;background:transparent;color:#b9bbd3;text-align:left;padding:11px 12px;display:flex;align-items:center;gap:11px}
+.nav button:hover,.nav button.active{background:#1b1730;border-color:#3c2a5e;color:white}
+.nav .ico{width:21px;text-align:center}
+.sidebar-bottom{margin-top:auto}
+.connection-small{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:12px}
+.status-dot{display:inline-block;width:8px;height:8px;background:#70738d;border-radius:50%;margin-right:6px}
+.status-dot.on{background:var(--green)}
+main{min-width:0;flex:1}
+.topbar{min-height:72px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:14px 28px;gap:14px}
+.topbar-title{font-weight:800}
+.topbar-right{display:flex;gap:10px;align-items:center}
+.content{max-width:1450px;padding:28px;margin:auto}
+h1{font-size:28px;margin:0 0 8px;letter-spacing:-.7px}
+h2{font-size:17px;margin:0 0 14px}
+h3{font-size:14px;margin:0 0 10px}
+p{line-height:1.6}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.btn{border:1px solid var(--border);border-radius:10px;background:var(--panel2);color:var(--text);padding:10px 14px;font-weight:700}
+.btn:hover{filter:brightness(1.15)}
+.btn.primary{background:linear-gradient(135deg,#8950e9,#5865f2);border-color:transparent}
+.btn.success{background:#143a2a;border-color:#276b4a}
+.btn.danger{background:#381b29;border-color:#733247}
+.btn.small-btn{padding:7px 10px;font-size:12px}
+.field{display:flex;flex-direction:column;gap:7px}
+label{color:#d8d7ed;font-size:12px;font-weight:700}
+input,select,textarea{width:100%;background:#0b0d1a;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--purple)}
+input[type=checkbox]{width:auto}
+textarea{min-height:100px;resize:vertical}
+.notice{padding:13px 14px;border-radius:10px;font-size:13px;line-height:1.55;background:#19182b;border:1px solid #3b315c}
+.notice.warning{background:#302517;border-color:#775528}
+.notice.error{background:#301b26;border-color:#753347}
+.notice.good{background:#142b23;border-color:#28684d}
+.stat{font-size:28px;font-weight:850;margin:8px 0}
+.stat-label{color:var(--muted);font-size:12px}
+.list{display:flex;flex-direction:column;gap:8px}
+.list-item{display:flex;align-items:center;gap:11px;padding:12px;border-radius:10px;background:#0c0e1c;border:1px solid var(--border);min-width:0}
+.list-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#22213b;flex-shrink:0}
+.list-text{min-width:0;flex:1}
+.list-title{font-size:13px;font-weight:750;overflow-wrap:anywhere}
+.list-sub{font-size:11px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+.page{display:none}
+.page.active{display:block}
+.server-select{max-width:270px}
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.level{border:1px solid var(--border);background:#0c0e1c;color:var(--text);border-radius:10px;padding:13px;text-align:center}
+.level.selected{border-color:var(--purple);background:#201638}
+.level strong{display:block;font-size:12px;margin-bottom:5px}
+.level span{color:var(--muted);font-size:10px}
+.template-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.template{border:1px solid var(--border);background:#0c0e1c;border-radius:14px;padding:16px;cursor:pointer;color:var(--text);text-align:left}
+.template.selected,.template:hover{border-color:var(--purple);background:#1a1530}
+.template-icon{font-size:25px;margin-bottom:10px}
+.template-name{font-weight:800;margin-bottom:6px}
+.template-desc{color:var(--muted);font-size:12px;line-height:1.5}
+.empty{text-align:center;color:var(--muted);padding:32px 12px;font-size:13px}
+.hidden{display:none!important}
+#toast{position:fixed;bottom:20px;right:20px;max-width:min(420px,calc(100vw - 40px));background:#20223a;border:1px solid var(--border);border-radius:12px;padding:14px 17px;box-shadow:0 10px 35px #0007;z-index:12000;display:none;font-size:13px}
+#toast.show{display:block}
+
+/* Bramka tokenu: domyślnie blokuje cały panel */
+body:not(.bot-connected) .app{filter:blur(5px);pointer-events:none;user-select:none}
+#botLock{position:fixed;inset:0;z-index:11000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,6,17,.97);backdrop-filter:blur(18px)}
+#botLock.hidden{display:none}
+.lock-card{width:100%;max-width:440px;padding:28px;border:1px solid #393052;border-radius:20px;background:#101222;box-shadow:0 25px 100px #0009}
+.lock-logo{width:58px;height:58px;display:grid;place-items:center;margin-bottom:20px;border-radius:16px;background:linear-gradient(135deg,#9b5cff,#5865f2);font-size:22px;font-weight:900}
+.lock-card h1{font-size:24px;margin-top:24px}
+.lock-card p{color:var(--muted);font-size:13px}
+.lock-error{color:var(--red);font-size:12px;margin-top:12px;overflow-wrap:anywhere}
+@media(max-width:900px){.sidebar{width:205px}.grid.three,.template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){
+ .app{display:block}.sidebar{width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--border)}
+ .sidebar .nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+ .nav button{justify-content:center;font-size:11px;padding:9px 4px;flex-direction:column;gap:4px}
+ .sidebar-bottom,.section-label{display:none}
+ .topbar{padding:14px;flex-wrap:wrap}.content{padding:16px}
+ .grid,.grid.three,.template-grid{grid-template-columns:1fr}
+ .levels{grid-template-columns:1fr}h1{font-size:23px}.server-select{max-width:none;width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- EKRAN BLOKADY -->
+<div id="botLock">
+  <div class="lock-card">
+    <div class="lock-logo">ST</div>
+    <div class="brand-name">SHADOWTALE</div>
+    <div class="brand-sub">DISCORD MANAGER</div>
+    <h1>Podłącz swojego bota</h1>
+    <p>Panel pozostanie zablokowany, dopóki backend Node.js nie zweryfikuje tokenu i nie utworzy sesji.</p>
+    <form id="lockForm">
+      <div class="field">
+        <label for="lockToken">Token bota Discord</label>
+        <input type="password" id="lockToken" autocomplete="off" spellcheck="false" placeholder="Wklej token bota" required>
+      </div>
+      <button class="btn primary" id="lockConnect" type="submit">Połącz przez Node.js</button>
+      <div id="lockError" class="lock-error" role="alert"></div>
+    </form>
+    <p>Token nie jest przechowywany w localStorage. Korzystaj z panelu tylko na zaufanym komputerze.</p>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">ST</div>
+      <div><div class="brand-name">SHADOWTALE</div><div class="brand-sub">DISCORD MANAGER</div></div>
+    </div>
+
+    <div>
+      <div class="section-label">ZARZĄDZANIE</div>
+      <nav class="nav" id="navigation">
+        <button class="active" data-page="dashboard"><span class="ico">⌂</span>Przegląd</button>
+        <button data-page="channels"><span class="ico">▤</span>Kanały</button>
+        <button data-page="roles"><span class="ico">♟</span>Role</button>
+        <button data-page="members"><span class="ico">♙</span>Użytkownicy</button>
+        <button data-page="messages"><span class="ico">✉</span>Wiadomości</button>
+        <button data-page="commands"><span class="ico">⌘</span>Komendy</button>
+        <button data-page="invites"><span class="ico">🔗</span>Link do serwera</button>
+        <button data-page="templates"><span class="ico">✦</span>Kreator serwera</button>
+      </nav>
+    </div>
+
+    <div>
+      <div class="section-label">KONTO BOTA</div>
+      <nav class="nav">
+        <button data-page="connection"><span class="ico">⚙</span>Połączenie</button>
+        <button data-page="permissions"><span class="ico">♜</span>Uprawnienia</button>
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="connection-small">
+        <div><span class="status-dot" id="sideDot"></span><span id="sideStatus">Brak połączenia</span></div>
+        <div class="muted" id="sideBotName" style="margin-top:7px;overflow-wrap:anywhere">Nie podłączono bota</div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div class="topbar-title">Discord Manager / <span id="currentPageName">Przegląd</span></div>
+      <div class="topbar-right">
+        <div class="server-select">
+          <select id="serverSelect" aria-label="Wybierz serwer" disabled>
+            <option value="">Najpierw podłącz bota</option>
+          </select>
+        </div>
+        <button class="btn primary" id="disconnectButton" disabled>Rozłącz</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="notice warning" style="margin-bottom:20px">
+        <strong>Bezpieczeństwo:</strong> token trafia do backendu na porcie 5500. Backend musi go trzymać tylko w pamięci, nie logować i usuwać przy rozłączeniu lub wygaśnięciu sesji.
+      </div>
+
+      <section class="page active" id="page-dashboard">
+        <h1>Centrum zarządzania</h1>
+        <p class="muted">Serwery, kanały, role, użytkownicy i konfiguracja bota w jednym miejscu.</p>
+        <div class="grid three" style="margin:22px 0">
+          <div class="card"><div class="stat-label">Wybrany serwer</div><div class="stat" id="statServer">—</div><div class="muted small" id="statServerSub">Nie wybrano</div></div>
+          <div class="card"><div class="stat-label">Kanały</div><div class="stat" id="statChannels">—</div><div class="muted small">Dostępne dla bota</div></div>
+          <div class="card"><div class="stat-label">Role</div><div class="stat" id="statRoles">—</div><div class="muted small">Role serwera</div></div>
+        </div>
+        <div class="grid">
+          <div class="card"><h2>Podłączony bot</h2><div id="dashboardBot" class="muted small">—</div><button class="btn" onclick="showPage('connection')" style="margin-top:14px">Informacje o połączeniu</button></div>
+          <div class="card"><h2>Nowy serwer</h2><p class="muted small">Wybierz szablon i przygotuj plan kanałów, ról i integracji.</p><button class="btn primary" onclick="showPage('templates')">Otwórz kreator</button></div>
+        </div>
+        <div class="card" style="margin-top:16px"><h2>Ostatnia aktywność</h2><div id="activityList" class="list"><div class="empty">Brak aktywności.</div></div></div>
+      </section>
+
+      <section class="page" id="page-connection">
+        <h1>Połączenie</h1>
+        <p class="muted">Ta sesja nie zachowuje tokenu po stronie przeglądarki.</p>
+        <div class="grid">
+          <div class="card stack">
+            <h2>Informacje o bocie</h2>
+            <div class="list-item"><div class="list-icon">🤖</div><div class="list-text"><div class="list-title" id="botDisplayName">Nie podłączono</div><div class="list-sub">Nazwa bota</div></div></div>
+            <div class="list-item"><div class="list-icon">🆔</div><div class="list-text"><div class="list-title" id="botDisplayId">—</div><div class="list-sub">ID bota</div></div></div>
+            <div class="list-item"><div class="list-icon">🌐</div><div class="list-text"><div class="list-title" id="botServerCount">—</div><div class="list-sub">Liczba dostępnych serwerów</div></div></div>
+            <button class="btn danger" id="disconnectButton2">Rozłącz i usuń sesję</button>
+          </div>
+          <div class="card"><h2>Status</h2><div id="connectResult" class="muted small">Brak sesji.</div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-channels">
+        <div class="between"><div><h1>Kanały</h1><p class="muted">Podgląd kanałów i kategorii.</p></div><button class="btn" id="refreshChannels">Odśwież</button></div>
+        <div class="card">
+          <div class="field" style="max-width:320px;margin-bottom:16px"><label for="channelFilter">Szukaj kanału</label><input id="channelFilter" placeholder="Nazwa kanału"></div>
+          <div id="channelsList" class="list"><div class="empty">Brak danych.</div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-roles">
+        <div class="between"><div><h1>Role</h1><p class="muted">Podgląd ról serwera.</p></div><button class="btn" id="refreshRoles">Odśwież</button></div>
+        <div class="card"><div id="rolesList" class="list"><div class="empty">Brak danych.</div></div></div>
+      </section>
+
+      <section class="page" id="page-members">
+        <div class="between"><div><h1>Użytkownicy</h1><p class="muted">Lista członków dostępna przez backend.</p></div><button class="btn" id="refreshMembers">Odśwież</button></div>
+        <div class="card">
+          <div class="field" style="max-width:320px;margin-bottom:16px"><label for="memberFilter">Szukaj użytkownika</label><input id="memberFilter" placeholder="Nazwa lub ID"></div>
+          <div id="membersList" class="list"><div class="empty">Brak danych.</div></div>
+          <button class="btn" id="loadMoreMembers" style="margin-top:14px" disabled>Załaduj więcej</button>
+        </div>
+      </section>
+
+      <section class="page" id="page-messages">
+        <h1>Wiadomości</h1><p class="muted">Wysyłanie wiadomości jako bot.</p>
+        <div class="grid">
+          <div class="card stack">
+            <div class="field"><label for="messageChannel">Kanał</label><select id="messageChannel"><option value="">Wybierz serwer</option></select></div>
+            <div class="field"><label for="messageContent">Treść</label><textarea id="messageContent" maxlength="2000" placeholder="Treść wiadomości"></textarea></div>
+            <button class="btn primary" id="sendMessage">Wyślij wiadomość</button>
+          </div>
+          <div class="card"><h2>Wynik</h2><div id="messageResult" class="muted small">Brak operacji.</div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-commands">
+        <h1>Operacje bota</h1>
+        <div class="card stack">
+          <div class="notice warning">Bot nie wywołuje dowolnych komend slash jak użytkownik. Backend powinien udostępniać tylko jawnie dozwolone operacje.</div>
+          <div class="field"><label for="commandName">Operacja</label><select id="commandName"><option value="refresh">Odśwież informacje</option><option value="announce">Ogłoszenie</option><option value="audit">Dostępne informacje audytowe</option></select></div>
+          <div class="field"><label for="commandPayload">Dane JSON</label><textarea id="commandPayload" maxlength="2000" placeholder="Opcjonalny obiekt JSON"></textarea></div>
+          <button class="btn primary" id="runCommand">Wykonaj</button>
+          <pre id="commandResult" class="notice" style="white-space:pre-wrap;overflow-wrap:anywhere">Brak operacji.</pre>
+        </div>
+      </section>
+
+      <section class="page" id="page-invites">
+        <h1>Link do serwera</h1>
+        <p class="muted">Wygeneruj zaproszenie Discord i skopiuj je do schowka.</p>
+        <div class="card stack">
+          <div class="field"><label for="inviteChannel">Kanał zaproszenia</label><select id="inviteChannel"><option value="">Wybierz kanał</option></select></div>
+          <div class="grid">
+            <div class="field"><label for="inviteExpiry">Ważność</label><select id="inviteExpiry"><option value="3600">1 godzina</option><option value="86400">24 godziny</option><option value="604800">7 dni</option><option value="0">Bez wygaśnięcia</option></select></div>
+            <div class="field"><label for="inviteUses">Limit użyć</label><select id="inviteUses"><option value="0">Bez limitu</option><option value="1">1 użycie</option><option value="5">5 użyć</option><option value="10">10 użyć</option><option value="25">25 użyć</option></select></div>
+          </div>
+          <button class="btn primary" id="createInvite">Wygeneruj link</button>
+          <div id="inviteResult" class="hidden stack">
+            <div class="field"><label for="inviteUrl">Link zaproszenia</label><input id="inviteUrl" readonly></div>
+            <div class="row"><button class="btn success" id="copyInvite">Kopiuj link</button><button class="btn" id="openInvite">Otwórz link</button></div>
+          </div>
+          <div class="notice">Bot potrzebuje uprawnienia do tworzenia zaproszeń na wybranym kanale.</div>
+        </div>
+      </section>
+
+      <section class="page" id="page-templates">
+        <h1>Kreator serwera</h1>
+        <p class="muted">Przygotuj konfigurację nowego serwera. Jeśli tworzenie serwera przez API jest niedostępne, utwórz serwer w Discordzie i zastosuj plan na nim.</p>
+        <div class="card stack" style="margin-bottom:16px">
+          <h2>1. Dane serwera</h2>
+          <div class="grid">
+            <div class="field"><label for="newServerName">Nazwa serwera</label><input id="newServerName" maxlength="100" placeholder="Nazwa nowego serwera"></div>
+            <div class="field"><label for="templateKind">Rodzaj szablonu</label><select id="templateKind"><option value="minecraft">Minecraft</option><option value="gaming">Gaming</option><option value="community">Community</option><option value="support">Support / Tickety</option><option value="creator">Twórca internetowy</option><option value="custom">Własny</option></select></div>
+          </div>
+        </div>
+        <div class="card stack" style="margin-bottom:16px">
+          <h2>2. Co skonfigurować?</h2>
+          <div class="grid three">
+            <label class="list-item"><input type="checkbox" id="includeChannels" checked> Kanały</label>
+            <label class="list-item"><input type="checkbox" id="includeRoles" checked> Role</label>
+            <label class="list-item"><input type="checkbox" id="includeBots"> Boty</label>
+          </div>
+        </div>
+        <div class="card stack" style="margin-bottom:16px">
+          <h2>3. Poziom konfiguracji</h2>
+          <div class="levels">
+            <button class="level selected" data-level="basic"><strong>Podstawowe</strong><span>Prosta struktura</span></button>
+            <button class="level" data-level="advanced"><strong>Zaawansowane</strong><span>Więcej ustawień</span></button>
+            <button class="level" data-level="pro"><strong>Pro</strong><span>Rozbudowana konfiguracja</span></button>
+          </div>
+        </div>
+        <div class="card stack">
+          <h2>4. Plan i wdrożenie</h2>
+          <button class="btn primary" id="prepareTemplate">Przygotuj plan</button>
+          <pre id="templatePreview" class="notice" style="white-space:pre-wrap;overflow-wrap:anywhere">Nie przygotowano planu.</pre>
+          <button class="btn" id="downloadTemplate">Pobierz plan JSON</button>
+          <div class="field"><label for="targetServer">Serwer docelowy</label><select id="targetServer"><option value="">Wybierz istniejący serwer</option></select></div>
+          <button class="btn success" id="applyTemplate" disabled>Zastosuj konfigurację</button>
+          <div id="applyNote" class="muted small">Wdrożenie wymaga odpowiedniej trasy backendu i uprawnień bota.</div>
+        </div>
+      </section>
+
+      <section class="page" id="page-permissions">
+        <h1>Uprawnienia i diagnostyka</h1>
+        <div class="card"><div id="permissionsList" class="list"><div class="empty">Połącz bota, aby sprawdzić status.</div></div></div>
+        <div class="notice warning" style="margin-top:16px">Dostęp do członków serwera wymaga odpowiednich ustawień Gateway Intents i uprawnień w Discord Developer Portal.</div>
+      </section>
+    </div>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/*
+Wymagane trasy backendu:
+POST /api/discord-manager/connect
+POST /api/discord-manager/disconnect
+GET  /api/discord-manager/servers
+GET  /api/discord-manager/servers/:guildId/overview
+GET  /api/discord-manager/servers/:guildId/channels
+GET  /api/discord-manager/servers/:guildId/roles
+GET  /api/discord-manager/servers/:guildId/members?offset=0&limit=50
+POST /api/discord-manager/servers/:guildId/messages
+POST /api/discord-manager/servers/:guildId/commands
+POST /api/discord-manager/servers/:guildId/invites
+POST /api/discord-manager/templates/preview
+POST /api/discord-manager/servers/:guildId/templates/apply
+
+Token obsługuj wyłącznie po stronie backendu. Nigdy nie zapisuj go w logach,
+plikach, bazie danych ani trwałym magazynie. Sesja powinna mieć TTL, limit
+żądań i losowy identyfikator, a każde żądanie musi weryfikować uprawnienia.
+*/
+
+const API_BASE = "http://127.0.0.1:5500/api/discord-manager";
+const $ = id => document.getElementById(id);
+
+let sessionId = null;
+let botInfo = null;
+let servers = [];
+let selectedServerId = "";
+let channels = [];
+let roles = [];
+let members = [];
+let memberOffset = 0;
+let selectedLevel = "basic";
+let lastTemplatePlan = null;
+let toastTimer = null;
+let connectionGeneration = 0;
+
+function toast(message) {
+  const el = $("toast");
+  el.textContent = String(message);
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 4000);
+}
+
+function addActivity(message) {
+  const list = $("activityList");
+  if (list.querySelector(".empty")) list.replaceChildren();
+  const row = document.createElement("div");
+  row.className = "list-item";
+  const icon = document.createElement("div");
+  icon.className = "list-icon";
+  icon.textContent = "•";
+  const wrap = document.createElement("div");
+  wrap.className = "list-text";
+  const title = document.createElement("div");
+  title.className = "list-title";
+  title.textContent = message;
+  const time = document.createElement("div");
+  time.className = "list-sub";
+  time.textContent = new Date().toLocaleTimeString("pl-PL");
+  wrap.append(title, time);
+  row.append(icon, wrap);
+  list.prepend(row);
+  while (list.children.length > 8) list.lastElementChild.remove();
+}
+
+function showPage(name) {
+  if (!sessionId) {
+    $("botLock").classList.remove("hidden");
+    return;
+  }
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll("[data-page]").forEach(b => b.classList.remove("active"));
+  const page = $("page-" + name);
+  if (!page) return;
+  page.classList.add("active");
+  document.querySelectorAll(`[data-page="${name}"]`).forEach(b => b.classList.add("active"));
+  const button = document.querySelector(`[data-page="${name}"]`);
+  $("currentPageName").textContent = button ? button.textContent.trim() : name;
+  if (name === "channels") loadChannels();
+  if (name === "roles") loadRoles();
+  if (name === "members") loadMembers(true);
+  if (name === "permissions") loadPermissions();
+  if (name === "invites") loadInviteChannels();
+}
+document.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => showPage(b.dataset.page)));
+
+function setConnected(connected) {
+  document.body.classList.toggle("bot-connected", connected);
+  $("botLock").classList.toggle("hidden", connected);
+  $("sideDot").classList.toggle("on", connected);
+  $("sideStatus").textContent = connected ? "Sesja aktywna" : "Brak połączenia";
+  $("disconnectButton").disabled = !connected;
+  $("serverSelect").disabled = !connected;
+}
+
+async function api(path, options = {}) {
+  if (!sessionId && path !== "/connect") throw new Error("Najpierw podłącz bota.");
+  const headers = {
+    "Accept": "application/json",
+    ...(options.body ? {"Content-Type":"application/json"} : {}),
+    ...(sessionId ? {"X-ShadowTale-Session":sessionId} : {})
+  };
+  const response = await fetch(API_BASE + path, {
+    ...options, headers, credentials:"omit", cache:"no-store"
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || data.message || `Błąd HTTP ${response.status}`);
+  return data;
+}
+
+function safeId(id) { return encodeURIComponent(String(id)); }
+
+function resetData() {
+  botInfo = null;
+  servers = [];
+  selectedServerId = "";
+  channels = [];
+  roles = [];
+  members = [];
+  memberOffset = 0;
+  lastTemplatePlan = null;
+  $("serverSelect").replaceChildren(new Option("Najpierw podłącz bota", ""));
+  $("targetServer").replaceChildren(new Option("Wybierz istniejący serwer", ""));
+  $("messageChannel").replaceChildren(new Option("Wybierz kanał", ""));
+  $("inviteChannel").replaceChildren(new Option("Wybierz kanał", ""));
+  $("channelsList").replaceChildren();
+  $("rolesList").replaceChildren();
+  $("membersList").replaceChildren();
+  $("permissionsList").replaceChildren();
+  $("statServer").textContent = "—";
+  $("statChannels").textContent = "—";
+  $("statRoles").textContent = "—";
+  $("statServerSub").textContent = "Nie wybrano";
+  $("botDisplayName").textContent = "Nie podłączono";
+  $("botDisplayId").textContent = "—";
+  $("botServerCount").textContent = "—";
+  $("sideBotName").textContent = "Nie podłączono bota";
+  $("dashboardBot").textContent = "—";
+  $("templatePreview").textContent = "Nie przygotowano planu.";
+  $("applyTemplate").disabled = true;
+  $("inviteResult").classList.add("hidden");
+  $("inviteUrl").value = "";
+  setConnected(false);
+}
+
+async function connectBot(token) {
+  const generation = ++connectionGeneration;
+  $("connectResult").textContent = "Łączenie przez Node.js…";
+  $("lockError").textContent = "";
+  try {
+    const result = await api("/connect", {
+      method:"POST",
+      body:JSON.stringify({token})
+    });
+    if (generation !== connectionGeneration) return;
+    if (!result.sessionId || !result.bot) throw new Error("Backend nie zwrócił poprawnej sesji bota.");
+    sessionId = result.sessionId;
+    botInfo = result.bot;
+
+    $("botDisplayName").textContent = botInfo.username || botInfo.name || "Bot";
+    $("botDisplayId").textContent = botInfo.id || "—";
+    $("sideBotName").textContent = botInfo.username || botInfo.name || "Bot podłączony";
+    $("dashboardBot").textContent = `${botInfo.username || botInfo.name || "Bot"} · ${botInfo.id || ""}`;
+
+    const resultServers = await api("/servers");
+    servers = Array.isArray(resultServers.servers) ? resultServers.servers : [];
+    renderServers();
+    setConnected(true);
+    $("connectResult").textContent = "Połączono. Wybierz serwer z listy.";
+    addActivity("Połączono bota " + (botInfo.username || botInfo.name || ""));
+    toast("Bot został podłączony.");
+
+    if (servers.length) {
+      $("serverSelect").value = servers[0].id;
+      $("targetServer").value = servers[0].id;
+      await selectServer(servers[0].id);
+    } else {
+      toast("Bot nie znajduje się na żadnym dostępnym serwerze.");
+    }
+  } catch (error) {
+    sessionId = null;
+    botInfo = null;
+    setConnected(false);
+    $("connectResult").textContent = "Nie udało się połączyć: " + error.message;
+    $("lockError").textContent = error.message;
+    throw error;
+  }
+}
+
+$("lockForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const input = $("lockToken");
+  const token = input.value.trim();
+  const button = $("lockConnect");
+  if (!token) return;
+  input.value = "";
+  button.disabled = true;
+  button.textContent = "Łączenie…";
+  try {
+    await connectBot(token);
+  } catch (_) {
+    // Szczegół błędu jest wyświetlany w bramce.
+  } finally {
+    input.value = "";
+    button.disabled = false;
+    button.textContent = "Połącz przez Node.js";
+  }
+});
+
+async function disconnectBot() {
+  connectionGeneration++;
+  try {
+    if (sessionId) await api("/disconnect", {method:"POST", body:"{}"});
+  } catch (_) {
+    // Niezależnie od odpowiedzi usuwamy lokalny identyfikator sesji.
+  }
+  sessionId = null;
+  resetData();
+  $("connectResult").textContent = "Sesja zakończona.";
+  $("lockToken").value = "";
+  $("lockError").textContent = "";
+  addActivity("Rozłączono sesję bota");
+  toast("Bot został rozłączony.");
+}
+$("disconnectButton").addEventListener("click", disconnectBot);
+$("disconnectButton2").addEventListener("click", disconnectBot);
+
+function renderServers() {
+  $("serverSelect").replaceChildren(new Option("Wybierz serwer", ""));
+  $("targetServer").replaceChildren(new Option("Wybierz istniejący serwer", ""));
+  for (const server of servers) {
+    $("serverSelect").add(new Option(server.name || server.id, server.id));
+    $("targetServer").add(new Option(server.name || server.id, server.id));
+  }
+  $("botServerCount").textContent = String(servers.length);
+}
+
+$("serverSelect").addEventListener("change", event => {
+  selectServer(event.target.value);
+  $("targetServer").value = event.target.value;
+});
+
+async function selectServer(id) {
+  selectedServerId = id;
+  channels = [];
+  roles = [];
+  members = [];
+  memberOffset = 0;
+  $("inviteResult").classList.add("hidden");
+  if (!id) return;
+  try {
+    const data = await api(`/servers/${safeId(id)}/overview`);
+    const server = data.server || servers.find(s => s.id === id) || {};
+    $("statServer").textContent = server.name || "Wybrany";
+    $("statServerSub").textContent = "ID: " + id;
+    $("statChannels").textContent = data.channelCount ?? "—";
+    $("statRoles").textContent = data.roleCount ?? "—";
+    addActivity("Wybrano serwer: " + (server.name || id));
+    await Promise.all([loadChannels(), loadRoles()]);
+    await loadInviteChannels();
+  } catch (error) {
+    $("statServer").textContent = "Błąd";
+    $("statServerSub").textContent = error.message;
+    toast("Nie udało się pobrać danych serwera: " + error.message);
+  }
+}
+
+function renderList(container, items, iconFn, titleFn, subFn) {
+  container.replaceChildren();
+  if (!items.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Brak danych lub backend nie zwrócił wyników.";
+    container.append(empty);
+    return;
+  }
+  for (const item of items) {
+    const row = document.createElement("div");
+    row.className = "list-item";
+    const icon = document.createElement("div");
+    icon.className = "list-icon";
+    icon.textContent = iconFn(item) || "•";
+    const wrap = document.createElement("div");
+    wrap.className = "list-text";
+    const title = document.createElement("div");
+    title.className = "list-title";
+    title.textContent = titleFn(item) || "Bez nazwy";
+    const sub = document.createElement("div");
+    sub.className = "list-sub";
+    sub.textContent = subFn(item) || "";
+    wrap.append(title, sub);
+    row.append(icon, wrap);
+    container.append(row);
+  }
+}
+
+async function loadChannels() {
+  if (!selectedServerId || !sessionId) return;
+  $("channelsList").textContent = "Ładowanie kanałów…";
+  try {
+    const data = await api(`/servers/${safeId(selectedServerId)}/channels`);
+    channels = Array.isArray(data.channels) ? data.channels : [];
+    renderChannels();
+    const textChannels = channels.filter(c => isTextChannel(c));
+    $("messageChannel").replaceChildren(new Option("Wybierz kanał", ""));
+    for (const c of textChannels) $("messageChannel").add(new Option("# " + c.name, c.id));
+    $("statChannels").textContent = String(channels.length);
+    await loadInviteChannels();
+  } catch (error) {
+    $("channelsList").textContent = "Błąd: " + error.message;
+  }
+}
+function isTextChannel(c) {
+  return c.type === "text" || c.type === 0 || c.type === "GUILD_TEXT";
+}
+function isInviteChannel(c) {
+  return isTextChannel(c) || c.type === "voice" || c.type === 2 || c.type === "GUILD_VOICE";
+}
+function renderChannels() {
+  const filter = $("channelFilter").value.trim().toLowerCase();
+  const filtered = channels.filter(c => String(c.name || "").toLowerCase().includes(filter));
+  renderList($("channelsList"), filtered,
+    c => c.type === "category" || c.type === 4 ? "▰" : (c.type === "voice" || c.type === 2 ? "◖" : "#"),
+    c => (c.type === "category" || c.type === 4 ? "Kategoria: " : "") + (c.name || c.id),
+    c => `ID: ${c.id || "—"} · Typ: ${c.type ?? "—"}`
+  );
+}
+$("channelFilter").addEventListener("input", renderChannels);
+$("refreshChannels").addEventListener("click", loadChannels);
+
+async function loadRoles() {
+  if (!selectedServerId || !sessionId) return;
+  $("rolesList").textContent = "Ładowanie ról…";
+  try {
+    const data = await api(`/servers/${safeId(selectedServerId)}/roles`);
+    roles = Array.isArray(data.roles) ? data.roles : [];
+    renderList($("rolesList"), roles, r => r.managed ? "⚙" : "♟",
+      r => r.name || r.id,
+      r => `ID: ${r.id || "—"} · Pozycja: ${r.position ?? "—"} · ${r.managed ? "Rola zarządzana przez integrację" : "Rola serwera"}`
+    );
+    $("statRoles").textContent = String(roles.length);
+  } catch (error) {
+    $("rolesList").textContent = "Błąd: " + error.message;
+  }
+}
+$("refreshRoles").addEventListener("click", loadRoles);
+
+async function loadMembers(reset = false) {
+  if (!selectedServerId || !sessionId) return;
+  if (reset) { memberOffset = 0; members = []; }
+  $("membersList").textContent = "Ładowanie użytkowników…";
+  try {
+    const params = new URLSearchParams({offset:String(memberOffset),limit:"50"});
+    const data = await api(`/servers/${safeId(selectedServerId)}/members?${params}`);
+    const batch = Array.isArray(data.members) ? data.members : [];
+    members = reset ? batch : members.concat(batch);
+    memberOffset += batch.length;
+    renderMembers();
+    $("loadMoreMembers").disabled = batch.length < 50;
+  } catch (error) {
+    $("membersList").textContent = "Nie udało się pobrać członków: " + error.message;
+  }
+}
+function renderMembers() {
+  const filter = $("memberFilter").value.trim().toLowerCase();
+  const filtered = members.filter(m =>
+    String(m.username || m.name || "").toLowerCase().includes(filter) ||
+    String(m.id || "").includes(filter)
+  );
+  renderList($("membersList"), filtered, m => m.bot ? "🤖" : "♙",
+    m => (m.username || m.name || "Użytkownik") + (m.bot ? " [BOT]" : ""),
+    m => `ID: ${m.id || "—"} · Role: ${Array.isArray(m.roles) ? m.roles.join(", ") : "—"}`
+  );
+}
+$("memberFilter").addEventListener("input", renderMembers);
+$("refreshMembers").addEventListener("click", () => loadMembers(true));
+$("loadMoreMembers").addEventListener("click", () => loadMembers(false));
+
+async function loadInviteChannels() {
+  if (!selectedServerId || !sessionId) return;
+  const select = $("inviteChannel");
+  select.replaceChildren(new Option("Wybierz kanał", ""));
+  for (const channel of channels.filter(isInviteChannel)) {
+    select.add(new Option(channel.name || channel.id, channel.id));
+  }
+}
+
+$("sendMessage").addEventListener("click", async () => {
+  if (!selectedServerId) return toast("Wybierz serwer.");
+  const channelId = $("messageChannel").value;
+  const content = $("messageContent").value.trim();
+  if (!channelId || !content) return toast("Wybierz kanał i wpisz treść.");
+  if (content.length > 2000) return toast("Wiadomość jest za długa.");
+  if (!confirm("Wysłać tę wiadomość jako bot?")) return;
+  $("sendMessage").disabled = true;
+  try {
+    const result = await api(`/servers/${safeId(selectedServerId)}/messages`, {
+      method:"POST", body:JSON.stringify({channelId,content})
+    });
+    $("messageResult").textContent = "Wysłano wiadomość. ID: " + (result.messageId || "potwierdzono");
+    $("messageContent").value = "";
+    addActivity("Wysłano wiadomość na kanał " + channelId);
+    toast("Wiadomość wysłana.");
+  } catch (error) {
+    $("messageResult").textContent = "Błąd: " + error.message;
+    toast("Nie udało się wysłać wiadomości.");
+  } finally { $("sendMessage").disabled = false; }
+});
+
+$("runCommand").addEventListener("click", async () => {
+  if (!selectedServerId) return toast("Wybierz serwer.");
+  let payload = {};
+  try {
+    const raw = $("commandPayload").value.trim();
+    if (raw) {
+      payload = JSON.parse(raw);
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("Wymagany obiekt JSON.");
+    }
+  } catch (error) { return toast("Nieprawidłowy JSON: " + error.message); }
+
+  const command = $("commandName").value;
+  if (!confirm("Wykonać operację: " + command + "?")) return;
+  try {
+    const result = await api(`/servers/${safeId(selectedServerId)}/commands`, {
+      method:"POST", body:JSON.stringify({command,payload})
+    });
+    $("commandResult").textContent = JSON.stringify(result,null,2);
+    addActivity("Wykonano operację: " + command);
+  } catch (error) {
+    $("commandResult").textContent = "Błąd: " + error.message;
+  }
+});
+
+$("createInvite").addEventListener("click", async () => {
+  if (!sessionId || !selectedServerId) return toast("Najpierw połącz bota i wybierz serwer.");
+  const channelId = $("inviteChannel").value;
+  if (!channelId) return toast("Wybierz kanał.");
+  const maxAge = Number($("inviteExpiry").value);
+  const maxUses = Number($("inviteUses").value);
+  $("createInvite").disabled = true;
+  try {
+    const result = await api(`/servers/${safeId(selectedServerId)}/invites`, {
+      method:"POST", body:JSON.stringify({channelId,maxAge,maxUses})
+    });
+    if (!result.url || !/^https:\/\/(discord\.gg|discord\.com\/invite)\//i.test(result.url)) {
+      throw new Error("Backend nie zwrócił prawidłowego linku Discord.");
+    }
+    $("inviteUrl").value = result.url;
+    $("inviteResult").classList.remove("hidden");
+    addActivity("Utworzono zaproszenie dla serwera " + selectedServerId);
+    toast("Link zaproszenia utworzony.");
+  } catch (error) {
+    toast("Nie udało się utworzyć zaproszenia: " + error.message);
+  } finally { $("createInvite").disabled = false; }
+});
+
+$("copyInvite").addEventListener("click", async () => {
+  const url = $("inviteUrl").value;
+  if (!url) return;
+  try {
+    await navigator.clipboard.writeText(url);
+    toast("Link skopiowany.");
+  } catch (_) {
+    $("inviteUrl").focus();
+    $("inviteUrl").select();
+    toast("Zaznaczony link skopiuj skrótem Ctrl+C.");
+  }
+});
+
+$("openInvite").addEventListener("click", () => {
+  const url = $("inviteUrl").value;
+  if (!/^https:\/\/(discord\.gg|discord\.com\/invite)\//i.test(url)) return toast("Nieprawidłowy link.");
+  window.open(url,"_blank","noopener,noreferrer");
+});
+
+document.querySelectorAll("[data-level]").forEach(button => {
+  button.addEventListener("click", () => {
+    selectedLevel = button.dataset.level;
+    document.querySelectorAll("[data-level]").forEach(b => b.classList.toggle("selected",b === button));
+  });
+});
+
+function buildTemplateRequest() {
+  return {
+    name:$("newServerName").value.trim(),
+    template:$("templateKind").value,
+    level:selectedLevel,
+    include:{
+      channels:$("includeChannels").checked,
+      roles:$("includeRoles").checked,
+      bots:$("includeBots").checked
+    }
+  };
+}
+
+$("prepareTemplate").addEventListener("click", async () => {
+  const request = buildTemplateRequest();
+  if (!request.name) return toast("Wpisz nazwę serwera.");
+  if (!request.include.channels && !request.include.roles && !request.include.bots) return toast("Wybierz element do konfiguracji.");
+  $("prepareTemplate").disabled = true;
+  try {
+    if (sessionId) {
+      try {
+        const result = await api("/templates/preview",{method:"POST",body:JSON.stringify(request)});
+        lastTemplatePlan = result.plan || request;
+      } catch (_) {
+        lastTemplatePlan = request;
+      }
+    } else {
+      lastTemplatePlan = request;
+    }
+    $("templatePreview").textContent = JSON.stringify(lastTemplatePlan,null,2);
+    $("applyTemplate").disabled = !(sessionId && $("targetServer").value);
+    $("applyNote").textContent = "Plan gotowy. Sprawdź jego zawartość przed wdrożeniem.";
+    toast("Przygotowano plan konfiguracji.");
+  } finally { $("prepareTemplate").disabled = false; }
+});
+
+$("targetServer").addEventListener("change", () => {
+  $("applyTemplate").disabled = !(sessionId && lastTemplatePlan && $("targetServer").value);
+});
+
+$("downloadTemplate").addEventListener("click", () => {
+  if (!lastTemplatePlan) return toast("Najpierw przygotuj plan.");
+  const blob = new Blob([JSON.stringify(lastTemplatePlan,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shadowtale-server-template.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+});
+
+$("applyTemplate").addEventListener("click", async () => {
+  const guildId = $("targetServer").value;
+  if (!sessionId || !lastTemplatePlan || !guildId) return toast("Wybierz serwer i przygotuj plan.");
+  if (!confirm("Zastosować plan na wybranym serwerze?")) return;
+  $("applyTemplate").disabled = true;
+  try {
+    const result = await api(`/servers/${safeId(guildId)}/templates/apply`,{
+      method:"POST",body:JSON.stringify({plan:lastTemplatePlan})
+    });
+    $("applyNote").textContent = result.message || "Backend potwierdził operację.";
+    toast("Operacja zakończona.");
+  } catch (error) {
+    $("applyNote").textContent = "Nie udało się zastosować planu: " + error.message;
+  } finally {
+    $("applyTemplate").disabled = !(sessionId && lastTemplatePlan && $("targetServer").value);
+  }
+});
+
+async function loadPermissions() {
+  const items = [
+    {name:"Sesja",value:sessionId ? "Aktywna" : "Nieaktywna"},
+    {name:"Serwer",value:selectedServerId || "Nie wybrano"},
+    {name:"Backend",value:API_BASE}
+  ];
+  if (sessionId && selectedServerId) {
+    try {
+      const data = await api(`/servers/${safeId(selectedServerId)}/overview`);
+      for (const [key,value] of Object.entries(data.permissions || {})) {
+        items.push({name:key,value:value ? "Dostępne" : "Niedostępne"});
+      }
+    } catch (error) {
+      items.push({name:"Diagnostyka",value:error.message});
+    }
+  }
+  renderList($("permissionsList"),items,
+    i => i.value === "Dostępne" || i.value === "Aktywna" ? "✓" : "•",
+    i => i.name,i => i.value
+  );
+}
+
+/* Token i sesja nie są odtwarzane po odświeżeniu strony. */
+window.addEventListener("pagehide", () => {
+  $("lockToken").value = "";
+  // Ostateczne usunięcie tokenu musi być realizowane także po stronie backendu
+  // przez TTL sesji. Samo pagehide nie gwarantuje wysłania żądania.
+});
+
+resetData();
+</script>
+</body>
+</html>
