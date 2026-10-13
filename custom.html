@@ -2,14 +2,568 @@
 <html lang="pl">
 
 <head>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Custom — ShadowTale.pl</title>
 
+<meta name="description" content="Zamów własny projekt Custom w ShadowTale.pl.">
+
 <link rel="stylesheet" href="style.css">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+<style>
+
+:root {
+    --custom-purple: #9b5cff;
+    --custom-purple-dark: #6f35d8;
+    --custom-blue: #5865f2;
+    --custom-green: #39e58c;
+    --custom-red: #ff5470;
+    --custom-yellow: #ffd166;
+    --custom-bg: #070914;
+    --custom-card: rgba(16, 18, 35, .92);
+    --custom-border: rgba(155, 92, 255, .25);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(155, 92, 255, .12), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(88, 101, 242, .10), transparent 30%),
+        var(--custom-bg);
+}
+
+#stars {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.custom-page {
+    width: min(1120px, calc(100% - 30px));
+    margin: 45px auto 80px;
+}
+
+.custom-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 48px 38px;
+    border: 1px solid var(--custom-border);
+    border-radius: 28px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(155, 92, 255, .17),
+            rgba(88, 101, 242, .08),
+            rgba(10, 12, 25, .96)
+        );
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, .35),
+        0 0 50px rgba(155, 92, 255, .08);
+    margin-bottom: 25px;
+}
+
+.custom-hero::before {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    right: -140px;
+    top: -170px;
+    border-radius: 50%;
+    background: rgba(155, 92, 255, .15);
+    filter: blur(55px);
+    pointer-events: none;
+}
+
+.custom-hero::after {
+    content: "";
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    left: -130px;
+    bottom: -150px;
+    border-radius: 50%;
+    background: rgba(88, 101, 242, .10);
+    filter: blur(45px);
+    pointer-events: none;
+}
+
+.custom-hero h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 12px;
+    font-size: clamp(30px, 5vw, 48px);
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.custom-hero h1 span {
+    color: var(--custom-purple);
+    text-shadow: 0 0 25px rgba(155, 92, 255, .25);
+}
+
+.custom-hero p {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0;
+    color: #b9bdd0;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.custom-badges {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.custom-badge {
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.04);
+    color: #ddd;
+    font-size: 13px;
+    transition: .2s ease;
+}
+
+.custom-badge:hover {
+    border-color: rgba(155,92,255,.35);
+    background: rgba(155,92,255,.08);
+    transform: translateY(-1px);
+}
+
+.login-warning {
+    display: none;
+    margin-bottom: 20px;
+    padding: 17px 18px;
+    border-radius: 16px;
+    background: rgba(255,84,112,.07);
+    border: 1px solid rgba(255,84,112,.18);
+    color: #ffc1ca;
+    line-height: 1.5;
+}
+
+.login-warning.show {
+    display: block;
+}
+
+.login-warning a {
+    color: #c39bff;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.login-warning a:hover {
+    text-decoration: underline;
+}
+
+.custom-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 25px;
+    align-items: start;
+}
+
+.custom-card {
+    background: var(--custom-card);
+    border: 1px solid var(--custom-border);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    backdrop-filter: blur(14px);
+}
+
+.custom-card h2 {
+    margin: 0 0 8px;
+    font-size: 24px;
+}
+
+.card-description {
+    margin: 0 0 25px;
+    color: #999fb7;
+    line-height: 1.6;
+}
+
+.form-section {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.form-section:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.form-section-title {
+    margin: 0 0 18px;
+    font-size: 17px;
+    color: #eee;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #d7d9e5;
+}
+
+.form-group label span {
+    color: #777d94;
+    font-weight: 400;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 13px;
+    background: rgba(5,7,18,.75);
+    color: #fff;
+    outline: none;
+    padding: 13px 15px;
+    font: inherit;
+    transition: .2s ease;
+}
+
+.form-group input,
+.form-group select {
+    height: 48px;
+}
+
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #666b80;
+}
+
+.form-group select option {
+    background: #111426;
+    color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--custom-purple);
+    box-shadow: 0 0 0 3px rgba(155,92,255,.12);
+}
+
+.account-info {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.account-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #16192b;
+    border: 1px solid rgba(155,92,255,.22);
+}
+
+.account-info strong {
+    display: block;
+    color: #fff;
+}
+
+.account-info small {
+    display: block;
+    margin-top: 3px;
+    color: #858ba2;
+}
+
+.account-status {
+    margin-left: auto;
+    color: var(--custom-green);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.order-summary {
+    position: sticky;
+    top: 90px;
+}
+
+.summary-title {
+    margin-bottom: 20px !important;
+}
+
+.summary-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 13px 15px;
+    background: rgba(255,255,255,.025);
+    border-bottom: 1px solid rgba(255,255,255,.05);
+}
+
+.summary-row:last-child {
+    border-bottom: 0;
+}
+
+.summary-row span:first-child {
+    color: #858ba2;
+    font-size: 13px;
+}
+
+.summary-row span:last-child {
+    color: #fff;
+    font-weight: 700;
+    text-align: right;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.summary-note {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(255,209,102,.07);
+    border: 1px solid rgba(255,209,102,.15);
+    color: #b9af91;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.submit-area {
+    margin-top: 28px;
+}
+
+.submit-button {
+    width: 100%;
+    min-height: 54px;
+    border: 0;
+    border-radius: 14px;
+    cursor: pointer;
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    background: linear-gradient(
+        135deg,
+        var(--custom-purple),
+        var(--custom-blue)
+    );
+    box-shadow: 0 12px 35px rgba(111,53,216,.25);
+    transition: .2s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(111,53,216,.35);
+}
+
+.submit-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submit-button:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.form-message {
+    display: none;
+    margin-top: 15px;
+    padding: 14px 16px;
+    border-radius: 13px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.form-message.show {
+    display: block;
+}
+
+.form-message.success {
+    color: #b9ffd9;
+    background: rgba(57,229,140,.08);
+    border: 1px solid rgba(57,229,140,.2);
+}
+
+.form-message.error {
+    color: #ffc0ca;
+    background: rgba(255,84,112,.08);
+    border: 1px solid rgba(255,84,112,.2);
+}
+
+.custom-footer-info {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.info-box {
+    padding: 20px;
+    border-radius: 17px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.06);
+    transition: .2s ease;
+}
+
+.info-box:hover {
+    transform: translateY(-2px);
+    border-color: rgba(155,92,255,.18);
+    background: rgba(155,92,255,.035);
+}
+
+.info-box .icon {
+    font-size: 24px;
+    margin-bottom: 9px;
+}
+
+.info-box strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.info-box p {
+    margin: 0;
+    color: #858ba2;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.loading {
+    opacity: .65;
+}
+
+.success-state {
+    animation: successPulse .35s ease;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(.99);
+        opacity: .7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 850px) {
+
+    .custom-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+        position: static;
+    }
+
+    .custom-footer-info {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .custom-page {
+        width: min(100% - 18px, 1120px);
+        margin-top: 25px;
+    }
+
+    .custom-hero {
+        padding: 30px 22px;
+        border-radius: 20px;
+    }
+
+    .custom-hero p {
+        font-size: 15px;
+    }
+
+    .custom-card {
+        padding: 21px;
+        border-radius: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .account-status {
+        display: none;
+    }
+
+    .custom-badge {
+        font-size: 12px;
+    }
+
+}
+
+</style>
 
 </head>
 
@@ -25,36 +579,105 @@
 </a>
 
 <div class="header-search">
-<input id="site-search" type="search" placeholder="Szukaj..." autocomplete="off">
+<input
+id="site-search"
+type="search"
+placeholder="Szukaj..."
+autocomplete="off"
+>
 <div id="search-results" class="search-results"></div>
 </div>
 
-<button id="account-button" class="account-button" type="button">Konto</button>
+<button id="account-button" class="account-button" type="button">
+Konto
+</button>
 
 </header>
 
-<main class="container">
+<main class="custom-page">
 
-<section class="form-card card">
+<section class="custom-hero">
 
-<h1>🛠 Zamów Custom</h1>
+<h1>🛠 <span>Custom</span> — stwórzmy coś własnego</h1>
 
 <p>
-Opisz projekt, który chcesz stworzyć.
+Masz pomysł na skrypt Minecraft, plugin, system Discord,
+mechanikę Undertale albo zupełnie inny projekt?
+Opisz go tutaj, a zamówienie trafi bezpośrednio do zespołu ShadowTale.
 </p>
 
-<form>
+<div class="custom-badges">
+
+<span class="custom-badge">⚙️ Minecraft</span>
+<span class="custom-badge">💜 Undertale</span>
+<span class="custom-badge">🤖 Discord</span>
+<span class="custom-badge">🧩 Pluginy</span>
+<span class="custom-badge">✨ Inne projekty</span>
+
+</div>
+
+</section>
+
+<div id="login-warning" class="login-warning">
+
+Musisz być zalogowany, aby złożyć zamówienie Custom.
+
+<a href="login.html">Zaloguj się →</a>
+
+</div>
+
+<div class="custom-layout">
+
+<section class="custom-card">
+
+<h2>Nowe zamówienie</h2>
+
+<p class="card-description">
+Wypełnij informacje możliwie dokładnie. Im więcej szczegółów podasz,
+tym łatwiej będzie nam przygotować projekt.
+</p>
+
+<form id="custom-order-form">
+
+<div class="form-section">
+
+<h3 class="form-section-title">
+👤 Dane konta
+</h3>
+
+<div id="account-info" class="account-info loading">
+
+<div class="account-avatar"></div>
+
+<div>
+<strong>Sprawdzanie konta...</strong>
+<small>Łączenie z ShadowTale</small>
+</div>
+
+</div>
+
+</div>
+
+<div class="form-section">
+
+<h3 class="form-section-title">
+📦 Informacje o projekcie
+</h3>
+
+<div class="form-grid">
 
 <div class="form-group">
 
 <label for="custom-name">
-Nazwa projektu
+Nazwa projektu *
 </label>
 
 <input
 id="custom-name"
 type="text"
-placeholder="Np. system dusz"
+maxlength="100"
+placeholder="Np. System dusz"
+required
 >
 
 </div>
@@ -62,14 +685,19 @@ placeholder="Np. system dusz"
 <div class="form-group">
 
 <label for="custom-type">
-Typ projektu
+Typ projektu *
 </label>
 
-<select id="custom-type">
+<select id="custom-type" required>
 
-<option>Minecraft</option>
-<option>Undertale</option>
-<option>Inne</option>
+<option value="">Wybierz typ</option>
+<option value="Minecraft">Minecraft</option>
+<option value="Undertale">Undertale</option>
+<option value="Discord">Discord</option>
+<option value="Plugin">Plugin</option>
+<option value="Mod">Mod</option>
+<option value="Skript">Skript</option>
+<option value="Inne">Inne</option>
 
 </select>
 
@@ -77,45 +705,1048 @@ Typ projektu
 
 <div class="form-group">
 
+<label for="custom-version">
+Wersja / środowisko
+<span>(opcjonalnie)</span>
+</label>
+
+<input
+id="custom-version"
+type="text"
+maxlength="100"
+placeholder="Np. Minecraft 1.21.4 / Fabric"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="custom-budget">
+Budżet
+</label>
+
+<select id="custom-budget">
+
+<option value="Do 20 zł">Do 20 zł</option>
+<option value="20–50 zł">20–50 zł</option>
+<option value="50–100 zł">50–100 zł</option>
+<option value="100–200 zł">100–200 zł</option>
+<option value="200+ zł">200+ zł</option>
+<option value="Do ustalenia">Do ustalenia</option>
+
+</select>
+
+</div>
+
+<div class="form-group full">
+
 <label for="custom-description">
-Opis
+Dokładny opis projektu *
 </label>
 
 <textarea
 id="custom-description"
-placeholder="Opisz dokładnie swój pomysł..."
+maxlength="10000"
+placeholder="Opisz dokładnie co ma robić projekt, jakie funkcje ma posiadać, jak ma wyglądać, jakie komendy mają być dostępne itd."
+required
 ></textarea>
 
 </div>
 
-<button
-class="btn primary"
-type="button"
-onclick="alert('Formularz zamówienia zostanie podłączony do systemu Custom.')"
+<div class="form-group full">
+
+<label for="custom-features">
+Lista najważniejszych funkcji
+<span>(opcjonalnie)</span>
+</label>
+
+<textarea
+id="custom-features"
+maxlength="5000"
+placeholder="Np.
+- GUI
+- System komend
+- Zapisywanie danych
+- Integracja z Discordem
+- Konfiguracja w configu"
+></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="form-section">
+
+<h3 class="form-section-title">
+📅 Termin realizacji
+</h3>
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label for="custom-deadline">
+Preferowany termin
+</label>
+
+<select id="custom-deadline">
+
+<option value="Bez pośpiechu">Bez pośpiechu</option>
+<option value="Do kilku dni">Do kilku dni</option>
+<option value="Do tygodnia">Do tygodnia</option>
+<option value="Do 2 tygodni">Do 2 tygodni</option>
+<option value="Jak najszybciej">Jak najszybciej</option>
+<option value="Do ustalenia">Do ustalenia</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label for="custom-contact">
+Preferowany kontakt
+</label>
+
+<select id="custom-contact">
+
+<option value="Discord">Discord</option>
+<option value="ShadowTale">ShadowTale</option>
+<option value="E-mail">E-mail</option>
+
+</select>
+
+</div>
+
+<div class="form-group full">
+
+<label for="custom-contact-value">
+Dodatkowy kontakt
+<span>(opcjonalnie)</span>
+</label>
+
+<input
+id="custom-contact-value"
+type="text"
+maxlength="150"
+placeholder="Np. nick Discord"
 >
-Wyślij zamówienie
+
+</div>
+
+</div>
+
+</div>
+
+<div class="form-section">
+
+<h3 class="form-section-title">
+📝 Dodatkowe informacje
+</h3>
+
+<div class="form-grid">
+
+<div class="form-group full">
+
+<label for="custom-extra">
+Dodatkowe informacje
+<span>(opcjonalnie)</span>
+</label>
+
+<textarea
+id="custom-extra"
+maxlength="5000"
+placeholder="Linki, dodatkowe wymagania, informacje techniczne itp."
+></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="submit-area">
+
+<button
+id="submit-order"
+class="submit-button"
+type="submit"
+disabled
+>
+Sprawdzanie konta...
 </button>
 
+<div id="form-message" class="form-message"></div>
+
+</div>
+
 </form>
+
+</section>
+
+<aside class="custom-card order-summary">
+
+<h2 class="summary-title">📋 Podsumowanie</h2>
+
+<div class="summary-box">
+
+<div class="summary-row">
+<span>Projekt</span>
+<span id="summary-name">—</span>
+</div>
+
+<div class="summary-row">
+<span>Typ</span>
+<span id="summary-type">—</span>
+</div>
+
+<div class="summary-row">
+<span>Wersja</span>
+<span id="summary-version">—</span>
+</div>
+
+<div class="summary-row">
+<span>Budżet</span>
+<span id="summary-budget">Do 20 zł</span>
+</div>
+
+<div class="summary-row">
+<span>Termin</span>
+<span id="summary-deadline">Bez pośpiechu</span>
+</div>
+
+<div class="summary-row">
+<span>Kontakt</span>
+<span id="summary-contact">Discord</span>
+</div>
+
+</div>
+
+<div class="summary-note">
+💡 Po wysłaniu zamówienie otrzyma własny numer ID.
+Administratorzy będą mogli zobaczyć je w panelu administracyjnym
+i zmieniać jego status.
+</div>
+
+</aside>
+
+</div>
+
+<section class="custom-footer-info">
+
+<div class="info-box">
+
+<div class="icon">📨</div>
+
+<strong>Bezpośrednio do panelu</strong>
+
+<p>
+Twoje zamówienie trafia do systemu ShadowTale i jest dostępne
+dla administratorów.
+</p>
+
+</div>
+
+<div class="info-box">
+
+<div class="icon">🔐</div>
+
+<strong>Powiązane z kontem</strong>
+
+<p>
+Zamówienie jest przypisane do zalogowanego konta ShadowTale.
+</p>
+
+</div>
+
+<div class="info-box">
+
+<div class="icon">📊</div>
+
+<strong>Śledzenie statusu</strong>
+
+<p>
+Administrator może zmieniać status zamówienia,
+a numer zamówienia pozwala łatwo je odnaleźć.
+</p>
+
+</div>
 
 </section>
 
 </main>
 
 <footer class="footer">
+
 <div class="footer-links">
+
 <a href="index.html">Start</a>
 <a href="minecraft.html">Minecraft</a>
 <a href="undertale.html">Undertale</a>
 <a href="custom.html">Custom</a>
 <a href="discord.html">Discord</a>
 <a href="regulamin.html">Regulamin</a>
+
 </div>
+
+<div>
 ShadowTale © 2026
+</div>
+
 </footer>
 
-<script src="app.js"></script>
+<script src="music.js"></script>
 <script src="stats-tracker.js"></script>
 
+<script>
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const form = document.getElementById("custom-order-form");
+    const submitButton = document.getElementById("submit-order");
+    const loginWarning = document.getElementById("login-warning");
+    const accountInfo = document.getElementById("account-info");
+    const message = document.getElementById("form-message");
+
+    let currentUser = null;
+    let currentProfile = null;
+
+    function getElement(id) {
+        return document.getElementById(id);
+    }
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+    function showMessage(text, type) {
+
+        message.textContent = text;
+
+        message.className =
+            "form-message show " +
+            (type || "error");
+
+    }
+
+    function hideMessage() {
+
+        message.textContent = "";
+        message.className = "form-message";
+
+    }
+
+    function updateSummary() {
+
+        getElement("summary-name").textContent =
+            getElement("custom-name").value.trim() || "—";
+
+        getElement("summary-type").textContent =
+            getElement("custom-type").value || "—";
+
+        getElement("summary-version").textContent =
+            getElement("custom-version").value.trim() || "—";
+
+        getElement("summary-budget").textContent =
+            getElement("custom-budget").value || "—";
+
+        getElement("summary-deadline").textContent =
+            getElement("custom-deadline").value || "—";
+
+        getElement("summary-contact").textContent =
+            getElement("custom-contact").value || "—";
+
+    }
+
+    [
+        "custom-name",
+        "custom-type",
+        "custom-version",
+        "custom-budget",
+        "custom-deadline",
+        "custom-contact"
+    ].forEach(id => {
+
+        const element = getElement(id);
+
+        if (!element) {
+            return;
+        }
+
+        element.addEventListener("input", updateSummary);
+        element.addEventListener("change", updateSummary);
+
+    });
+
+    updateSummary();
+
+    async function getSupabaseClient() {
+
+        if (window.supabaseClient) {
+            return window.supabaseClient;
+        }
+
+        if (
+            window.ShadowTale &&
+            typeof window.ShadowTale.getSupabase === "function"
+        ) {
+
+            const client = window.ShadowTale.getSupabase();
+
+            if (client) {
+                window.supabaseClient = client;
+                return client;
+            }
+
+        }
+
+        if (
+            window.supabase &&
+            typeof window.supabase.createClient === "function"
+        ) {
+
+            const config = window.CONFIG ||
+                window.SHADOWTALE_CONFIG ||
+                {};
+
+            const url = config.supabaseUrl;
+            const key = config.supabaseKey;
+
+            if (!url || !key) {
+                return null;
+            }
+
+            try {
+
+                window.supabaseClient =
+                    window.supabase.createClient(
+                        url,
+                        key,
+                        {
+                            auth: {
+                                persistSession: true,
+                                autoRefreshToken: true,
+                                detectSessionInUrl: true
+                            }
+                        }
+                    );
+
+                return window.supabaseClient;
+
+            } catch (error) {
+
+                console.error(
+                    "Nie udało się utworzyć klienta Supabase:",
+                    error
+                );
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+    async function getCurrentUser() {
+
+        const supabase = await getSupabaseClient();
+
+        if (!supabase) {
+            return null;
+        }
+
+        try {
+
+            const {
+                data,
+                error
+            } = await supabase.auth.getUser();
+
+            if (error || !data || !data.user) {
+                return null;
+            }
+
+            return data.user;
+
+        } catch (error) {
+
+            console.error(
+                "Błąd pobierania użytkownika:",
+                error
+            );
+
+            return null;
+
+        }
+
+    }
+
+    async function getSessionToken() {
+
+        const supabase = await getSupabaseClient();
+
+        if (!supabase) {
+            return null;
+        }
+
+        try {
+
+            const {
+                data,
+                error
+            } = await supabase.auth.getSession();
+
+            if (
+                error ||
+                !data ||
+                !data.session
+            ) {
+                return null;
+            }
+
+            return data.session.access_token || null;
+
+        } catch (error) {
+
+            console.error(
+                "Błąd pobierania sesji:",
+                error
+            );
+
+            return null;
+
+        }
+
+    }
+
+    async function getProfile(userId) {
+
+        const supabase = await getSupabaseClient();
+
+        if (!supabase || !userId) {
+            return null;
+        }
+
+        try {
+
+            const {
+                data,
+                error
+            } = await supabase
+                .from("profiles")
+                .select("username, avatar_url, role")
+                .eq("id", userId)
+                .maybeSingle();
+
+            if (error) {
+
+                console.warn(
+                    "Nie udało się pobrać profilu:",
+                    error
+                );
+
+                return null;
+
+            }
+
+            return data || null;
+
+        } catch (error) {
+
+            console.warn(
+                "Błąd profilu:",
+                error
+            );
+
+            return null;
+
+        }
+
+    }
+
+    function getUsername(user, profile) {
+
+        if (
+            profile &&
+            profile.username
+        ) {
+            return profile.username;
+        }
+
+        if (
+            window.ShadowTale &&
+            typeof window.ShadowTale.getUsername === "function"
+        ) {
+
+            const username =
+                window.ShadowTale.getUsername();
+
+            if (username) {
+                return username;
+            }
+
+        }
+
+        const metadata =
+            user?.user_metadata || {};
+
+        return (
+            metadata.username ||
+            metadata.nick ||
+            metadata.nickname ||
+            metadata.name ||
+            metadata.display_name ||
+            metadata.full_name ||
+            user?.email?.split("@")[0] ||
+            "Użytkownik"
+        );
+
+    }
+
+    function getAvatar(user, profile) {
+
+        if (
+            profile &&
+            profile.avatar_url
+        ) {
+            return profile.avatar_url;
+        }
+
+        const metadata =
+            user?.user_metadata || {};
+
+        return (
+            metadata.avatar_url ||
+            metadata.picture ||
+            "assets/logo.png"
+        );
+
+    }
+
+    function setLoggedOutState() {
+
+        currentUser = null;
+        currentProfile = null;
+
+        loginWarning.classList.add("show");
+
+        accountInfo.classList.remove("loading");
+
+        accountInfo.innerHTML = `
+            <img
+                class="account-avatar"
+                src="assets/logo.png"
+                alt=""
+            >
+
+            <div>
+                <strong>Brak zalogowanego konta</strong>
+                <small>Zaloguj się, aby złożyć zamówienie.</small>
+            </div>
+        `;
+
+        submitButton.disabled = true;
+        submitButton.textContent =
+            "Zaloguj się, aby zamówić";
+
+    }
+
+    async function loadAccount() {
+
+        const supabase =
+            await getSupabaseClient();
+
+        if (!supabase) {
+
+            accountInfo.classList.remove("loading");
+
+            accountInfo.innerHTML = `
+                <img
+                    class="account-avatar"
+                    src="assets/logo.png"
+                    alt=""
+                >
+
+                <div>
+                    <strong>Nie udało się połączyć z kontem</strong>
+                    <small>Sprawdź konfigurację Supabase.</small>
+                </div>
+            `;
+
+            submitButton.disabled = true;
+            submitButton.textContent =
+                "Błąd połączenia";
+
+            return;
+
+        }
+
+        currentUser =
+            await getCurrentUser();
+
+        if (!currentUser) {
+
+            setLoggedOutState();
+            return;
+
+        }
+
+        currentProfile =
+            await getProfile(currentUser.id);
+
+        const username =
+            getUsername(
+                currentUser,
+                currentProfile
+            );
+
+        const email =
+            currentUser.email ||
+            "Brak adresu e-mail";
+
+        const avatar =
+            getAvatar(
+                currentUser,
+                currentProfile
+            );
+
+        loginWarning.classList.remove("show");
+
+        accountInfo.classList.remove("loading");
+
+        accountInfo.innerHTML = `
+
+            <img
+                class="account-avatar"
+                src="${escapeHtml(avatar)}"
+                alt=""
+                onerror="this.src='assets/logo.png'"
+            >
+
+            <div>
+
+                <strong>
+                    ${escapeHtml(username)}
+                </strong>
+
+                <small>
+                    ${escapeHtml(email)}
+                </small>
+
+            </div>
+
+            <div class="account-status">
+                ZALOGOWANY
+            </div>
+
+        `;
+
+        submitButton.disabled = false;
+        submitButton.textContent =
+            "🚀 Wyślij zamówienie";
+
+    }
+
+    await loadAccount();
+
+    form.addEventListener("submit", async event => {
+
+        event.preventDefault();
+
+        hideMessage();
+
+        if (!currentUser) {
+
+            showMessage(
+                "Musisz być zalogowany, aby złożyć zamówienie.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        const projectName =
+            getElement("custom-name")
+                .value
+                .trim();
+
+        const projectType =
+            getElement("custom-type")
+                .value;
+
+        const version =
+            getElement("custom-version")
+                .value
+                .trim();
+
+        const description =
+            getElement("custom-description")
+                .value
+                .trim();
+
+        const features =
+            getElement("custom-features")
+                .value
+                .trim();
+
+        const budget =
+            getElement("custom-budget")
+                .value;
+
+        const deadline =
+            getElement("custom-deadline")
+                .value;
+
+        const contactMethod =
+            getElement("custom-contact")
+                .value;
+
+        const contactValue =
+            getElement("custom-contact-value")
+                .value
+                .trim();
+
+        const extra =
+            getElement("custom-extra")
+                .value
+                .trim();
+
+        if (!projectName) {
+
+            showMessage(
+                "Podaj nazwę projektu.",
+                "error"
+            );
+
+            getElement("custom-name").focus();
+            return;
+
+        }
+
+        if (!projectType) {
+
+            showMessage(
+                "Wybierz typ projektu.",
+                "error"
+            );
+
+            getElement("custom-type").focus();
+            return;
+
+        }
+
+        if (!description) {
+
+            showMessage(
+                "Opisz swój projekt.",
+                "error"
+            );
+
+            getElement("custom-description").focus();
+            return;
+
+        }
+
+        if (description.length < 10) {
+
+            showMessage(
+                "Opis projektu jest zbyt krótki. Podaj trochę więcej szczegółów.",
+                "error"
+            );
+
+            getElement("custom-description").focus();
+            return;
+
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent =
+            "⏳ Wysyłanie...";
+
+        const token =
+            await getSessionToken();
+
+        if (!token) {
+
+            showMessage(
+                "Sesja logowania wygasła. Zaloguj się ponownie.",
+                "error"
+            );
+
+            submitButton.disabled = false;
+            submitButton.textContent =
+                "🚀 Wyślij zamówienie";
+
+            return;
+
+        }
+
+        const username =
+            getUsername(
+                currentUser,
+                currentProfile
+            );
+
+        const orderData = {
+
+            user_id:
+                currentUser.id,
+
+            username:
+                username,
+
+            user_email:
+                currentUser.email || null,
+
+            project_name:
+                projectName,
+
+            project_type:
+                projectType,
+
+            version:
+                version || null,
+
+            description:
+                description,
+
+            features:
+                features || null,
+
+            budget:
+                budget || null,
+
+            deadline:
+                deadline || null,
+
+            contact_method:
+                contactMethod || null,
+
+            contact_value:
+                contactValue || null,
+
+            extra:
+                extra || null
+
+        };
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/custom-orders",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " + token
+                        },
+
+                        credentials: "include",
+
+                        body:
+                            JSON.stringify(orderData)
+                    }
+                );
+
+            let result = null;
+
+            try {
+
+                result =
+                    await response.json();
+
+            } catch {
+                result = null;
+            }
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result?.error ||
+                    result?.message ||
+                    "Nie udało się wysłać zamówienia."
+                );
+
+            }
+
+            const orderId =
+                result?.order_id ||
+                result?.id ||
+                result?.order?.id ||
+                result?.ticket_id ||
+                result?.ticket?.id;
+
+            showMessage(
+                orderId
+                    ? "Zamówienie zostało wysłane! Numer zamówienia: #" + orderId
+                    : "Zamówienie zostało wysłane do panelu administracyjnego!",
+                "success"
+            );
+
+            message.classList.add(
+                "success-state"
+            );
+
+            form.reset();
+
+            updateSummary();
+
+            getElement("custom-name").focus();
+
+            window.scrollTo({
+                top:
+                    document
+                        .querySelector(".custom-page")
+                        .offsetTop,
+                behavior: "smooth"
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Błąd wysyłania zamówienia Custom:",
+                error
+            );
+
+            showMessage(
+                error?.message ||
+                "Wystąpił błąd podczas wysyłania zamówienia.",
+                "error"
+            );
+
+        } finally {
+
+            submitButton.disabled =
+                !currentUser;
+
+            submitButton.textContent =
+                currentUser
+                    ? "🚀 Wyślij zamówienie"
+                    : "Zaloguj się, aby zamówić";
+
+        }
+
+    });
+
+});
+
+</script>
+
 </body>
-</html> s spampo neda
+</html>
