@@ -1,0 +1,896 @@
+<!doctype html>
+
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Gry — ShadowTale.pl</title>
+
+<meta
+    name="description"
+    content="Gry ShadowTale.pl — Wordle, Globle, Flagle i Block Blast."
+>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: #05050d;
+        color: #f5f3ff;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* =========================
+       MNIEJSZY HEADER
+    ========================= */
+
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        width: 100%;
+        background: rgba(5, 5, 13, 0.94);
+        border-bottom: 1px solid rgba(164, 135, 255, 0.16);
+        backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+        width: min(1180px, calc(100% - 28px));
+        min-height: 64px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .logo img {
+        width: 38px;
+        height: 38px;
+        object-fit: contain;
+        border-radius: 10px;
+    }
+
+    .logo-text {
+        display: flex;
+        align-items: baseline;
+        font-weight: 900;
+        font-size: 18px;
+        letter-spacing: -0.7px;
+        white-space: nowrap;
+    }
+
+    .logo-shadow {
+        color: #ffffff;
+    }
+
+    .logo-tale {
+        color: #a487ff;
+    }
+
+    .logo-pl {
+        color: #39e58c;
+        font-size: 12px;
+        margin-left: 1px;
+    }
+
+    .header-search {
+        position: relative;
+        flex: 1;
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    #global-search-form {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        border-radius: 11px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(164, 135, 255, 0.18);
+    }
+
+    #global-search {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #fff;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    #global-search::placeholder {
+        color: rgba(255, 255, 255, 0.42);
+    }
+
+    #search-button {
+        width: 42px;
+        height: 100%;
+        border: 0;
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    #search-button:hover {
+        background: rgba(164, 135, 255, 0.12);
+    }
+
+    #search-results {
+        position: absolute;
+        top: calc(100% + 7px);
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
+    }
+
+    .header-button {
+        min-height: 40px;
+        padding: 0 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        border-radius: 10px;
+        border: 1px solid rgba(164, 135, 255, 0.18);
+        background: rgba(255, 255, 255, 0.045);
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        transition: 0.2s ease;
+    }
+
+    .header-button:hover {
+        background: rgba(164, 135, 255, 0.12);
+        border-color: rgba(164, 135, 255, 0.35);
+        transform: translateY(-1px);
+    }
+
+    #account-button {
+        max-width: 190px;
+    }
+
+    #account-avatar {
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid rgba(164, 135, 255, 0.35);
+    }
+
+    #account-name {
+        max-width: 105px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* =========================
+       GRY
+    ========================= */
+
+    main {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 55px 0 80px;
+    }
+
+    .games-hero {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto 42px;
+    }
+
+    .games-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(164, 135, 255, 0.1);
+        border: 1px solid rgba(164, 135, 255, 0.2);
+        color: #bcaaff;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .games-hero h1 {
+        margin: 15px 0 10px;
+        font-size: clamp(36px, 6vw, 58px);
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: -2px;
+    }
+
+    .games-hero h1 span {
+        color: #a487ff;
+    }
+
+    .games-hero p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 16px;
+        line-height: 1.65;
+    }
+
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .game-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+        padding: 24px;
+        border-radius: 20px;
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.055),
+                rgba(255, 255, 255, 0.018)
+            );
+        border: 1px solid rgba(164, 135, 255, 0.16);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+        transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(164, 135, 255, 0.42);
+    }
+
+    .game-card::before {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        top: -80px;
+        right: -60px;
+        border-radius: 50%;
+        background: rgba(164, 135, 255, 0.1);
+        filter: blur(35px);
+        pointer-events: none;
+    }
+
+    .game-icon {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 18px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-icon img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+    }
+
+    .game-card h2 {
+        margin: 0 0 8px;
+        font-size: 25px;
+        font-weight: 900;
+    }
+
+    .game-card p {
+        margin: 0 0 20px;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.55;
+        font-size: 14px;
+        max-width: 500px;
+    }
+
+    .game-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 0 18px;
+        border-radius: 11px;
+        background: #a487ff;
+        color: #0b0815;
+        text-decoration: none;
+        font-weight: 900;
+        font-size: 13px;
+        transition: 0.2s ease;
+    }
+
+    .game-button:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    .site-footer {
+        border-top: 1px solid rgba(164, 135, 255, 0.14);
+        background: #03030a;
+    }
+
+    .footer-inner {
+        width: min(1180px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 42px 0 20px;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 1.5fr repeat(4, 1fr);
+        gap: 30px;
+    }
+
+    .footer-column {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .footer-column .logo {
+        margin-bottom: 7px;
+    }
+
+    .footer-column p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 13px;
+        line-height: 1.6;
+        max-width: 240px;
+    }
+
+    .footer-column h3 {
+        margin: 0 0 8px;
+        font-size: 14px;
+        color: #fff;
+    }
+
+    .footer-column a:not(.logo) {
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        font-size: 13px;
+        transition: color 0.2s ease;
+    }
+
+    .footer-column a:not(.logo):hover {
+        color: #a487ff;
+    }
+
+    .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 35px;
+        padding-top: 17px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        color: rgba(255, 255, 255, 0.32);
+        font-size: 12px;
+    }
+
+    @media (max-width: 950px) {
+        .header-inner {
+            min-height: 60px;
+        }
+
+        .header-search {
+            max-width: none;
+        }
+
+        .header-button span {
+            display: none;
+        }
+
+        .header-button {
+            width: 40px;
+            padding: 0;
+        }
+
+        #account-button {
+            width: auto;
+            padding: 0 9px;
+        }
+
+        #account-name {
+            display: none;
+        }
+
+        .footer-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 700px) {
+        .header-inner {
+            width: min(100% - 18px, 1180px);
+            gap: 8px;
+        }
+
+        .logo-text {
+            display: none;
+        }
+
+        .logo img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .header-search {
+            max-width: none;
+        }
+
+        .games-grid {
+            grid-template-columns: 1fr;
+        }
+
+        main {
+            padding-top: 38px;
+        }
+
+        .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-actions {
+            gap: 4px;
+        }
+
+        .header-button {
+            min-height: 36px;
+            width: 36px;
+            border-radius: 9px;
+        }
+
+        #account-button {
+            width: 36px;
+            padding: 0;
+        }
+
+        #account-avatar {
+            width: 25px;
+            height: 25px;
+        }
+
+        #global-search-form {
+            height: 36px;
+        }
+
+        .game-card {
+            padding: 20px;
+        }
+
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+        }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+
+<div id="stars"></div>
+
+<header class="site-header">
+    <div class="header-inner">
+
+        <a href="index.html" class="logo">
+            <img src="assets/logo.png" alt="ShadowTale">
+
+            <span class="logo-text">
+                <span class="logo-shadow">SHADOW</span>
+                <span class="logo-tale">TALE</span>
+                <span class="logo-pl">.PL</span>
+            </span>
+        </a>
+
+        <div class="header-search">
+            <form id="global-search-form" autocomplete="off">
+                <input
+                    type="search"
+                    id="global-search"
+                    placeholder="Szukaj plików, skryptów, map..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="search-button"
+                    type="submit"
+                    aria-label="Szukaj"
+                >🔎</button>
+            </form>
+
+            <div id="search-results"></div>
+        </div>
+
+        <div class="header-actions">
+
+            <a
+                href="admin.html"
+                id="panel-button"
+                class="header-button"
+                style="display:none;"
+            >
+                🛡️ <span>Panel</span>
+            </a>
+
+            <a
+                href="media.html"
+                class="header-button blocked-feature"
+                data-blocked="media"
+            >
+                🎬 <span>Media</span>
+            </a>
+
+            <a
+                href="login.html"
+                id="account-button"
+                class="header-button"
+                aria-label="Zaloguj się"
+            >
+                <img
+                    id="account-avatar"
+                    src="assets/logo.png"
+                    alt="ShadowTale"
+                >
+
+                <span id="account-name">
+                    Zaloguj się
+                </span>
+            </a>
+
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <section class="games-hero">
+        <div class="games-badge">
+            🎮 ShadowTale Games
+        </div>
+
+        <h1>
+            Zagraj w <span>ShadowTale</span>
+        </h1>
+
+        <p>
+            Wybierz grę i sprawdź swoje umiejętności.
+            Codzienne wyzwania, rywalizacja i dobra zabawa.
+        </p>
+    </section>
+
+    <section class="games-grid">
+
+        <article class="game-card">
+            <div class="game-icon">
+                <img
+                    src="assets/wordle.png"
+                    alt="Wordle"
+                >
+            </div>
+
+            <h2>Wordle</h2>
+
+            <p>
+                Odgadnij ukryte słowo. Masz ograniczoną liczbę prób,
+                więc dobrze przemyśl każdy ruch.
+            </p>
+
+            <a href="wordle.html" class="game-button">
+                Zagraj →
+            </a>
+        </article>
+
+        <article class="game-card">
+            <div class="game-icon">
+                <img
+                    src="assets/globle.png"
+                    alt="Globle"
+                >
+            </div>
+
+            <h2>Globle</h2>
+
+            <p>
+                Spróbuj odgadnąć tajemniczy kraj na podstawie
+                kolejnych podpowiedzi.
+            </p>
+
+            <a href="globle.html" class="game-button">
+                Zagraj →
+            </a>
+        </article>
+
+        <article class="game-card">
+            <div class="game-icon">
+                <img
+                    src="assets/flagle.png"
+                    alt="Flagle"
+                >
+            </div>
+
+            <h2>Flagle</h2>
+
+            <p>
+                Rozpoznaj flagę ukrytą za kolejnymi fragmentami.
+                Im szybciej zgadniesz, tym lepiej.
+            </p>
+
+            <a href="flagle.html" class="game-button">
+                Zagraj →
+            </a>
+        </article>
+
+        <article class="game-card">
+            <div class="game-icon">
+                <img
+                    src="assets/block.png"
+                    alt="Block Blast"
+                >
+            </div>
+
+            <h2>Block Blast</h2>
+
+            <p>
+                Układaj klocki, zdobywaj punkty i próbuj pobić
+                swój najlepszy wynik.
+            </p>
+
+            <a href="block.html" class="game-button">
+                Zagraj →
+            </a>
+        </article>
+
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+
+        <div class="footer-grid">
+
+            <div class="footer-column">
+
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="ShadowTale">
+
+                    <span class="logo-text">
+                        <span class="logo-shadow">SHADOW</span>
+                        <span class="logo-tale">TALE</span>
+                        <span class="logo-pl">.PL</span>
+                    </span>
+                </a>
+
+                <p>
+                    ShadowTale.pl — Twój świat, twoje zasady.
+                </p>
+
+            </div>
+
+            <div class="footer-column">
+                <h3>Minecraft</h3>
+
+                <a href="minecraft.html">Wszystkie</a>
+                <a href="mc-skrypty.html">Skrypty</a>
+                <a href="mc-mapy.html">Mapy</a>
+                <a href="mc-configi.html">Configi</a>
+                <a href="mc-txt.html">TXT</a>
+                <a href="mc-skiny.html">Skiny</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Undertale</h3>
+
+                <a
+                    href="undertale.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Wszystkie
+                </a>
+
+                <a
+                    href="ut-postacie.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Lore postaci
+                </a>
+
+                <a
+                    href="ut-przedmioty.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Lore przedmiotów
+                </a>
+
+                <a
+                    href="ut-dane.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Dane / wykresy
+                </a>
+
+                <a
+                    href="ut-save.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Save'y
+                </a>
+
+                <a
+                    href="ut-mody.html"
+                    class="blocked-feature"
+                    data-blocked="undertale"
+                >
+                    Mody
+                </a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Konto</h3>
+
+                <a href="konto.html">Konto</a>
+                <a href="ustawienia.html">Ustawienia</a>
+                <a href="statystyki.html">Statystyki</a>
+                <a href="historia.html">Historia</a>
+                <a href="platnosci.html">Płatności</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Pomoc</h3>
+
+                <a href="pomoc.html">Centrum pomocy</a>
+                <a href="ticket.html">Ticket</a>
+                <a href="propozycje.html">Propozycje</a>
+                <a href="regulaminy.html">Regulaminy</a>
+                <a href="prywatnosc.html">Prywatność</a>
+                <a href="cookies.html">Cookies</a>
+                <a href="zasady-zakupow.html">Zasady zakupów</a>
+                <a href="discord.html">Discord</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 ShadowTale.pl</span>
+            <span>Twój świat, twoje zasady.</span>
+        </div>
+
+    </div>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+
+        const accountButton = document.getElementById("account-button");
+        const accountName = document.getElementById("account-name");
+        const accountAvatar = document.getElementById("account-avatar");
+
+        if (!accountButton || !accountName || !accountAvatar) {
+            return;
+        }
+
+        try {
+            if (
+                typeof supabase === "undefined" ||
+                !supabase ||
+                typeof supabase.auth === "undefined"
+            ) {
+                console.warn("Supabase nie jest dostępne.");
+                return;
+            }
+
+            const {
+                data: {
+                    session
+                }
+            } = await supabase.auth.getSession();
+
+            if (!session || !session.user) {
+                accountButton.href = "login.html";
+                accountName.textContent = "Zaloguj się";
+                accountAvatar.src = "assets/logo.png";
+                return;
+            }
+
+            const user = session.user;
+
+            let displayName =
+                user.user_metadata?.username ||
+                user.user_metadata?.name ||
+                user.user_metadata?.display_name ||
+                user.email?.split("@")[0] ||
+                "Użytkownik";
+
+            let avatar =
+                user.user_metadata?.avatar_url ||
+                user.user_metadata?.picture ||
+                user.user_metadata?.avatar ||
+                "assets/logo.png";
+
+            accountName.textContent = displayName;
+            accountAvatar.src = avatar;
+            accountAvatar.alt = displayName;
+
+            accountButton.href = "konto.html";
+            accountButton.setAttribute(
+                "aria-label",
+                "Konto użytkownika " + displayName
+            );
+
+        } catch (error) {
+            console.error("Błąd pobierania konta:", error);
+
+            accountButton.href = "login.html";
+            accountName.textContent = "Zaloguj się";
+            accountAvatar.src = "assets/logo.png";
+        }
+
+    });
+</script>
+
+<script src="music.js"></script>
+<script src="stats-tracker.js"></script>
+
+
+</body>
+</html>
