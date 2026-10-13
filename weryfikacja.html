@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weryfikacja — ShadowTale</title>
+
+    <link rel="icon" href="assets/logo.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 25px;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(155, 92, 255, 0.28),
+                    transparent 42%
+                ),
+                radial-gradient(
+                    circle at 0% 100%,
+                    rgba(89, 170, 255, 0.10),
+                    transparent 35%
+                ),
+                #05050b;
+
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+
+            position: fixed;
+            inset: 0;
+
+            pointer-events: none;
+
+            opacity: 0.5;
+
+            background-image:
+                radial-gradient(
+                    circle,
+                    rgba(255,255,255,.8) 1px,
+                    transparent 1px
+                ),
+                radial-gradient(
+                    circle,
+                    rgba(155,92,255,.5) 1px,
+                    transparent 1px
+                );
+
+            background-size:
+                90px 90px,
+                150px 150px;
+
+            background-position:
+                10px 20px,
+                50px 80px;
+        }
+
+        .box {
+            position: relative;
+
+            width: min(100%, 520px);
+
+            padding: 42px 35px 35px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20, 17, 38, 0.97),
+                    rgba(8, 8, 18, 0.97)
+                );
+
+            border: 1px solid rgba(155, 92, 255, 0.35);
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 0 80px rgba(155, 92, 255, 0.12),
+                0 20px 60px rgba(0, 0, 0, 0.45);
+
+            backdrop-filter: blur(15px);
+
+            animation: appear .55s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .box::before {
+            content: "";
+
+            position: absolute;
+
+            top: -1px;
+            left: 15%;
+
+            width: 70%;
+            height: 2px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #9b5cff,
+                    transparent
+                );
+
+            box-shadow:
+                0 0 20px #9b5cff;
+
+            border-radius: 50%;
+        }
+
+        .logo-wrapper {
+            width: 105px;
+            height: 105px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(155,92,255,.22),
+                    rgba(155,92,255,.03) 70%,
+                    transparent
+                );
+
+            box-shadow:
+                0 0 35px rgba(155,92,255,.18);
+
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow:
+                    0 0 25px rgba(155,92,255,.15);
+            }
+
+            50% {
+                box-shadow:
+                    0 0 45px rgba(155,92,255,.3);
+            }
+        }
+
+        .logo {
+            width: 82px;
+            height: 82px;
+
+            object-fit: contain;
+        }
+
+        h1 {
+            margin: 0;
+
+            font-size: 30px;
+
+            letter-spacing: .3px;
+        }
+
+        .subtitle {
+            margin: 10px auto 0;
+
+            max-width: 400px;
+
+            color: #aaa5bb;
+
+            font-size: 15px;
+
+            line-height: 1.65;
+        }
+
+        .steps {
+            display: flex;
+            align-items: center;
+
+            margin: 30px 0 25px;
+        }
+
+        .step {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            gap: 8px;
+
+            color: #777287;
+
+            font-size: 12px;
+        }
+
+        .step-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,.04);
+
+            border: 1px solid rgba(255,255,255,.08);
+
+            font-size: 17px;
+        }
+
+        .step.active {
+            color: #fff;
+        }
+
+        .step.active .step-icon {
+            background:
+                rgba(155,92,255,.16);
+
+            border-color:
+                rgba(155,92,255,.5);
+
+            box-shadow:
+                0 0 20px rgba(155,92,255,.15);
+        }
+
+        .step.completed {
+            color: #39e58c;
+        }
+
+        .step.completed .step-icon {
+            background:
+                rgba(57,229,140,.10);
+
+            border-color:
+                rgba(57,229,140,.35);
+
+            box-shadow:
+                0 0 20px rgba(57,229,140,.12);
+        }
+
+        .step-line {
+            width: 55px;
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(155,92,255,.45),
+                    rgba(155,92,255,.12)
+                );
+
+            margin-bottom: 22px;
+        }
+
+        .account {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 13px 15px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(57,229,140,.07);
+
+            border:
+                1px solid rgba(57,229,140,.2);
+
+            color: #39e58c;
+
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+
+            margin-top: 18px;
+
+            padding: 16px 20px;
+
+            border: none;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #9b5cff,
+                    #7940dc
+                );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 25px rgba(155,92,255,.18);
+
+            transition:
+                transform .2s,
+                box-shadow .2s,
+                opacity .2s;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 30px rgba(155,92,255,.32);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: .55;
+
+            cursor: not-allowed;
+        }
+
+        .secondary-button {
+            margin-top: 10px;
+
+            background:
+                rgba(255,255,255,.05);
+
+            border:
+                1px solid rgba(255,255,255,.1);
+
+            box-shadow: none;
+        }
+
+        .secondary-button:hover:not(:disabled) {
+            background:
+                rgba(255,255,255,.08);
+
+            box-shadow: none;
+        }
+
+        .status {
+            display: none;
+
+            margin-top: 16px;
+
+            padding: 14px 15px;
+
+            border-radius: 12px;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .success {
+            display: block;
+
+            background:
+                rgba(57,229,140,.08);
+
+            border:
+                1px solid rgba(57,229,140,.3);
+
+            color: #39e58c;
+        }
+
+        .error {
+            display: block;
+
+            background:
+                rgba(255,84,112,.08);
+
+            border:
+                1px solid rgba(255,84,112,.3);
+
+            color: #ff5470;
+        }
+
+        .loading {
+            display: block;
+
+            background:
+                rgba(255,209,102,.07);
+
+            border:
+                1px solid rgba(255,209,102,.2);
+
+            color: #ffd166;
+        }
+
+        .login-box {
+            display: none;
+
+            margin-top: 22px;
+
+            text-align: left;
+        }
+
+        .login-box h2 {
+            margin: 0 0 8px;
+
+            text-align: center;
+
+            font-size: 19px;
+        }
+
+        .login-description {
+            margin: 0 0 18px;
+
+            text-align: center;
+
+            color: #918b9f;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #aaa5b7;
+
+            font-size: 13px;
+        }
+
+        .field input {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border-radius: 11px;
+
+            outline: none;
+
+            color: #fff;
+
+            background:
+                rgba(255,255,255,.045);
+
+            border:
+                1px solid rgba(255,255,255,.1);
+
+            transition: .2s;
+        }
+
+        .field input::placeholder {
+            color: #625d6e;
+        }
+
+        .field input:focus {
+            border-color:
+                rgba(155,92,255,.65);
+
+            box-shadow:
+                0 0 0 3px rgba(155,92,255,.08);
+        }
+
+        .logged-box {
+            display: none;
+
+            margin-top: 22px;
+        }
+
+        .logged-icon {
+            width: 65px;
+            height: 65px;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                rgba(57,229,140,.08);
+
+            border:
+                1px solid rgba(57,229,140,.25);
+
+            font-size: 27px;
+
+            box-shadow:
+                0 0 25px rgba(57,229,140,.10);
+        }
+
+        .logged-title {
+            margin: 0;
+
+            font-size: 20px;
+        }
+
+        .logged-description {
+            margin: 9px auto 0;
+
+            color: #918b9f;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        .discord-info {
+            display: none;
+
+            margin-top: 17px;
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(155,92,255,.07);
+
+            border:
+                1px solid rgba(155,92,255,.18);
+
+            color: #bcb5cb;
+
+            font-size: 13px;
+
+            line-height: 1.55;
+        }
+
+        .footer {
+            margin-top: 25px;
+
+            color: #625d6e;
+
+            font-size: 11px;
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 15px;
+            }
+
+            .box {
+                padding: 32px 22px 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .step-line {
+                width: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <div class="logo-wrapper">
+        <img
+            src="assets/logo.png"
+            class="logo"
+            alt="ShadowTale"
+        >
+    </div>
+
+    <h1>🔐 Weryfikacja</h1>
+
+    <p class="subtitle">
+        Zaloguj się na swoje konto ShadowTale,
+        aby korzystać z systemu weryfikacji Discord.
+    </p>
+
+    <div class="steps">
+
+        <div
+            id="stepDiscord"
+            class="step"
+        >
+            <div class="step-icon">💬</div>
+            <span>Discord</span>
+        </div>
+
+        <div class="step-line"></div>
+
+        <div
+            id="stepAccount"
+            class="step active"
+        >
+            <div class="step-icon">🔐</div>
+            <span>Konto</span>
+        </div>
+
+        <div class="step-line"></div>
+
+        <div
+            id="stepDone"
+            class="step"
+        >
+            <div class="step-icon">✅</div>
+            <span>Gotowe</span>
+        </div>
+
+    </div>
+
+    <div
+        id="account"
+        class="account"
+    ></div>
+
+    <!-- LOGOWANIE / REJESTRACJA -->
+
+    <div
+        id="loginBox"
+        class="login-box"
+    >
+
+        <h2>👤 Konto ShadowTale</h2>
+
+        <p class="login-description">
+            Zaloguj się lub utwórz konto,
+            aby kontynuować.
+        </p>
+
+        <div class="field">
+
+            <label for="email">
+                Adres e-mail
+            </label>
+
+            <input
+                id="email"
+                type="email"
+                autocomplete="email"
+                placeholder="twoj@email.pl"
+            >
+
+        </div>
+
+        <div class="field">
+
+            <label for="password">
+                Hasło
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Twoje hasło"
+            >
+
+        </div>
+
+        <button id="loginButton">
+            🔑 ZALOGUJ SIĘ
+        </button>
+
+        <button
+            id="registerButton"
+            class="secondary-button"
+        >
+            ✨ UTWÓRZ KONTO
+        </button>
+
+    </div>
+
+    <!-- PANEL PO ZALOGOWANIU -->
+
+    <div
+        id="loggedBox"
+        class="logged-box"
+    >
+
+        <div class="logged-icon">
+            ✓
+        </div>
+
+        <h2
+            id="loggedTitle"
+            class="logged-title"
+        >
+            Zalogowano
+        </h2>
+
+        <p
+            id="loggedDescription"
+            class="logged-description"
+        ></p>
+
+        <div
+            id="discordInfo"
+            class="discord-info"
+        >
+            💬 Aby rozpocząć weryfikację Discord,
+            wróć na serwer ShadowTale i kliknij
+            przycisk weryfikacji.
+        </div>
+
+        <button
+            id="verifyButton"
+        >
+            ✅ ZWERYFIKUJ SIĘ
+        </button>
+
+        <button
+            id="logoutButton"
+            class="secondary-button"
+        >
+            🚪 WYLOGUJ
+        </button>
+
+    </div>
+
+    <div
+        id="status"
+        class="status"
+    ></div>
+
+    <div class="footer">
+        ShadowTale • Bezpieczna weryfikacja
+    </div>
+
+</div>
+
+<script>
+
+    /*
+        config.js powinien zawierać:
+
+        const SUPABASE_URL = "https://...supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_...";
+    */
+
+    if (
+        typeof SUPABASE_URL === "undefined" ||
+        typeof SUPABASE_PUBLISHABLE_KEY === "undefined"
+    ) {
+
+        document.body.innerHTML = `
+            <div style="
+                color:white;
+                font-family:Arial;
+                text-align:center;
+                padding:40px;
+            ">
+                <h2>❌ Brak konfiguracji Supabase</h2>
+
+                <p>
+                    Sprawdź plik
+                    <b>config.js</b>.
+                </p>
+            </div>
+        `;
+
+        throw new Error(
+            "Brak konfiguracji Supabase."
+        );
+    }
+
+    const supabase =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+    const loginBox =
+        document.getElementById("loginBox");
+
+    const loggedBox =
+        document.getElementById("loggedBox");
+
+    const loginButton =
+        document.getElementById("loginButton");
+
+    const registerButton =
+        document.getElementById("registerButton");
+
+    const verifyButton =
+        document.getElementById("verifyButton");
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+    const account =
+        document.getElementById("account");
+
+    const status =
+        document.getElementById("status");
+
+    const email =
+        document.getElementById("email");
+
+    const password =
+        document.getElementById("password");
+
+    const loggedTitle =
+        document.getElementById("loggedTitle");
+
+    const loggedDescription =
+        document.getElementById("loggedDescription");
+
+    const discordInfo =
+        document.getElementById("discordInfo");
+
+    const stepDiscord =
+        document.getElementById("stepDiscord");
+
+    const stepAccount =
+        document.getElementById("stepAccount");
+
+    const stepDone =
+        document.getElementById("stepDone");
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const token =
+        params.get("token");
+
+    function showStatus(
+        message,
+        type
+    ) {
+
+        status.textContent = message;
+
+        status.className =
+            "status " + type;
+    }
+
+    function clearStatus() {
+
+        status.textContent = "";
+
+        status.className =
+            "status";
+    }
+
+    function showLogin() {
+
+        loginBox.style.display =
+            "block";
+
+        loggedBox.style.display =
+            "none";
+
+        account.style.display =
+            "none";
+
+        verifyButton.style.display =
+            "none";
+
+        discordInfo.style.display =
+            "none";
+
+        stepDiscord.classList.remove(
+            "completed"
+        );
+
+        stepAccount.classList.add(
+            "active"
+        );
+
+        stepDone.classList.remove(
+            "completed"
+        );
+    }
+
+    function showLoggedIn(user) {
+
+        loginBox.style.display =
+            "none";
+
+        loggedBox.style.display =
+            "block";
+
+        account.style.display =
+            "block";
+
+        account.textContent =
+            "✅ Zalogowano jako: " +
+            (user.email || "Twoje konto");
+
+        loggedTitle.textContent =
+            "Witaj na ShadowTale!";
+
+        if (token) {
+
+            loggedDescription.textContent =
+                "Twoje konto jest gotowe. " +
+                "Możesz teraz potwierdzić połączenie z Discordem.";
+
+            discordInfo.style.display =
+                "block";
+
+            verifyButton.style.display =
+                "block";
+
+            stepDiscord.classList.add(
+                "completed"
+            );
+
+            stepAccount.classList.add(
+                "completed"
+            );
+
+            stepAccount.classList.add(
+                "active"
+            );
+
+        } else {
+
+            loggedDescription.textContent =
+                "Twoje konto jest zalogowane. " +
+                "Aby się zweryfikować, rozpocznij proces na naszym Discordzie.";
+
+            discordInfo.style.display =
+                "block";
+
+            verifyButton.style.display =
+                "none";
+
+            stepAccount.classList.add(
+                "active"
+            );
+        }
+    }
+
+    async function checkSession() {
+
+        const {
+            data,
+            error
+        } = await supabase.auth.getSession();
+
+        if (error) {
+
+            console.error(error);
+
+            showLogin();
+
+            showStatus(
+                "❌ Nie udało się sprawdzić sesji.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (!data.session) {
+
+            showLogin();
+
+            return;
+        }
+
+        showLoggedIn(
+            data.session.user
+        );
+    }
+
+    loginButton.addEventListener(
+        "click",
+        async () => {
+
+            const userEmail =
+                email.value.trim();
+
+            const userPassword =
+                password.value;
+
+            if (
+                !userEmail ||
+                !userPassword
+            ) {
+
+                showStatus(
+                    "❌ Wpisz e-mail oraz hasło.",
+                    "error"
+                );
+
+                return;
+            }
+
+            loginButton.disabled =
+                true;
+
+            showStatus(
+                "⏳ Logowanie...",
+                "loading"
+            );
+
+            const {
+                data,
+                error
+            } = await supabase.auth.signInWithPassword({
+
+                email: userEmail,
+
+                password: userPassword
+
+            });
+
+            loginButton.disabled =
+                false;
+
+            if (error) {
+
+                console.error(error);
+
+                showStatus(
+                    "❌ Nieprawidłowy e-mail lub hasło.",
+                    "error"
+                );
+
+                return;
+            }
+
+            clearStatus();
+
+            showLoggedIn(
+                data.user
+            );
+        }
+    );
+
+    registerButton.addEventListener(
+        "click",
+        async () => {
+
+            const userEmail =
+                email.value.trim();
+
+            const userPassword =
+                password.value;
+
+            if (
+                !userEmail ||
+                !userPassword
+            ) {
+
+                showStatus(
+                    "❌ Wpisz e-mail oraz hasło.",
+                    "error"
+                );
+
+                return;
+            }
+
+            if (
+                userPassword.length < 6
+            ) {
+
+                showStatus(
+                    "❌ Hasło musi mieć co najmniej 6 znaków.",
+                    "error"
+                );
+
+                return;
+            }
+
+            registerButton.disabled =
+                true;
+
+            showStatus(
+                "⏳ Tworzenie konta...",
+                "loading"
+            );
+
+            const {
+                data,
+                error
+            } = await supabase.auth.signUp({
+
+                email: userEmail,
+
+                password: userPassword
+
+            });
+
+            registerButton.disabled =
+                false;
+
+            if (error) {
+
+                console.error(error);
+
+                showStatus(
+                    "❌ Nie udało się utworzyć konta: " +
+                    error.message,
+                    "error"
+                );
+
+                return;
+            }
+
+            /*
+                Jeżeli Supabase wymaga
+                potwierdzenia e-mail,
+                session może być pusta.
+            */
+
+            if (!data.session) {
+
+                showStatus(
+                    "📧 Konto zostało utworzone. " +
+                    "Sprawdź swoją skrzynkę e-mail " +
+                    "i potwierdź adres.",
+                    "success"
+                );
+
+                return;
+            }
+
+            showLoggedIn(
+                data.user
+            );
+
+            showStatus(
+                "✅ Konto zostało utworzone.",
+                "success"
+            );
+        }
+    );
+
+    verifyButton.addEventListener(
+        "click",
+        async () => {
+
+            if (!token) {
+
+                showStatus(
+                    "❌ Nie znaleziono tokenu Discord. " +
+                    "Rozpocznij weryfikację na Discordzie.",
+                    "error"
+                );
+
+                return;
+            }
+
+            const {
+                data: sessionData
+            } = await supabase.auth.getSession();
+
+            if (!sessionData.session) {
+
+                showLogin();
+
+                showStatus(
+                    "❌ Musisz być zalogowany.",
+                    "error"
+                );
+
+                return;
+            }
+
+            verifyButton.disabled =
+                true;
+
+            verifyButton.textContent =
+                "⏳ WERYFIKOWANIE...";
+
+            showStatus(
+                "⏳ Sprawdzanie tokenu Discord...",
+                "loading"
+            );
+
+            const {
+                data,
+                error
+            } = await supabase.rpc(
+                "verify_discord_token",
+                {
+                    p_token: token
+                }
+            );
+
+            if (error) {
+
+                console.error(error);
+
+                verifyButton.disabled =
+                    false;
+
+                verifyButton.textContent =
+                    "✅ ZWERYFIKUJ SIĘ";
+
+                showStatus(
+                    "❌ Wystąpił błąd podczas weryfikacji.",
+                    "error"
+                );
+
+                return;
+            }
+
+            if (
+                !data ||
+                !data.success
+            ) {
+
+                verifyButton.disabled =
+                    true;
+
+                showStatus(
+                    data?.message ||
+                    "❌ Token jest nieprawidłowy, wygasł albo został już wykorzystany.",
+                    "error"
+                );
+
+                return;
+            }
+
+            verifyButton.disabled =
+                true;
+
+            verifyButton.textContent =
+                "✅ ZWERYFIKOWANO";
+
+            stepDone.classList.add(
+                "completed"
+            );
+
+            stepDone.classList.add(
+                "active"
+            );
+
+            showStatus(
+                "✅ Weryfikacja zakończona pomyślnie! " +
+                "Możesz wrócić na Discorda.",
+                "success"
+            );
+        }
+    );
+
+    logoutButton.addEventListener(
+        "click",
+        async () => {
+
+            await supabase.auth.signOut();
+
+            clearStatus();
+
+            email.value = "";
+            password.value = "";
+
+            showLogin();
+        }
+    );
+
+    supabase.auth.onAuthStateChange(
+        (_event, session) => {
+
+            if (session) {
+
+                showLoggedIn(
+                    session.user
+                );
+
+            } else {
+
+                showLogin();
+
+            }
+        }
+    );
+
+    checkSession();
+
+</script>
+
+</body>
+</html>
