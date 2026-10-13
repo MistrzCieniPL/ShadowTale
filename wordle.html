@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ShadowTale — Wordle</title>
+
+<style>
+:root{
+    --bg:#050712;
+    --panel:#0b0e1d;
+    --panel2:#11152a;
+    --purple:#9b5cff;
+    --blue:#5865f2;
+    --green:#39e58c;
+    --yellow:#ffd166;
+    --red:#ff5470;
+    --text:#f4f1ff;
+    --muted:#9ca3c7;
+    --border:rgba(155,92,255,.25)
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:radial-gradient(circle at 50% -10%,#21134d 0,#090b18 42%,#050712 75%);
+    color:var(--text);
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:radial-gradient(#fff 1px,transparent 1px);
+    background-size:70px 70px;
+    opacity:.07
+}
+
+header{
+    width:100%;
+    padding:18px 24px;
+    border-bottom:1px solid var(--border);
+    background:rgba(5,7,18,.82);
+    backdrop-filter:blur(12px);
+    display:flex;
+    justify-content:center;
+    position:sticky;
+    top:0;
+    z-index:5
+}
+
+.top{
+    width:min(1050px,100%);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px
+}
+
+.brand{
+    font-weight:900;
+    font-size:22px;
+    color:#fff;
+    text-decoration:none
+}
+
+.brand span{
+    color:var(--purple)
+}
+
+.back{
+    color:#fff;
+    text-decoration:none;
+    border:1px solid var(--border);
+    padding:9px 14px;
+    border-radius:12px;
+    background:#0e1122
+}
+
+.back:hover{
+    border-color:var(--purple)
+}
+
+main{
+    width:min(720px,94vw);
+    padding:30px 0 40px;
+    text-align:center
+}
+
+.title{
+    font-size:42px;
+    margin:8px 0 5px;
+    font-weight:950;
+    letter-spacing:-1px
+}
+
+.title span{
+    color:var(--purple)
+}
+
+.subtitle{
+    color:var(--muted);
+    margin:0 0 24px
+}
+
+.stats{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:18px
+}
+
+.stat{
+    min-width:105px;
+    background:rgba(17,21,42,.9);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:9px 14px
+}
+
+.stat b{
+    display:block;
+    font-size:19px
+}
+
+.stat small{
+    color:var(--muted)
+}
+
+.board{
+    display:grid;
+    grid-template-columns:repeat(var(--cols),1fr);
+    gap:7px;
+    width:min(510px,92vw);
+    margin:0 auto 22px
+}
+
+.tile{
+    aspect-ratio:1;
+    border:2px solid #303650;
+    background:#0c1020;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:clamp(22px,6vw,34px);
+    font-weight:900;
+    text-transform:uppercase;
+    transition:.18s;
+    transform-style:preserve-3d
+}
+
+.tile.filled{
+    border-color:#636b91
+}
+
+.tile.correct{
+    background:#258d60;
+    border-color:#39e58c
+}
+
+.tile.present{
+    background:#9a7922;
+    border-color:#ffd166
+}
+
+.tile.absent{
+    background:#24283a;
+    border-color:#34394f;
+    color:#b4b7c7
+}
+
+.tile.flip{
+    animation:flip .45s ease
+}
+
+.tile.pop{
+    animation:pop .12s ease
+}
+
+@keyframes flip{
+    0%{transform:rotateX(0)}
+    45%{transform:rotateX(90deg)}
+    100%{transform:rotateX(0)}
+}
+
+@keyframes pop{
+    50%{transform:scale(1.08)}
+}
+
+.message{
+    min-height:30px;
+    color:#fff;
+    font-weight:750;
+    margin:5px auto 15px
+}
+
+.message.error{
+    color:var(--red)
+}
+
+.message.ok{
+    color:var(--green)
+}
+
+.keyboard{
+    width:min(690px,96vw);
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    margin:0 auto
+}
+
+.keyrow{
+    display:flex;
+    justify-content:center;
+    gap:6px
+}
+
+.key{
+    border:0;
+    border-radius:8px;
+    background:#24283b;
+    color:#fff;
+    font-weight:850;
+    min-width:clamp(25px,8vw,43px);
+    height:50px;
+    padding:0 7px;
+    cursor:pointer
+}
+
+.key:hover{
+    filter:brightness(1.2)
+}
+
+.key.wide{
+    min-width:clamp(48px,12vw,70px);
+    font-size:11px
+}
+
+.key.correct{
+    background:#258d60
+}
+
+.key.present{
+    background:#9a7922
+}
+
+.key.absent{
+    background:#171a27;
+    color:#777d98
+}
+
+.hints{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:18px auto 0
+}
+
+.hint{
+    border:1px solid var(--border);
+    background:#10142a;
+    color:#fff;
+    border-radius:12px;
+    padding:10px 14px;
+    font-weight:850;
+    cursor:pointer
+}
+
+.hint:hover:not(:disabled){
+    filter:brightness(1.15)
+}
+
+.hint:disabled{
+    opacity:.42;
+    cursor:not-allowed
+}
+
+.hint.used{
+    border-color:#34394f;
+    background:#171a27;
+    color:#777d98
+}
+
+.hint span{
+    color:var(--yellow)
+}
+
+.controls{
+    margin:25px auto 0;
+    padding:18px;
+    background:rgba(11,14,29,.9);
+    border:1px solid var(--border);
+    border-radius:18px
+}
+
+.controls h2{
+    font-size:18px;
+    margin:0 0 7px
+}
+
+.controls p{
+    margin:0 0 15px;
+    color:var(--muted);
+    font-size:14px
+}
+
+.lengths{
+    display:flex;
+    justify-content:center;
+    gap:7px;
+    flex-wrap:wrap
+}
+
+.length{
+    border:1px solid var(--border);
+    background:#10142a;
+    color:#fff;
+    border-radius:10px;
+    padding:10px 14px;
+    font-weight:850;
+    cursor:pointer
+}
+
+.length.active{
+    background:var(--purple);
+    border-color:var(--purple)
+}
+
+.new{
+    margin-top:12px;
+    border:0;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    color:white;
+    padding:11px 20px;
+    border-radius:12px;
+    font-weight:900;
+    cursor:pointer
+}
+
+.loading{
+    padding:14px;
+    border:1px solid var(--border);
+    background:#0d1123;
+    border-radius:14px;
+    color:var(--muted);
+    margin-bottom:15px
+}
+
+.hidden{
+    display:none!important
+}
+
+footer{
+    width:100%;
+    text-align:center;
+    color:#6f7595;
+    font-size:12px;
+    padding:15px 20px 25px
+}
+
+.note{
+    margin-top:12px;
+    color:#8f95b5;
+    font-size:12px;
+    line-height:1.5
+}
+
+@media(max-width:500px){
+    main{
+        padding-top:22px
+    }
+
+    .title{
+        font-size:34px
+    }
+
+    .key{
+        height:46px;
+        padding:0 4px
+    }
+
+    .keyrow{
+        gap:4px
+    }
+
+    .board{
+        gap:5px
+    }
+}
+
+.hint-modal{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(3,5,14,.78);
+    backdrop-filter:blur(8px);
+    animation:modalIn .18s ease
+}
+
+.hint-modal.hidden{
+    display:none
+}
+
+.hint-box{
+    position:relative;
+    width:min(390px,92vw);
+    padding:25px 22px 20px;
+    text-align:center;
+    background:#0d1123;
+    border:1px solid rgba(155,92,255,.45);
+    border-radius:20px;
+    box-shadow:0 20px 70px rgba(0,0,0,.55)
+}
+
+.hint-close{
+    position:absolute;
+    right:10px;
+    top:8px;
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:9px;
+    background:#171b31;
+    color:#bfc4df;
+    font-size:24px;
+    cursor:pointer
+}
+
+.hint-icon{
+    font-size:34px
+}
+
+.hint-box h2{
+    margin:7px 0;
+    color:#fff
+}
+
+.hint-box p{
+    margin:0;
+    color:#b7bdd8;
+    line-height:1.5
+}
+
+.hint-preview{
+    margin:18px auto;
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    min-height:52px
+}
+
+.hint-letter{
+    width:46px;
+    height:52px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    font-weight:900;
+    background:#9a7922;
+    border:2px solid #ffd166
+}
+
+.hint-letter.correct-hint{
+    background:#258d60;
+    border-color:#39e58c
+}
+
+.hint-back{
+    border:0;
+    border-radius:11px;
+    padding:11px 20px;
+    background:linear-gradient(135deg,#9b5cff,#5865f2);
+    color:#fff;
+    font-weight:900;
+    cursor:pointer
+}
+
+.hint-back:hover{
+    filter:brightness(1.12)
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:scale(.94)
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1)
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="top">
+        <a class="brand" href="index.html">SHADOW<span>TALE</span></a>
+        <a class="back" href="gry.html">← Gry</a>
+    </div>
+</header>
+
+<main>
+
+<h1 class="title">W<span>ORDLE</span></h1>
+
+<p class="subtitle">
+    Zgadnij ukryte polskie słowo.
+</p>
+
+<div id="loading" class="loading">
+    Ładowanie polskiego słownika…
+</div>
+
+<div id="game" class="hidden">
+
+    <div class="stats">
+
+        <div class="stat">
+            <b id="tryStat">0/6</b>
+            <small>próby</small>
+        </div>
+
+        <div class="stat">
+            <b id="lengthStat">5</b>
+            <small>liter</small>
+        </div>
+
+        <div class="stat">
+            <b id="winsStat">0</b>
+            <small>wygrane</small>
+        </div>
+
+    </div>
+
+    <div id="board" class="board"></div>
+
+    <div id="message" class="message">
+        Powodzenia!
+    </div>
+
+    <div id="keyboard" class="keyboard"></div>
+
+    <div id="hintModal" class="hint-modal hidden">
+
+        <div class="hint-box">
+
+            <button id="hintClose" class="hint-close" aria-label="Wróć do gry">
+                ×
+            </button>
+
+            <div class="hint-icon">
+                💡
+            </div>
+
+            <h2 id="hintTitle">
+                Podpowiedź
+            </h2>
+
+            <p id="hintText"></p>
+
+            <div id="hintPreview" class="hint-preview"></div>
+
+            <button id="hintBack" class="hint-back">
+                Wróć do gry
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="hints">
+
+        <button id="hintCorrect" class="hint">
+            💡 Poprawne miejsce <span>1×</span>
+        </button>
+
+        <button id="hintPresent" class="hint">
+            🔎 Złe miejsce <span>1×</span>
+        </button>
+
+    </div>
+
+    <div class="controls">
+
+        <h2>
+            Zmień liczbę liter
+        </h2>
+
+        <p>
+            Możesz grać słowami od 5 do 10 liter.
+            Po zmianie długości rozpoczyna się nowa runda.
+        </p>
+
+        <div id="lengths" class="lengths"></div>
+
+        <button id="newGame" class="new">
+            Nowa gra
+        </button>
+
+        <div class="note">
+            Dozwolone są polskie słowa znajdujące się w używanym słowniku,
+            również wiele form odmienionych i potocznych.
+            Nieistniejące lub niepolskie słowa są odrzucane.
+        </div>
+
+    </div>
+
+</div>
+
+</main>
+
+<footer>
+    ShadowTale.pl — Twój świat, twoje zasady
+</footer>
+
+<script>
+
+const DICTIONARY_URL =
+    'https://raw.githubusercontent.com/kin344/Wordlists/master/languages/polish.txt';
+
+const fallback = [
+    'polak',
+    'słowo',
+    'dom',
+    'kot',
+    'pies',
+    'woda',
+    'drzewo',
+    'szkoła',
+    'telefon',
+    'komputer',
+    'gracz',
+    'grać',
+    'lubić',
+    'świat',
+    'zegar',
+    'słońce',
+    'księżyc',
+    'chmura',
+    'ziemia',
+    'morze',
+    'las',
+    'rzeka',
+    'droga',
+    'miasto',
+    'krzesło',
+    'okno',
+    'drzwi',
+    'książka',
+    'muzyka',
+    'film',
+    'serce',
+    'człowiek',
+    'przyjaciel',
+    'rodzina',
+    'samochód',
+    'rower',
+    'program',
+    'strona',
+    'polska',
+    'język',
+    'szybko',
+    'dobrze',
+    'super',
+    'hej',
+    'cześć',
+    'dzięki',
+    'dobra',
+    'spoko'
+];
+
+let dictionary = new Set();
+
+let candidates = [];
+
+let word = '';
+
+let length = 5;
+
+let row = 0;
+
+let gameOver = false;
+
+let evaluating = false;
+
+let keyboardState = {};
+
+let wins = Number(
+    localStorage.getItem('shadowtale_wordle_wins') || 0
+);
+
+let hintCorrectUsed = false;
+
+let hintPresentUsed = false;
+
+let current = [];
+
+let hintLocks = {};
+
+const $ = id =>
+    document.getElementById(id);
+
+
+/* =========================
+   SŁOWNIK
+========================= */
+
+function normalize(s){
+
+    return s
+        .toLocaleLowerCase('pl-PL')
+        .replace(/\ufeff/g,'')
+        .trim();
+
+}
+
+
+function keyId(ch){
+
+    return ch.toLocaleLowerCase('pl-PL');
+
+}
+
+
+function cleanWord(s){
+
+    s = normalize(s);
+
+    return /^[a-ząćęłńóśźż]+$/i.test(s)
+        ? s
+        : '';
+
+}
+
+
+function addWord(s){
+
+    const w = cleanWord(s);
+
+    if(
+        w.length >= 5 &&
+        w.length <= 10
+    ){
+        dictionary.add(w);
+    }
+
+}
+
+
+async function loadDictionary(){
+
+    try{
+
+        const r = await fetch(
+            DICTIONARY_URL,
+            {
+                cache:'force-cache'
+            }
+        );
+
+        if(!r.ok){
+            throw new Error();
+        }
+
+        const text = await r.text();
+
+        for(
+            const line of text.split(/\r?\n/)
+        ){
+
+            let raw =
+                line
+                .replace(/\ufeff/g,'')
+                .trim();
+
+            if(
+                !raw ||
+                raw.startsWith('#')
+            ){
+                continue;
+            }
+
+            raw =
+                raw
+                .split(/\s+/)[0];
+
+            if(
+                !raw ||
+                raw.includes('-') ||
+                raw.includes('_')
+            ){
+                continue;
+            }
+
+            addWord(raw);
+        }
+
+    }
+    catch(e){
+
+        fallback.forEach(addWord);
+
+    }
+
+    fallback.forEach(addWord);
+
+    candidates =
+        [...dictionary]
+        .filter(
+            w =>
+                w.length >= 5 &&
+                w.length <= 10
+        );
+
+    if(!candidates.length){
+
+        throw new Error(
+            'Brak słownika'
+        );
+
+    }
+
+    $('loading')
+        .classList
+        .add('hidden');
+
+    $('game')
+        .classList
+        .remove('hidden');
+
+    buildLengths();
+
+    newGame();
+
+}
+
+
+/* =========================
+   NAJWAŻNIEJSZA POPRAWKA
+   LOSOWANIE TYLKO DANEJ
+   LICZBY LITER
+========================= */
+
+function getCandidatesForLength(){
+
+    return candidates.filter(
+        w => w.length === length
+    );
+
+}
+
+
+function chooseWord(){
+
+    const matching =
+        getCandidatesForLength();
+
+    if(!matching.length){
+
+        throw new Error(
+            'Brak słów o długości ' +
+            length
+        );
+
+    }
+
+    const selected =
+        matching[
+            Math.floor(
+                Math.random() *
+                matching.length
+            )
+        ];
+
+    /*
+        Dodatkowe zabezpieczenie.
+        Jeśli z jakiegoś powodu słowo nie ma
+        dokładnie tylu liter, ile wybrano,
+        nie zostanie użyte.
+    */
+
+    if(
+        selected.length !== length
+    ){
+
+        console.error(
+            'Wordle: odrzucono słowo o złej długości:',
+            selected
+        );
+
+        return chooseWord();
+
+    }
+
+    return selected;
+
+}
+
+
+/* =========================
+   PLANSZA
+========================= */
+
+function buildBoard(){
+
+    const b = $('board');
+
+    b.style.setProperty(
+        '--cols',
+        length
+    );
+
+    b.innerHTML = '';
+
+    for(
+        let r = 0;
+        r < 6;
+        r++
+    ){
+
+        for(
+            let c = 0;
+            c < length;
+            c++
+        ){
+
+            const t =
+                document.createElement('div');
+
+            t.className = 'tile';
+
+            t.id =
+                `t-${r}-${c}`;
+
+            b.appendChild(t);
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   KLAWIATURA
+========================= */
+
+function buildKeyboard(){
+
+    const k = $('keyboard');
+
+    k.innerHTML = '';
+
+    const rows = [
+        'QWERTYUIOPĄĘ',
+        'ASDFGHJKLŁŃ',
+        'ZXCVBNMÓŚŹŻ'
+    ];
+
+    rows.forEach(
+        (letters,i)=>{
+
+            const rowEl =
+                document.createElement('div');
+
+            rowEl.className =
+                'keyrow';
+
+            for(
+                const ch of letters
+            ){
+
+                const b =
+                    document.createElement('button');
+
+                b.className = 'key';
+
+                b.textContent = ch;
+
+                b.dataset.key =
+                    keyId(ch);
+
+                b.onclick =
+                    () => pressKey(ch);
+
+                rowEl.appendChild(b);
+
+            }
+
+            if(i === 2){
+
+                const enter =
+                    document.createElement('button');
+
+                enter.className =
+                    'key wide';
+
+                enter.textContent =
+                    'ENTER';
+
+                enter.onclick =
+                    submit;
+
+                rowEl.prepend(enter);
+
+
+                const back =
+                    document.createElement('button');
+
+                back.className =
+                    'key wide';
+
+                back.textContent =
+                    '⌫';
+
+                back.onclick =
+                    backspace;
+
+                rowEl.appendChild(back);
+
+            }
+
+            k.appendChild(rowEl);
+
+        }
+    );
+
+}
+
+
+/* =========================
+   WYBÓR DŁUGOŚCI
+========================= */
+
+function buildLengths(){
+
+    const box =
+        $('lengths');
+
+    box.innerHTML = '';
+
+    for(
+        let n = 5;
+        n <= 10;
+        n++
+    ){
+
+        const b =
+            document.createElement('button');
+
+        b.className =
+            'length' +
+            (
+                n === length
+                    ? ' active'
+                    : ''
+            );
+
+        b.textContent = n;
+
+        b.onclick = () => {
+
+            if(n === length){
+                return;
+            }
+
+            const available =
+                candidates.some(
+                    w => w.length === n
+                );
+
+            if(!available){
+
+                msg(
+                    'Brak słów o długości ' +
+                    n +
+                    ' liter w słowniku.',
+                    'error'
+                );
+
+                return;
+
+            }
+
+            if(
+                confirm(
+                    'Czy na pewno chcesz zmienić liczbę liter na ' +
+                    n +
+                    '? Zmiana długości zresetuje bieżący postęp i rozpocznie nową grę.'
+                )
+            ){
+
+                length = n;
+
+                newGame();
+
+            }
+
+        };
+
+        box.appendChild(b);
+
+    }
+
+}
+
+
+/* =========================
+   NOWA GRA
+========================= */
+
+function newGame(){
+
+    if(!dictionary.size){
+        return;
+    }
+
+    const matching =
+        getCandidatesForLength();
+
+    /*
+        Nigdy nie rozpoczynamy gry,
+        jeśli słownik nie posiada słów
+        o wybranej długości.
+    */
+
+    if(!matching.length){
+
+        msg(
+            'Brak słów o długości ' +
+            length +
+            ' liter.',
+            'error'
+        );
+
+        return;
+
+    }
+
+    /*
+        KLUCZOWA CZĘŚĆ:
+        losujemy tylko z matching,
+        czyli tylko słowa o dokładnie
+        wybranej liczbie liter.
+    */
+
+    word =
+        matching[
+            Math.floor(
+                Math.random() *
+                matching.length
+            )
+        ];
+
+
+    /*
+        Ostateczne zabezpieczenie.
+    */
+
+    if(
+        word.length !== length
+    ){
+
+        console.error(
+            'Wordle: nieprawidłowa długość hasła.',
+            {
+                word:word,
+                wordLength:word.length,
+                selectedLength:length
+            }
+        );
+
+        return newGame();
+
+    }
+
+
+    row = 0;
+
+    gameOver = false;
+
+    evaluating = false;
+
+    keyboardState = {};
+
+    hintCorrectUsed = false;
+
+    hintPresentUsed = false;
+
+    current = [];
+
+    hintLocks = {};
+
+
+    $('lengthStat').textContent =
+        length;
+
+    $('tryStat').textContent =
+        '0/6';
+
+    $('winsStat').textContent =
+        wins;
+
+    $('message').textContent =
+        'Powodzenia!';
+
+    $('message').className =
+        'message';
+
+
+    buildBoard();
+
+    buildKeyboard();
+
+    buildLengths();
+
+    updateHints();
+
+
+    console.log(
+        'Wordle:',
+        length,
+        'liter',
+        '→',
+        word,
+        '→ długość:',
+        word.length
+    );
+
+}
+
+
+/* =========================
+   WPISYWANIE
+========================= */
+
+function pressKey(ch){
+
+    if(
+        gameOver ||
+        evaluating
+    ){
+        return;
+    }
+
+    const letter =
+        ch.toLocaleLowerCase(
+            'pl-PL'
+        );
+
+    let idx = -1;
+
+    for(
+        let i = 0;
+        i < length;
+        i++
+    ){
+
+        if(
+            !hintLocks[i] &&
+            !current[i]
+        ){
+
+            idx = i;
+
+            break;
+
+        }
+
+    }
+
+    if(idx === -1){
+        return;
+    }
+
+    current[idx] =
+        letter;
+
+    renderCurrent();
+
+}
+
+
+function backspace(){
+
+    if(
+        gameOver ||
+        evaluating
+    ){
+        return;
+    }
+
+    for(
+        let i = length - 1;
+        i >= 0;
+        i--
+    ){
+
+        if(
+            !hintLocks[i] &&
+            current[i]
+        ){
+
+            current[i] = '';
+
+            renderCurrent();
+
+            return;
+
+        }
+
+    }
+
+}
+
+
+function renderCurrent(){
+
+    for(
+        let c = 0;
+        c < length;
+        c++
+    ){
+
+        const value =
+            hintLocks[c] ||
+            current[c] ||
+            '';
+
+        const t =
+            $(`t-${row}-${c}`);
+
+        t.textContent =
+            value;
+
+        t.classList.toggle(
+            'filled',
+            !!value &&
+            !t.classList.contains(
+                'correct'
+            ) &&
+            !t.classList.contains(
+                'present'
+            )
+        );
+
+        if(
+            current[c] &&
+            !hintLocks[c]
+        ){
+
+            t.classList.remove(
+                'pop'
+            );
+
+            void t.offsetWidth;
+
+            t.classList.add(
+                'pop'
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   SPRAWDZANIE
+========================= */
+
+function submit(){
+
+    if(
+        gameOver ||
+        evaluating
+    ){
+        return;
+    }
+
+    const completed =
+        Array.from(
+            {length},
+            (_,i) =>
+                hintLocks[i] ||
+                current[i] ||
+                ''
+        ).join('');
+
+    const guess =
+        cleanWord(completed);
+
+
+    if(
+        guess.length !== length
+    ){
+
+        msg(
+            'Wpisz dokładnie ' +
+            length +
+            ' liter.',
+            'error'
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !dictionary.has(guess)
+    ){
+
+        msg(
+            'To słowo nie znajduje się w polskim słowniku.',
+            'error'
+        );
+
+        return;
+
+    }
+
+
+    evaluate(guess);
+
+    current = [];
+
+    hintLocks = {};
+
+}
+
+
+function evaluate(guess){
+
+    evaluating = true;
+
+    const submittedRow =
+        row;
+
+    const answer =
+        [...word];
+
+    const used =
+        Array(length).fill(false);
+
+    const state =
+        Array(length).fill(
+            'absent'
+        );
+
+
+    /*
+        Najpierw zielone.
+    */
+
+    for(
+        let i = 0;
+        i < length;
+        i++
+    ){
+
+        if(
+            guess[i] ===
+            answer[i]
+        ){
+
+            state[i] =
+                'correct';
+
+            used[i] =
+                true;
+
+        }
+
+    }
+
+
+    /*
+        Potem żółte.
+    */
+
+    for(
+        let i = 0;
+        i < length;
+        i++
+    ){
+
+        if(
+            state[i] ===
+            'correct'
+        ){
+            continue;
+        }
+
+        const j =
+            answer.findIndex(
+                (ch,idx) =>
+                    !used[idx] &&
+                    ch === guess[i]
+            );
+
+        if(j !== -1){
+
+            state[i] =
+                'present';
+
+            used[j] =
+                true;
+
+        }
+
+    }
+
+
+    /*
+        Animacja.
+    */
+
+    for(
+        let i = 0;
+        i < length;
+        i++
+    ){
+
+        const t =
+            $(
+                `t-${submittedRow}-${i}`
+            );
+
+        t.textContent =
+            guess[i];
+
+        t.classList.remove(
+            'filled'
+        );
+
+        t.classList.add(
+            'flip'
+        );
+
+        setTimeout(
+            () => {
+
+                t.classList.add(
+                    state[i]
+                );
+
+            },
+            220 + i * 55
+        );
+
+    }
+
+
+    updateKeyboard(
+        guess,
+        state
+    );
+
+
+    row++;
+
+    $('tryStat').textContent =
+        Math.min(row,6) +
+        '/6';
+
+
+    if(
+        guess === word
+    ){
+
+        gameOver = true;
+
+        wins++;
+
+        localStorage.setItem(
+            'shadowtale_wordle_wins',
+            wins
+        );
+
+        setTimeout(
+            () => {
+
+                msg(
+                    '🎉 Brawo! Odgadłeś słowo: ' +
+                    word.toUpperCase(),
+                    'ok'
+                );
+
+            },
+            650
+        );
+
+        $('winsStat').textContent =
+            wins;
+
+    }
+    else if(
+        row >= 6
+    ){
+
+        gameOver = true;
+
+        setTimeout(
+            () => {
+
+                msg(
+                    'Koniec gry. Szukane słowo: ' +
+                    word.toUpperCase(),
+                    'error'
+                );
+
+            },
+            650
+        );
+
+    }
+
+
+    updateHints();
+
+
+    setTimeout(
+        () => {
+
+            evaluating = false;
+
+        },
+        Math.max(
+            650,
+            length * 70
+        )
+    );
+
+}
+
+
+/* =========================
+   PODPOWIEDZI
+========================= */
+
+function updateHints(){
+
+    const greens =
+        getGreenCount();
+
+    const blocked =
+        greens >= 4 ||
+        gameOver;
+
+    const a =
+        $('hintCorrect');
+
+    const b =
+        $('hintPresent');
+
+
+    a.disabled =
+        blocked ||
+        hintCorrectUsed;
+
+    a.classList.toggle(
+        'used',
+        hintCorrectUsed
+    );
+
+    a.innerHTML =
+        hintCorrectUsed
+            ? '💡 Poprawne miejsce <span>✓</span>'
+            : '💡 Poprawne miejsce <span>1×</span>';
+
+
+    b.disabled =
+        blocked ||
+        hintPresentUsed;
+
+    b.classList.toggle(
+        'used',
+        hintPresentUsed
+    );
+
+    b.innerHTML =
+        hintPresentUsed
+            ? '🔎 Złe miejsce <span>✓</span>'
+            : '🔎 Złe miejsce <span>1×</span>';
+
+
+    if(
+        greens >= 4 &&
+        !gameOver
+    ){
+
+        msg(
+            'Masz już 4 zielone litery — podpowiedzi są zablokowane.',
+            'ok'
+        );
+
+    }
+
+}
+
+
+function getGreenCount(){
+
+    return document.querySelectorAll(
+        '#board .tile.correct'
+    ).length;
+
+}
+
+
+function openHintModal(
+    type,
+    idx,
+    letter
+){
+
+    const modal =
+        $('hintModal');
+
+    const title =
+        $('hintTitle');
+
+    const text =
+        $('hintText');
+
+    const preview =
+        $('hintPreview');
+
+
+    modal.classList.remove(
+        'hidden'
+    );
+
+    preview.innerHTML = '';
+
+
+    for(
+        let i = 0;
+        i < length;
+        i++
+    ){
+
+        const box =
+            document.createElement(
+                'div'
+            );
+
+        box.className =
+            'hint-letter' +
+            (
+                type === 'correct' &&
+                i === idx
+                    ? ' correct-hint'
+                    : ''
+            );
+
+        box.textContent =
+            i === idx
+                ? letter.toUpperCase()
+                : '•';
+
+        preview.appendChild(
+            box
+        );
+
+    }
+
+
+    if(type === 'correct'){
+
+        title.textContent =
+            '💡 Poprawne miejsce';
+
+        text.textContent =
+            'Litera ' +
+            letter.toUpperCase() +
+            ' znajduje się na pozycji ' +
+            (idx + 1) +
+            '.';
+
+    }
+    else{
+
+        title.textContent =
+            '🔎 Złe miejsce';
+
+        text.textContent =
+            'Litera ' +
+            letter.toUpperCase() +
+            ' występuje w szukanym słowie, ale nie znajduje się na pokazanej pozycji.';
+
+    }
+
+}
+
+
+function closeHintModal(){
+
+    $('hintModal')
+        .classList
+        .add('hidden');
+
+}
+
+
+function revealHint(type){
+
+    if(
+        gameOver ||
+        getGreenCount() >= 4
+    ){
+        return;
+    }
+
+    const answer =
+        [...word];
+
+
+    if(
+        type === 'correct' &&
+        !hintCorrectUsed
+    ){
+
+        const idxs = [];
+
+        for(
+            let i = 0;
+            i < length;
+            i++
+        ){
+
+            if(
+                !document
+                    .querySelector(
+                        `#t-${row}-${i}`
+                    )
+                    ?.classList
+                    .contains('correct')
+            ){
+
+                idxs.push(i);
+
+            }
+
+        }
+
+        if(!idxs.length){
+            return;
+        }
+
+        const idx =
+            idxs[
+                Math.floor(
+                    Math.random() *
+                    idxs.length
+                )
+            ];
+
+        hintCorrectUsed = true;
+
+        openHintModal(
+            'correct',
+            idx,
+            answer[idx]
+        );
+
+    }
+    else if(
+        type === 'present' &&
+        !hintPresentUsed
+    ){
+
+        const choices = [];
+
+        for(
+            let answerIdx = 0;
+            answerIdx < length;
+            answerIdx++
+        ){
+
+            const letter =
+                answer[answerIdx];
+
+            for(
+                let displayIdx = 0;
+                displayIdx < length;
+                displayIdx++
+            ){
+
+                if(
+                    displayIdx !== answerIdx &&
+                    !document
+                        .querySelector(
+                            `#t-${row}-${displayIdx}`
+                        )
+                        ?.classList
+                        .contains('correct')
+                ){
+
+                    choices.push({
+                        displayIdx,
+                        letter
+                    });
+
+                }
+
+            }
+
+        }
+
+        if(!choices.length){
+            return;
+        }
+
+        const pick =
+            choices[
+                Math.floor(
+                    Math.random() *
+                    choices.length
+                )
+            ];
+
+        hintPresentUsed = true;
+
+        openHintModal(
+            'present',
+            pick.displayIdx,
+            pick.letter
+        );
+
+    }
+
+    updateHints();
+
+}
+
+
+/* =========================
+   KLAWIATURA — KOLORY
+========================= */
+
+function updateKeyboard(
+    guess,
+    state
+){
+
+    for(
+        let i = 0;
+        i < guess.length;
+        i++
+    ){
+
+        const b =
+            document.querySelector(
+                `[data-key="${keyId(guess[i])}"]`
+            );
+
+        if(!b){
+            continue;
+        }
+
+        const s =
+            state[i];
+
+        const old =
+            keyboardState[guess[i]];
+
+
+        if(
+            old === 'correct' ||
+            (
+                old === 'present' &&
+                s === 'absent'
+            )
+        ){
+
+            continue;
+
+        }
+
+
+        keyboardState[guess[i]] =
+            s;
+
+        b.classList.remove(
+            'correct',
+            'present',
+            'absent'
+        );
+
+        b.classList.add(s);
+
+    }
+
+}
+
+
+/* =========================
+   WIADOMOŚCI
+========================= */
+
+function msg(
+    text,
+    type = ''
+){
+
+    const m =
+        $('message');
+
+    m.textContent =
+        text;
+
+    m.className =
+        'message ' +
+        type;
+
+}
+
+
+/* =========================
+   KLAWIATURA FIZYCZNA
+========================= */
+
+window.addEventListener(
+    'keydown',
+    e => {
+
+        if(
+            e.ctrlKey ||
+            e.altKey ||
+            e.metaKey
+        ){
+            return;
+        }
+
+
+        if(
+            e.key === 'Enter'
+        ){
+
+            e.preventDefault();
+
+            submit();
+
+            return;
+
+        }
+
+
+        if(
+            e.key === 'Backspace'
+        ){
+
+            e.preventDefault();
+
+            backspace();
+
+            return;
+
+        }
+
+
+        if(
+            e.key.length === 1 &&
+            /^[a-ząćęłńóśźż]$/i.test(
+                e.key
+            )
+        ){
+
+            pressKey(
+                e.key
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   PRZYCISKI
+========================= */
+
+$('newGame').onclick =
+    newGame;
+
+$('hintCorrect').onclick =
+    () => revealHint('correct');
+
+$('hintPresent').onclick =
+    () => revealHint('present');
+
+$('hintClose').onclick =
+    closeHintModal;
+
+$('hintBack').onclick =
+    closeHintModal;
+
+
+$('hintModal').addEventListener(
+    'click',
+    e => {
+
+        if(
+            e.target.id ===
+            'hintModal'
+        ){
+
+            closeHintModal();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    'keydown',
+    e => {
+
+        if(
+            e.key === 'Escape'
+        ){
+
+            closeHintModal();
+
+        }
+
+    }
+);
+
+
+/* =========================
+   START
+========================= */
+
+loadDictionary()
+.catch(
+    () => {
+
+        $('loading').textContent =
+            'Nie udało się załadować słownika. Odśwież stronę.';
+
+    }
+);
+
+</script>
+
+</body>
+</html>
