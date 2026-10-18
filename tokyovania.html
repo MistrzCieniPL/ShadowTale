@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tokyovania — ShadowTale</title><link rel="stylesheet" href="style.css">
+<style>body{background:#080710;color:#f5f1ff;font-family:Arial,sans-serif;margin:0;padding:32px}.st-track{max-width:900px;margin:5vh auto;padding:24px;background:#11101c;border:1px solid #6938b5;border-radius:18px}.st-track video{width:100%;max-height:65vh;background:#000;border-radius:12px}.st-track select,.st-track button{padding:10px;border-radius:8px;margin:8px 8px 8px 0}.st-track a{color:#c5a3ff}.st-warning{padding:12px;background:#251a36;border-radius:10px;margin:12px 0}</style></head>
+<body><main class="st-track"><p><a href="muzyka.html">← Wróć do biblioteki</a></p><h1>Tokyovania</h1><p>Domyślna muzyka strony ShadowTale.pl</p>
+
+
+<video id="st-track-video" controls preload="metadata"  src="assets/music/shadowtale.mp4"></video>
+<p id="st-track-message" role="status"></p></main><script>
+(()=>{const v=document.getElementById('st-track-video'),c=document.getElementById('st-age-confirm'),s=document.getElementById('st-track-version'),m=document.getElementById('st-track-message');
+const allowed=()=>!c||c.checked;v.addEventListener('play',e=>{if(!allowed()){v.pause();m.textContent='Zaznacz potwierdzenie wieku przed odtworzeniem.';}});if(c)c.addEventListener('change',()=>{m.textContent='';});if(s)s.addEventListener('change',()=>{v.pause();v.src=s.value;v.load();});})();
+</script><script src="muza.js" defer></script></body></html>
