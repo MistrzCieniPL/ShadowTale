@@ -6,17 +6,13 @@
     window.__shadowTaleMuzaLoaded = true;
 
     const CONFIG = window.CONFIG || window.config || {};
-
     const API = String(
         CONFIG.musicApi ||
         CONFIG.productFilesApi ||
         CONFIG.apiBaseUrl ||
         CONFIG.backendUrl ||
         "http://127.0.0.1:5500"
-    )
-        .replace(/\/+$/, "")
-        .replace(/\/api\/music$/i, "")
-        .replace(/\/api$/i, "");
+    ).replace(/\/+$/, "").replace(/\/api\/music$/i, "").replace(/\/api$/i, "");
 
     const CATALOG_URL = "muzyka.html";
 
@@ -26,7 +22,8 @@
     let currentTab = "music";
     let repeatMode = "all";
     let panelOpen = false;
-    let loadingTracks = false;
+    let syncingVideo = false;
+    let requestNumber = 0;
 
     let audio;
     let video;
@@ -45,11 +42,9 @@
         const node = document.createElement(tag);
 
         for (const [key, value] of Object.entries(attrs)) {
-            if (key === "text") {
-                node.textContent = value;
-            } else if (key === "class") {
-                node.className = value;
-            } else if (key.startsWith("on") && typeof value === "function") {
+            if (key === "text") node.textContent = value;
+            else if (key === "class") node.className = value;
+            else if (key.startsWith("on") && typeof value === "function") {
                 node.addEventListener(key.slice(2).toLowerCase(), value);
             } else if (value !== undefined && value !== null) {
                 node.setAttribute(key, String(value));
@@ -68,9 +63,7 @@
 
         const value = String(src).trim();
 
-        if (/^(https?:|blob:|data:)/i.test(value)) {
-            return value;
-        }
+        if (/^(https?:|blob:|data:)/i.test(value)) return value;
 
         return `${API}/${value.replace(/^\/+/, "")}`;
     }
@@ -85,31 +78,7 @@
     }
 
     function currentSrc() {
-        const version = currentVersion();
-
-        if (!version) return "";
-
-        let src = version.src || version.url || "";
-
-        if (!src && version.filename) {
-            src = "assets/music/" + version.filename;
-        }
-
-        return url(src);
-    }
-
-    function isMp4Track() {
-        const version = currentVersion();
-        const src = currentSrc();
-
-        return /\.mp4(?:$|[?#])/i.test(src) ||
-            /\.mp4$/i.test(String(version?.filename || ""));
-    }
-
-    // MP4 odtwarzamy przez video nawet wtedy, gdy zakładka Film jest zamknięta.
-    // Dzięki temu dźwięk może działać w tle bez drugiego, niesynchronizowanego odtwarzacza.
-    function activeMedia() {
-        return isMp4Track() ? video : audio;
+        return url(currentVersion()?.src || currentVersion()?.url);
     }
 
     function currentTimeLabel(seconds) {
@@ -138,11 +107,10 @@
     function updatePlaybackButton() {
         if (!playButton) return;
 
-        const media = activeMedia();
-
-        playButton.textContent = media && !media.paused
-            ? "Ⅱ Pauza"
-            : "▶ Start";
+        playButton.textContent =
+            audio && !audio.paused && !audio.ended
+                ? "Ⅱ Pauza"
+                : "▶ Start";
     }
 
     function updateRepeatButton() {
@@ -153,70 +121,92 @@
             : "🔁 Odtwarzaj po kolei";
     }
 
+    // Zatrzymuje aktualne audio i wyciszony element video.
+    // Unieważnia również oczekujące próby odtworzenia.
+    function stopAllMedia(clearSources = false) {
+        requestNumber++;
+
+        if (audio) {
+            audio.pause();
+
+            if (clearSources) {
+                audio.removeAttribute("src");
+                audio.querySelectorAll("source").forEach(source => source.remove());
+                audio.load();
+            } else {
+                try {
+                    audio.currentTime = 0;
+                } catch (_) {}
+            }
+        }
+
+        if (video) {
+            video.pause();
+            video.muted = true;
+
+            if (clearSources) {
+                video.removeAttribute("src");
+                video.querySelectorAll("source").forEach(source => source.remove());
+                delete video.dataset.src;
+                video.load();
+            } else {
+                try {
+                    video.currentTime = 0;
+                } catch (_) {}
+            }
+        }
+
+        updatePlaybackButton();
+    }
+
+    function syncVideo() {
+        if (!video || !audio || !currentSrc()) return;
+
+        const src = currentSrc();
+
+        if (video.dataset.src !== src) {
+            video.pause();
+            video.muted = true;
+            video.src = src;
+            video.dataset.src = src;
+            video.load();
+        }
+
+        video.playbackRate = audio.playbackRate;
+        video.muted = true;
+
+        if (
+            Number.isFinite(audio.currentTime) &&
+            Number.isFinite(video.currentTime) &&
+            Math.abs(video.currentTime - audio.currentTime) > 0.4
+        ) {
+            syncingVideo = true;
+
+            try {
+                video.currentTime = audio.currentTime;
+            } catch (_) {}
+
+            syncingVideo = false;
+        }
+
+        if (!audio.paused && !audio.ended && video.paused) {
+            video.play().catch(() => {});
+        } else if ((audio.paused || audio.ended) && !video.paused) {
+            video.pause();
+        }
+    }
+
     function updateVideoVisibility() {
         if (!video) return;
 
-        const showVideo =
-            currentTab === "film" &&
-            isMp4Track() &&
-            Boolean(currentSrc());
+        const show = currentTab === "film" && Boolean(currentSrc());
+        video.style.display = show ? "block" : "none";
 
-        video.style.display = showVideo ? "block" : "none";
-
-        if (showVideo) {
-            video.controls = true;
-        }
-    }
-
-    function updateTime() {
-        if (!seek || !timeLabel) return;
-
-        const media = activeMedia();
-
-        if (!media) return;
-
-        const duration = Number.isFinite(media.duration)
-            ? media.duration
-            : 0;
-
-        seek.max = String(duration || 0);
-        seek.value = String(media.currentTime || 0);
-
-        timeLabel.textContent =
-            `${currentTimeLabel(media.currentTime)} / ${currentTimeLabel(duration)}`;
-    }
-
-    function configureSource() {
-        const src = currentSrc();
-
-        audio.pause();
-        video.pause();
-
-        audio.removeAttribute("src");
-        video.removeAttribute("src");
-
-        audio.load();
-        video.load();
-
-        if (!src) {
-            updateVideoVisibility();
-            return;
-        }
-
-        if (isMp4Track()) {
-            video.src = src;
-            video.muted = false;
-            video.controls = true;
-            video.loop = repeatMode === "one";
-            video.load();
+        if (show) {
+            syncVideo();
         } else {
-            audio.src = src;
-            audio.loop = repeatMode === "one";
-            audio.load();
+            video.pause();
         }
-
-        updateVideoVisibility();
-        updateTime();
     }
 
     async function selectTrack(index, selectedVersion = 0, autoplay = true) {
@@ -226,32 +216,39 @@
         }
 
         trackIndex = (index + tracks.length) % tracks.length;
+        versionIndex = selectedVersion;
 
-        const versions = currentTrack()?.versions || [];
+        const src = currentSrc();
 
-        versionIndex = Math.min(
-            Math.max(0, selectedVersion),
-            Math.max(0, versions.length - 1)
-        );
+        stopAllMedia(true);
 
-        if (!currentSrc()) {
-            setStatus("Ten utwór nie ma jeszcze przypisanego pliku.");
+        if (!src) {
             updateTrackInfo();
             renderTab();
+            setStatus("Ten utwór nie ma jeszcze pliku.");
             return;
         }
 
-        configureSource();
+        audio.src = src;
+        audio.load();
+
         updateTrackInfo();
         renderTab();
 
         if (autoplay) {
+            const thisRequest = requestNumber;
+
             try {
-                await activeMedia().play();
-                setStatus("Odtwarzanie: " + (currentTrack()?.title || "utwór"));
-            } catch (error) {
-                console.warn("[ShadowTale Muza] Nie udało się uruchomić:", error);
-                setStatus("Kliknij Start, aby odtworzyć utwór.");
+                await audio.play();
+
+                if (thisRequest !== requestNumber) {
+                    audio.pause();
+                    return;
+                }
+
+                setStatus("Odtwarzanie muzyki.");
+            } catch (_) {
+                setStatus("Kliknij Start, aby odtworzyć muzykę.");
             }
         } else {
             setStatus("Wybrano utwór.");
@@ -259,51 +256,45 @@
 
         updatePlaybackButton();
         updateVideoVisibility();
-        updateTime();
     }
 
     async function togglePlayback() {
-        const src = currentSrc();
-
-        if (!src) {
-            setStatus("Wybierz utwór z plikiem w katalogu.");
+        if (!currentSrc()) {
+            setStatus("Brak pliku dla wybranego utworu.");
             return;
         }
 
-        const media = activeMedia();
-
-        if (media.paused) {
-            try {
-                await media.play();
-                setStatus("Odtwarzanie.");
-            } catch (error) {
-                console.warn("[ShadowTale Muza] Odtwarzanie:", error);
-                setStatus("Nie udało się rozpocząć odtwarzania. Spróbuj ponownie.");
-            }
-        } else {
-            media.pause();
+        if (!audio.paused && !audio.ended) {
+            audio.pause();
+            video.pause();
             setStatus("Pauza.");
+            updatePlaybackButton();
+            return;
+        }
+
+        // Video jest wyciszone, aby nie dublowało dźwięku audio.
+        video.pause();
+        video.muted = true;
+
+        try {
+            await audio.play();
+            setStatus("Odtwarzanie muzyki.");
+        } catch (_) {
+            setStatus("Nie udało się odtworzyć pliku. Sprawdź ścieżkę i format.");
         }
 
         updatePlaybackButton();
         updateVideoVisibility();
-        updateTime();
     }
 
     function stopPlayback() {
-        const media = activeMedia();
-
-        media.pause();
-
-        try {
-            media.currentTime = 0;
-        } catch (_) {}
+        stopAllMedia(true);
 
         if (seek) seek.value = "0";
+        if (timeLabel) timeLabel.textContent = "0:00 / 0:00";
 
         updatePlaybackButton();
-        updateTime();
-        setStatus("Zatrzymano odtwarzanie.");
+        setStatus("Zatrzymano muzykę.");
     }
 
     async function nextTrack() {
@@ -321,8 +312,7 @@
     function toggleRepeat() {
         repeatMode = repeatMode === "all" ? "one" : "all";
 
-        audio.loop = repeatMode === "one";
-        video.loop = repeatMode === "one";
+        if (audio) audio.loop = repeatMode === "one";
 
         updateRepeatButton();
 
@@ -333,9 +323,23 @@
         );
     }
 
+    function updateTime() {
+        if (!audio || !seek || !timeLabel) return;
+
+        const duration = Number.isFinite(audio.duration) ? audio.duration : 0;
+
+        seek.max = String(duration || 0);
+        seek.value = String(audio.currentTime || 0);
+
+        timeLabel.textContent =
+            `${currentTimeLabel(audio.currentTime)} / ${currentTimeLabel(duration)}`;
+
+        if (currentTab === "film" && !syncingVideo) syncVideo();
+    }
+
     function renderMusic() {
         const track = currentTrack();
-        const versions = track?.versions || [];
+        const description = track?.description || "";
 
         content.append(
             $("div", {
@@ -349,13 +353,11 @@
         const controls = $("div", { class: "st-muza-controls" });
 
         playButton = $("button", {
-            text: "▶ Start",
+            text: audio && !audio.paused ? "Ⅱ Pauza" : "▶ Start",
             onclick: togglePlayback
         });
 
-        repeatButton = $("button", {
-            onclick: toggleRepeat
-        });
+        repeatButton = $("button", { onclick: toggleRepeat });
 
         controls.append(
             playButton,
@@ -366,61 +368,35 @@
 
         content.append(controls);
 
-        if (versions.length > 1) {
-            const versionSelect = $("select", {
-                "aria-label": "Wybierz wersję językową"
-            });
-
-            versions.forEach((version, index) => {
-                const option = $("option", {
-                    value: String(index),
-                    text: `${version.name || version.language || "Wersja"} (${version.language || "—"})`
-                });
-
-                if (index === versionIndex) option.selected = true;
-
-                versionSelect.append(option);
-            });
-
-            versionSelect.addEventListener("change", () => {
-                selectTrack(trackIndex, Number(versionSelect.value), false);
-            });
-
-            content.append(
-                $("label", { text: "Wersja utworu" }),
-                versionSelect
-            );
-        }
-
         seek = $("input", {
             type: "range",
             min: "0",
-            max: "0",
+            max: String(audio.duration || 0),
             step: "0.1",
-            value: "0",
+            value: String(audio.currentTime || 0),
             "aria-label": "Pozycja utworu"
         });
 
         seek.addEventListener("input", () => {
-            const media = activeMedia();
+            if (Number.isFinite(audio.duration)) {
+                audio.currentTime = Number(seek.value);
+            }
 
-            media.currentTime = Number(seek.value);
+            if (currentTab === "film") syncVideo();
+
             updateTime();
         });
 
         timeLabel = $("div", {
             class: "st-muza-time",
-            text: "0:00 / 0:00"
+            text: `${currentTimeLabel(audio.currentTime)} / ${currentTimeLabel(audio.duration)}`
         });
 
         content.append(seek, timeLabel);
 
-        if (track?.description) {
+        if (description) {
             content.append(
-                $("p", {
-                    class: "st-muza-description",
-                    text: track.description
-                })
+                $("p", { class: "st-muza-description", text: description })
             );
         }
 
@@ -438,8 +414,6 @@
 
         content.append(list);
         updateRepeatButton();
-        updatePlaybackButton();
-        updateTime();
     }
 
     function renderFilm() {
@@ -447,34 +421,25 @@
 
         if (!track || !currentSrc()) {
             content.append($("p", {
-                text: "Wybierz utwór z przypisanym plikiem."
-            }));
-            return;
-        }
-
-        if (!isMp4Track()) {
-            content.append($("p", {
-                text: "Ten utwór nie ma wersji MP4. Dodaj wersję filmową w katalogu muzyki."
+                text: "Wybierz utwór z plikiem w kategorii Muzyka, aby zobaczyć obraz."
             }));
             return;
         }
 
         content.append(
             $("p", {
-                text: "Film odtwarza się z dźwiękiem. Sterowanie jest wspólne z zakładką Muzyka."
+                text: "Film jest zsynchronizowany z aktualnie odtwarzaną muzyką. Dźwięk filmu pozostaje wyciszony."
             }),
             video
         );
 
         updateVideoVisibility();
+        syncVideo();
     }
 
     function renderText() {
         const track = currentTrack();
-
-        const lyrics = String(
-            track?.lyrics || track?.text || ""
-        ).trim();
+        const lyrics = String(track?.lyrics || track?.text || "").trim();
 
         if (!lyrics) {
             content.append($("p", {
@@ -484,43 +449,32 @@
         }
 
         content.append(
-            $("h3", {
-                text: track.title || track.name || "Tekst utworu"
-            }),
-            $("pre", {
-                class: "st-muza-lyrics",
-                text: lyrics
-            })
+            $("h3", { text: track.title || track.name || "Tekst utworu" }),
+            $("pre", { class: "st-muza-lyrics", text: lyrics })
         );
     }
 
     function renderVolume() {
-        const media = activeMedia();
-
         const slider = $("input", {
             type: "range",
             min: "0",
             max: "1",
             step: "0.01",
-            value: String(media.volume),
-            "aria-label": "Głośność utworu"
+            value: String(audio.volume),
+            "aria-label": "Głośność piosenki"
         });
 
         const label = $("p", {
-            text: `${Math.round(media.volume * 100)}%`
+            text: `${Math.round(audio.volume * 100)}%`
         });
 
         slider.addEventListener("input", () => {
-            const volume = Number(slider.value);
-
-            audio.volume = volume;
-            video.volume = volume;
-
-            label.textContent = `${Math.round(volume * 100)}%`;
+            audio.volume = Number(slider.value);
+            label.textContent = `${Math.round(audio.volume * 100)}%`;
         });
 
         content.append(
-            $("h3", { text: "Głośność utworu" }),
+            $("h3", { text: "Głośność piosenki" }),
             slider,
             label
         );
@@ -557,13 +511,9 @@
     }
 
     async function loadTracks() {
-        if (loadingTracks) return;
-
-        loadingTracks = true;
-
         try {
             const response = await fetch(`${API}/api/music`, {
-                headers: { Accept: "application/json" }
+                cache: "no-store"
             });
 
             if (!response.ok) {
@@ -582,40 +532,37 @@
             );
 
             if (!tracks.length) {
-                audio.pause();
-                video.pause();
-
+                stopAllMedia(true);
                 setStatus("Katalog muzyczny jest pusty.");
                 renderTab();
                 return;
             }
 
             const previousSlug = currentTrack()?.slug;
-
             const foundIndex = tracks.findIndex(
                 item => item.slug === previousSlug
             );
 
             trackIndex = foundIndex >= 0 ? foundIndex : 0;
+            versionIndex = 0;
 
-            const versions = currentTrack()?.versions || [];
+            stopAllMedia(true);
 
-            if (versionIndex >= versions.length) {
-                versionIndex = 0;
+            const src = currentSrc();
+
+            if (src) {
+                audio.src = src;
+                audio.load();
             }
 
-            configureSource();
             updateTrackInfo();
             renderTab();
-
-            setStatus("Katalog muzyczny załadowany.");
+            setStatus("Biblioteka muzyki załadowana.");
         } catch (error) {
             console.error("[ShadowTale Muza]", error);
             setStatus(
-                "Nie udało się pobrać muzyki. Sprawdź, czy backend działa."
+                "Nie udało się pobrać muzyki. Sprawdź, czy backend jest uruchomiony."
             );
-        } finally {
-            loadingTracks = false;
         }
     }
 
@@ -637,7 +584,6 @@
                     cursor: pointer;
                     box-shadow: 0 0 18px #8b45ff88;
                 }
-
                 #st-muza-panel {
                     display: none;
                     position: fixed;
@@ -655,56 +601,41 @@
                     font: 14px/1.45 system-ui, sans-serif;
                     box-shadow: 0 0 26px #7135b855;
                 }
-
                 #st-muza-panel * { box-sizing: border-box; }
-
-                #st-muza-panel button,
-                #st-muza-panel select {
+                #st-muza-panel button {
                     border: 1px solid #69418d;
                     border-radius: 8px;
                     background: #211431;
                     color: white;
                     padding: 8px 10px;
                     cursor: pointer;
-                    font: inherit;
                 }
-
-                #st-muza-panel select {
-                    width: 100%;
-                    margin: 6px 0;
-                }
-
                 #st-muza-panel button:hover,
                 #st-muza-panel button.active,
                 #st-muza-panel button.selected {
                     background: #613795;
                 }
-
                 #st-muza-panel .st-muza-header {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     gap: 8px;
                 }
-
                 #st-muza-panel .st-muza-header h2 {
                     margin: 0;
                     font-size: 18px;
                 }
-
                 #st-muza-panel .st-muza-tabs {
                     display: grid;
                     grid-template-columns: repeat(5, minmax(0, 1fr));
                     gap: 4px;
                     margin: 12px 0;
                 }
-
                 #st-muza-panel .st-muza-tabs button {
                     padding: 7px 2px;
                     font-size: 11px;
                     overflow-wrap: anywhere;
                 }
-
                 #st-muza-panel .st-muza-now {
                     padding: 9px;
                     margin-top: 10px;
@@ -712,49 +643,41 @@
                     background: #1b1326;
                     overflow-wrap: anywhere;
                 }
-
                 #st-muza-panel .st-muza-controls {
                     display: flex;
                     flex-wrap: wrap;
                     gap: 5px;
                     margin: 10px 0;
                 }
-
                 #st-muza-panel input[type=range] {
                     display: block;
                     width: 100%;
                     margin: 12px 0;
                     accent-color: #ac76ff;
                 }
-
                 #st-muza-panel .st-muza-time {
                     display: flex;
                     justify-content: flex-end;
                     color: #cdb9e8;
                     font-size: 12px;
                 }
-
                 #st-muza-panel .st-muza-list {
                     display: grid;
                     gap: 5px;
                     margin-top: 12px;
                 }
-
                 #st-muza-panel .st-muza-track {
                     width: 100%;
                     text-align: left;
                 }
-
                 #st-muza-panel .st-muza-description {
                     color: #c8b7dc;
                 }
-
                 #st-muza-panel .st-muza-lyrics {
                     white-space: pre-wrap;
                     overflow-wrap: anywhere;
                     font: inherit;
                 }
-
                 #st-muza-panel video {
                     width: 100%;
                     max-height: 280px;
@@ -762,19 +685,16 @@
                     border-radius: 9px;
                     background: black;
                 }
-
                 #st-muza-panel #st-muza-status {
                     color: #cdb9e8;
                     font-size: 12px;
                     margin-bottom: 0;
                 }
-
                 @media (max-width: 480px) {
                     #st-muza-launcher {
                         left: 14px;
                         bottom: 110px;
                     }
-
                     #st-muza-panel {
                         left: 10px;
                         bottom: 174px;
@@ -797,39 +717,44 @@
             preload: "metadata"
         });
 
-        video.volume = 0.7;
-        video.muted = false;
+        video.muted = true;
+        video.defaultMuted = true;
+        video.volume = 0;
         video.style.display = "none";
 
-        function handleMediaEvent(event) {
-            if (event.currentTarget !== activeMedia()) return;
+        audio.addEventListener("timeupdate", updateTime);
+        audio.addEventListener("durationchange", updateTime);
 
+        audio.addEventListener("play", () => {
             updatePlaybackButton();
-            updateTime();
-            updateVideoVisibility();
-        }
+            syncVideo();
+        });
 
-        [audio, video].forEach(media => {
-            media.addEventListener("timeupdate", handleMediaEvent);
-            media.addEventListener("durationchange", handleMediaEvent);
-            media.addEventListener("loadedmetadata", handleMediaEvent);
-            media.addEventListener("play", handleMediaEvent);
-            media.addEventListener("pause", handleMediaEvent);
+        audio.addEventListener("pause", () => {
+            updatePlaybackButton();
+            video.pause();
+        });
 
-            media.addEventListener("ended", () => {
-                if (media !== activeMedia()) return;
-                if (repeatMode === "one") return;
+        audio.addEventListener("ended", () => {
+            if (repeatMode === "one") return;
+            nextTrack();
+        });
 
-                nextTrack();
-            });
+        audio.addEventListener("error", () => {
+            if (audio.currentSrc) {
+                setStatus("Nie można odtworzyć pliku audio. Sprawdź, czy plik istnieje.");
+            }
+        });
 
-            media.addEventListener("error", () => {
-                if (media !== activeMedia()) return;
+        video.addEventListener("loadedmetadata", syncVideo);
 
-                setStatus(
-                    "Nie udało się odtworzyć pliku. Sprawdź jego nazwę i format."
-                );
-            });
+        video.addEventListener("seeked", () => {
+            if (
+                currentTab === "film" &&
+                Math.abs(video.currentTime - audio.currentTime) > 0.5
+            ) {
+                syncVideo();
+            }
         });
 
         nowPlaying = $("div", {
@@ -890,14 +815,11 @@
                 panelOpen = !panelOpen;
                 panel.style.display = panelOpen ? "block" : "none";
 
-                if (panelOpen) {
-                    loadTracks();
-                }
+                if (panelOpen) loadTracks();
             }
         });
 
         document.body.append(audio, video, panel, launcher);
-
         renderTab();
     }
 
