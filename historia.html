@@ -1,0 +1,1500 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Historia — ShadowTale</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+        :root {
+            --bg: #05050b;
+            --panel: rgba(12, 12, 25, .86);
+            --border: rgba(255,255,255,.08);
+            --text: #fff;
+            --muted: #a7a7ba;
+            --purple: #9b6cff;
+            --green: #55e69a;
+            --red: #ff737d;
+            --yellow: #ffd36a;
+            --blue: #70b8ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(111,45,189,.18), transparent 32%),
+                radial-gradient(circle at 85% 30%, rgba(25,95,255,.10), transparent 30%),
+                radial-gradient(circle at 50% 95%, rgba(180,30,255,.08), transparent 35%),
+                #05050b;
+        }
+
+        #stars {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        /* GÓRNY PASEK */
+
+        .topbar {
+            position: relative;
+            z-index: 10;
+            width: min(1400px, calc(100% - 30px));
+            min-height: 70px;
+            margin: 15px auto 0;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: rgba(8,8,18,.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 10px 40px rgba(0,0,0,.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-width: 145px;
+            height: 46px;
+            padding: 0 16px;
+            border: 1px solid rgba(139,92,246,.4);
+            border-radius: 13px;
+            background: rgba(139,92,246,.1);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--purple);
+        }
+
+        .top-search {
+            flex: 1;
+            min-width: 0;
+            height: 46px;
+            padding: 0 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            background: rgba(255,255,255,.035);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .top-search:focus {
+            border-color: var(--purple);
+        }
+
+        .top-search::placeholder {
+            color: #85859a;
+        }
+
+        .top-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .top-link {
+            padding: 13px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: rgba(255,255,255,.035);
+            color: #ddddec;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .top-link:hover {
+            border-color: rgba(155,108,255,.5);
+            background: rgba(155,108,255,.09);
+        }
+
+        /* GŁÓWNY KONTENER */
+
+        .wrapper {
+            width: min(1120px, calc(100% - 30px));
+            margin: 45px auto 80px;
+        }
+
+        .page-heading {
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px 13px;
+            border: 1px solid rgba(155,108,255,.25);
+            border-radius: 30px;
+            background: rgba(155,108,255,.08);
+            color: #c5aaff;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 12px;
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            background: linear-gradient(90deg, #fff, #bba2ff, #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .page-heading p {
+            max-width: 650px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* STATYSTYKI */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 13px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            min-width: 0;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: var(--panel);
+            box-shadow: 0 12px 35px rgba(0,0,0,.15);
+        }
+
+        .summary-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(155,108,255,.2);
+            border-radius: 12px;
+            background: rgba(155,108,255,.1);
+            font-size: 20px;
+        }
+
+        .summary-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .summary-value {
+            display: block;
+            overflow-wrap: anywhere;
+            font-size: clamp(19px, 2.5vw, 27px);
+            font-weight: 900;
+        }
+
+        .summary-note {
+            display: block;
+            margin-top: 6px;
+            color: #77778d;
+            font-size: 11px;
+        }
+
+        /* FILTRY */
+
+        .filter-panel {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(12,12,25,.7);
+        }
+
+        .filter-label {
+            margin-right: 5px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .filter-button {
+            padding: 10px 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: rgba(255,255,255,.025);
+            color: #bdbdce;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .filter-button:hover,
+        .filter-button.active {
+            border-color: rgba(155,108,255,.55);
+            background: rgba(155,108,255,.13);
+            color: #fff;
+        }
+
+        .refresh-button {
+            margin-left: auto;
+        }
+
+        /* SEKCJE */
+
+        .history-section {
+            margin-bottom: 22px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--panel);
+            box-shadow: 0 18px 50px rgba(0,0,0,.16);
+            backdrop-filter: blur(15px);
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 22px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+        .section-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border: 1px solid rgba(155,108,255,.22);
+            border-radius: 14px;
+            background: rgba(155,108,255,.1);
+            font-size: 23px;
+        }
+
+        .section-heading h2 {
+            margin: 0 0 5px;
+            font-size: 17px;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .section-count {
+            margin-left: auto;
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: #bdbdce;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .section-content {
+            padding: 8px 22px 20px;
+        }
+
+        /* WIERSZE HISTORII */
+
+        .history-item {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 15px;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,.055);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-main {
+            min-width: 0;
+        }
+
+        .item-title {
+            margin: 0 0 7px;
+            overflow-wrap: anywhere;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .item-description {
+            margin: 0 0 9px;
+            color: #a3a3b8;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 13px;
+            color: #85859a;
+            font-size: 11px;
+        }
+
+        .item-meta span {
+            overflow-wrap: anywhere;
+        }
+
+        .item-side {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 9px;
+            text-align: right;
+        }
+
+        .item-price {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .item-price.free {
+            color: var(--green);
+        }
+
+        .item-price.unknown {
+            color: #9999ae;
+            font-size: 12px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 190px;
+            padding: 6px 9px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: rgba(255,255,255,.035);
+            color: #c5c5d4;
+            font-size: 10px;
+            font-weight: 900;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        .status.success {
+            border-color: rgba(85,230,154,.24);
+            background: rgba(85,230,154,.08);
+            color: var(--green);
+        }
+
+        .status.pending {
+            border-color: rgba(255,211,106,.24);
+            background: rgba(255,211,106,.08);
+            color: var(--yellow);
+        }
+
+        .status.rejected {
+            border-color: rgba(255,115,125,.24);
+            background: rgba(255,115,125,.08);
+            color: var(--red);
+        }
+
+        .status.info {
+            border-color: rgba(112,184,255,.24);
+            background: rgba(112,184,255,.08);
+            color: var(--blue);
+        }
+
+        .empty-state {
+            padding: 30px 12px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            margin-bottom: 12px;
+            font-size: 28px;
+            opacity: .8;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 8px;
+            font-size: 14px;
+        }
+
+        .empty-state p {
+            max-width: 520px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .section-error {
+            margin: 15px 0 5px;
+            padding: 13px;
+            border: 1px solid rgba(255,115,125,.2);
+            border-radius: 11px;
+            background: rgba(255,115,125,.05);
+            color: #ff9ba3;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .notice {
+            margin-bottom: 20px;
+            padding: 15px 17px;
+            border: 1px solid rgba(112,184,255,.2);
+            border-radius: 13px;
+            background: rgba(112,184,255,.055);
+            color: #b9d9ff;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .global-error {
+            display: none;
+            margin-bottom: 20px;
+            padding: 16px;
+            border: 1px solid rgba(255,115,125,.25);
+            border-radius: 13px;
+            background: rgba(255,115,125,.06);
+            color: #ff9ba3;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .loading-text {
+            color: var(--muted);
+            text-align: center;
+            padding: 24px 10px;
+            font-size: 12px;
+        }
+
+        .footer-note {
+            padding: 10px;
+            color: #77778b;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 850px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .topbar {
+                flex-wrap: wrap;
+            }
+
+            .top-search {
+                order: 3;
+                flex-basis: 100%;
+            }
+
+            .top-links {
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .wrapper {
+                width: calc(100% - 20px);
+                margin-top: 30px;
+            }
+
+            .topbar {
+                width: calc(100% - 20px);
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .logo {
+                min-width: 120px;
+                font-size: 14px;
+            }
+
+            .top-links {
+                width: 100%;
+            }
+
+            .top-link {
+                flex: 1;
+                text-align: center;
+            }
+
+            .summary-card {
+                padding: 14px;
+            }
+
+            .summary-icon {
+                width: 36px;
+                height: 36px;
+                margin-bottom: 10px;
+            }
+
+            .filter-panel {
+                gap: 7px;
+            }
+
+            .filter-label {
+                flex-basis: 100%;
+            }
+
+            .refresh-button {
+                margin-left: 0;
+            }
+
+            .section-heading {
+                padding: 16px;
+                gap: 10px;
+            }
+
+            .section-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 19px;
+            }
+
+            .section-heading h2 {
+                font-size: 15px;
+            }
+
+            .section-count {
+                padding: 6px 8px;
+                font-size: 10px;
+            }
+
+            .section-content {
+                padding: 5px 16px 15px;
+            }
+
+            .history-item {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 10px;
+            }
+
+            .item-side {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                text-align: left;
+            }
+
+            .item-price {
+                font-size: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="stars"></canvas>
+
+    <header class="topbar">
+        <a href="index.html" class="logo">
+            SHADOW<span>TALE</span>
+        </a>
+
+        <input
+            id="history-search"
+            class="top-search"
+            type="search"
+            placeholder="Szukaj w swojej historii..."
+            aria-label="Szukaj w historii"
+            autocomplete="off"
+        >
+
+        <nav class="top-links">
+            <a href="konto.html" class="top-link">← Moje konto</a>
+            <a href="media.html" class="top-link">Media</a>
+            <a href="pomoc.html" class="top-link">Pomoc</a>
+        </nav>
+    </header>
+
+    <main class="wrapper">
+        <div class="page-heading">
+            <div class="eyebrow">✦ Twoja aktywność</div>
+            <h1>Historia ShadowTale</h1>
+            <p>
+                Wszystkie Twoje zakupy, pobrane pliki, propozycje i zamówienia
+                Custom w jednym miejscu.
+            </p>
+        </div>
+
+        <div id="global-error" class="global-error"></div>
+
+        <div class="notice">
+            <strong>Twoje dane, Twoja historia.</strong>
+            Pokazujemy rekordy przypisane do zalogowanego konta.
+            Ceny i daty są odczytywane z zapisanych danych, a nie generowane
+            automatycznie.
+        </div>
+
+        <section class="summary-grid" aria-label="Podsumowanie historii">
+            <div class="summary-card">
+                <div class="summary-icon">🛒</div>
+                <span class="summary-label">Zakupy</span>
+                <strong class="summary-value" id="summary-purchases">—</strong>
+                <span class="summary-note">Zapisane transakcje</span>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">📥</div>
+                <span class="summary-label">Pobrane pliki</span>
+                <strong class="summary-value" id="summary-downloads">—</strong>
+                <span class="summary-note">Zapisane pobrania</span>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">💡</div>
+                <span class="summary-label">Propozycje</span>
+                <strong class="summary-value" id="summary-proposals">—</strong>
+                <span class="summary-note">Wysłane sugestie</span>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">🧩</div>
+                <span class="summary-label">Zamówienia Custom</span>
+                <strong class="summary-value" id="summary-custom">—</strong>
+                <span class="summary-note">Indywidualne zlecenia</span>
+            </div>
+        </section>
+
+        <div class="filter-panel">
+            <span class="filter-label">Filtruj historię:</span>
+
+            <button class="filter-button active" data-filter="all" type="button">
+                Wszystko
+            </button>
+
+            <button class="filter-button" data-filter="purchases" type="button">
+                🛒 Zakupy
+            </button>
+
+            <button class="filter-button" data-filter="downloads" type="button">
+                📥 Pobrane
+            </button>
+
+            <button class="filter-button" data-filter="proposals" type="button">
+                💡 Propozycje
+            </button>
+
+            <button class="filter-button" data-filter="custom" type="button">
+                🧩 Custom
+            </button>
+
+            <button class="filter-button refresh-button" id="refresh-button" type="button">
+                ↻ Odśwież
+            </button>
+        </div>
+
+        <!-- ZAKUPY -->
+
+        <section class="history-section" data-section="purchases">
+            <div class="section-heading">
+                <div class="section-icon">🛒</div>
+                <div>
+                    <h2>Zakupy</h2>
+                    <p>Produkty kupione na ShadowTale, ceny i daty transakcji.</p>
+                </div>
+                <span class="section-count" id="count-purchases">0 rekordów</span>
+            </div>
+
+            <div class="section-content" id="list-purchases">
+                <div class="loading-text">Ładowanie historii zakupów...</div>
+            </div>
+        </section>
+
+        <!-- POBRANE PLIKI -->
+
+        <section class="history-section" data-section="downloads">
+            <div class="section-heading">
+                <div class="section-icon">📥</div>
+                <div>
+                    <h2>Pobrane pliki</h2>
+                    <p>Produkty i pliki pobrane przez Twoje konto.</p>
+                </div>
+                <span class="section-count" id="count-downloads">0 rekordów</span>
+            </div>
+
+            <div class="section-content" id="list-downloads">
+                <div class="loading-text">Ładowanie historii pobrań...</div>
+            </div>
+        </section>
+
+        <!-- PROPOZYCJE -->
+
+        <section class="history-section" data-section="proposals">
+            <div class="section-heading">
+                <div class="section-icon">💡</div>
+                <div>
+                    <h2>Twoje propozycje</h2>
+                    <p>Pomysły, sugestie i propozycje wysłane administracji.</p>
+                </div>
+                <span class="section-count" id="count-proposals">0 rekordów</span>
+            </div>
+
+            <div class="section-content" id="list-proposals">
+                <div class="loading-text">Ładowanie propozycji...</div>
+            </div>
+        </section>
+
+        <!-- ZAMÓWIENIA CUSTOM -->
+
+        <section class="history-section" data-section="custom">
+            <div class="section-heading">
+                <div class="section-icon">🧩</div>
+                <div>
+                    <h2>Zamówienia Custom</h2>
+                    <p>
+                        Prośby o indywidualne skrypty, konfiguracje, mapy,
+                        grafiki i inne realizacje.
+                    </p>
+                </div>
+                <span class="section-count" id="count-custom">0 rekordów</span>
+            </div>
+
+            <div class="section-content" id="list-custom">
+                <div class="loading-text">Ładowanie zamówień Custom...</div>
+            </div>
+        </section>
+
+        <div class="footer-note">
+            Historia obejmuje tylko dane zapisane i dostępne dla Twojego konta.
+            Jeśli brakuje rekordów, odpowiednie tabele muszą być skonfigurowane
+            w bazie ShadowTale.
+        </div>
+    </main>
+
+    <script>
+        "use strict";
+
+        /*
+         * KONFIGURACJA HISTORII
+         *
+         * Domyślne nazwy tabel:
+         * purchases      - zakupy
+         * downloads      - pobrania
+         * suggestions    - propozycje
+         * custom_orders  - zamówienia Custom
+         *
+         * Każda tabela powinna zawierać kolumnę user_id wskazującą
+         * identyfikator użytkownika Supabase Auth.
+         *
+         * Jeśli w Twojej bazie nazwy tabel są inne, zmień je poniżej.
+         */
+
+        const HISTORY_CONFIG = {
+            tables: {
+                purchases: "purchases",
+                downloads: "downloads",
+                proposals: "suggestions",
+                custom: "custom_orders"
+            },
+            userColumn: "user_id",
+            limit: 100
+        };
+
+        let supabaseClient = null;
+        let currentFilter = "all";
+        let allRecords = {
+            purchases: [],
+            downloads: [],
+            proposals: [],
+            custom: []
+        };
+
+        let sectionErrors = {};
+
+        const DEFAULT_CONFIG = {
+            purchases: {
+                title: "Zakupy",
+                description: "Zapisany zakup produktu",
+                dateFields: ["created_at", "purchased_at", "purchase_date", "date"],
+                nameFields: ["product_name", "name", "title", "product_title"],
+                descriptionFields: ["description", "details"],
+                priceFields: ["price", "amount", "total", "price_paid"],
+                statusFields: ["status", "payment_status"],
+                currencyFields: ["currency"],
+                type: "purchase"
+            },
+            downloads: {
+                title: "Pobrany plik",
+                description: "Zapisane pobranie",
+                dateFields: ["created_at", "downloaded_at", "download_date", "date"],
+                nameFields: ["product_name", "file_name", "filename", "name", "title"],
+                descriptionFields: ["description", "file_path", "details"],
+                priceFields: ["price", "amount", "price_paid"],
+                statusFields: ["status"],
+                currencyFields: ["currency"],
+                type: "download"
+            },
+            proposals: {
+                title: "Propozycja",
+                description: "Propozycja wysłana przez użytkownika",
+                dateFields: ["created_at", "submitted_at", "date"],
+                nameFields: ["title", "subject", "name"],
+                descriptionFields: ["description", "content", "message", "proposal"],
+                priceFields: [],
+                statusFields: ["status", "state"],
+                currencyFields: [],
+                type: "proposal"
+            },
+            custom: {
+                title: "Zamówienie Custom",
+                description: "Indywidualne zamówienie",
+                dateFields: ["created_at", "submitted_at", "order_date", "date"],
+                nameFields: ["title", "name", "service_name", "subject"],
+                descriptionFields: ["description", "details", "message", "requirements", "content"],
+                priceFields: ["price", "quoted_price", "total", "amount"],
+                statusFields: ["status", "order_status", "state"],
+                currencyFields: ["currency"],
+                type: "custom"
+            }
+        };
+
+        function getConfig() {
+            const config = window.CONFIG || window.SHADOWTALE_CONFIG || {};
+
+            return {
+                url:
+                    config.supabaseUrl ||
+                    config.SUPABASE_URL ||
+                    config.url ||
+                    "",
+                key:
+                    config.supabaseKey ||
+                    config.SUPABASE_KEY ||
+                    config.supabaseAnonKey ||
+                    config.SUPABASE_ANON_KEY ||
+                    config.anonKey ||
+                    ""
+            };
+        }
+
+        function initializeSupabase() {
+            if (!window.supabase || !window.supabase.createClient) {
+                throw new Error("Biblioteka Supabase nie została załadowana.");
+            }
+
+            const config = getConfig();
+
+            if (!config.url || !config.key) {
+                throw new Error("Brakuje adresu lub klucza Supabase w config.js.");
+            }
+
+            supabaseClient = window.supabase.createClient(config.url, config.key);
+        }
+
+        function firstValue(record, fields) {
+            for (const field of fields) {
+                const value = record?.[field];
+
+                if (
+                    value !== null &&
+                    value !== undefined &&
+                    value !== ""
+                ) {
+                    return value;
+                }
+            }
+
+            return null;
+        }
+
+        function formatDate(value) {
+            if (!value) return "Brak zapisanej daty";
+
+            const date = new Date(value);
+
+            if (Number.isNaN(date.getTime())) {
+                return String(value);
+            }
+
+            return new Intl.DateTimeFormat("pl-PL", {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }).format(date);
+        }
+
+        function formatPrice(value, currency) {
+            if (value === null || value === undefined || value === "") {
+                return null;
+            }
+
+            const numeric = Number(value);
+
+            if (!Number.isFinite(numeric)) {
+                return String(value);
+            }
+
+            const currencyCode = String(currency || "PLN").toUpperCase();
+
+            try {
+                return new Intl.NumberFormat("pl-PL", {
+                    style: "currency",
+                    currency: currencyCode
+                }).format(numeric);
+            } catch {
+                return numeric.toFixed(2) + " " + currencyCode;
+            }
+        }
+
+        function normalizeStatus(value) {
+            return String(value || "")
+                .trim()
+                .toLowerCase()
+                .replace(/[_-]+/g, " ");
+        }
+
+        function statusPresentation(value, type) {
+            const status = normalizeStatus(value);
+
+            if (!status) {
+                if (type === "download") {
+                    return { label: "Zapisane pobranie", className: "info" };
+                }
+
+                if (type === "purchase") {
+                    return { label: "Zapisany zakup", className: "info" };
+                }
+
+                return { label: "Wysłane", className: "info" };
+            }
+
+            const successWords = [
+                "completed", "complete", "paid", "success",
+                "approved", "accepted", "delivered", "finished",
+                "zrealizowane", "zrealizowany", "opłacone", "oplacone",
+                "zaakceptowane", "zaakceptowany", "zakończone",
+                "zakonczone", "gotowe", "wysłane", "wyslane"
+            ];
+
+            const pendingWords = [
+                "pending", "processing", "waiting", "in progress",
+                "review", "new", "oczekuje", "oczekujące",
+                "oczekujace", "w trakcie", "nowe", "rozpatrywane"
+            ];
+
+            const rejectedWords = [
+                "rejected", "declined", "cancelled", "canceled",
+                "failed", "odrzucone", "odrzucony", "anulowane",
+                "anulowany", "nieudane", "błąd", "blad"
+            ];
+
+            if (successWords.some(word => status.includes(word))) {
+                return { label: value, className: "success" };
+            }
+
+            if (pendingWords.some(word => status.includes(word))) {
+                return { label: value, className: "pending" };
+            }
+
+            if (rejectedWords.some(word => status.includes(word))) {
+                return { label: value, className: "rejected" };
+            }
+
+            return { label: value, className: "info" };
+        }
+
+        function makeElement(tag, className, text) {
+            const element = document.createElement(tag);
+
+            if (className) {
+                element.className = className;
+            }
+
+            if (text !== undefined && text !== null) {
+                element.textContent = String(text);
+            }
+
+            return element;
+        }
+
+        function makeEmptyState(icon, title, description) {
+            const wrapper = makeElement("div", "empty-state");
+            wrapper.appendChild(makeElement("div", "empty-icon", icon));
+            wrapper.appendChild(makeElement("h3", "", title));
+            wrapper.appendChild(makeElement("p", "", description));
+
+            return wrapper;
+        }
+
+        function renderRecord(record, section) {
+            const config = DEFAULT_CONFIG[section];
+            const item = makeElement("article", "history-item");
+            const main = makeElement("div", "item-main");
+
+            const name = firstValue(record, config.nameFields);
+            const description = firstValue(record, config.descriptionFields);
+            const date = firstValue(record, config.dateFields);
+            const priceValue = firstValue(record, config.priceFields);
+            const currency = firstValue(record, config.currencyFields);
+            const rawStatus = firstValue(record, config.statusFields);
+
+            const title = name || config.title;
+            main.appendChild(makeElement("h3", "item-title", title));
+
+            if (description) {
+                main.appendChild(
+                    makeElement("p", "item-description", description)
+                );
+            }
+
+            const meta = makeElement("div", "item-meta");
+            meta.appendChild(
+                makeElement("span", "", "📅 " + formatDate(date))
+            );
+
+            const paymentMethod = firstValue(record, [
+                "payment_method", "payment_type", "method"
+            ]);
+
+            if (paymentMethod) {
+                meta.appendChild(
+                    makeElement("span", "", "💳 " + paymentMethod)
+                );
+            }
+
+            const version = firstValue(record, [
+                "minecraft_version", "version"
+            ]);
+
+            if (version) {
+                meta.appendChild(
+                    makeElement("span", "", "Wersja: " + version)
+                );
+            }
+
+            const orderId = firstValue(record, [
+                "order_number", "order_id", "transaction_id"
+            ]);
+
+            if (orderId) {
+                meta.appendChild(
+                    makeElement("span", "", "Nr: " + orderId)
+                );
+            }
+
+            main.appendChild(meta);
+
+            const side = makeElement("div", "item-side");
+            const priceText = formatPrice(priceValue, currency);
+
+            if (priceText !== null) {
+                const priceClass =
+                    Number(priceValue) === 0 ? "item-price free" : "item-price";
+
+                side.appendChild(makeElement("div", priceClass, priceText));
+            } else if (section === "proposals") {
+                side.appendChild(
+                    makeElement("div", "item-price unknown", "Bez ceny")
+                );
+            } else {
+                side.appendChild(
+                    makeElement("div", "item-price unknown", "Brak ceny w danych")
+                );
+            }
+
+            const presentation = statusPresentation(rawStatus, config.type);
+            side.appendChild(
+                makeElement(
+                    "span",
+                    "status " + presentation.className,
+                    presentation.label
+                )
+            );
+
+            item.append(main, side);
+            return item;
+        }
+
+        function renderSection(section) {
+            const container = document.getElementById("list-" + section);
+            const records = allRecords[section] || [];
+
+            container.replaceChildren();
+
+            if (sectionErrors[section]) {
+                const error = makeElement(
+                    "div",
+                    "section-error",
+                    sectionErrors[section]
+                );
+
+                container.appendChild(error);
+            }
+
+            const query = document
+                .getElementById("history-search")
+                .value
+                .trim()
+                .toLowerCase();
+
+            const filtered = records.filter(record => {
+                if (!query) return true;
+
+                return Object.values(record).some(value => {
+                    if (
+                        value === null ||
+                        value === undefined ||
+                        typeof value === "object"
+                    ) {
+                        return false;
+                    }
+
+                    return String(value).toLowerCase().includes(query);
+                });
+            });
+
+            document.getElementById("count-" + section).textContent =
+                records.length + (records.length === 1 ? " rekord" : " rekordów");
+
+            if (filtered.length === 0) {
+                let title = "Brak zapisanych danych";
+                let description = "Gdy pojawią się nowe rekordy, zobaczysz je tutaj.";
+
+                if (query) {
+                    title = "Brak wyników";
+                    description = "Nie znaleziono rekordów pasujących do wyszukiwania.";
+                } else if (section === "purchases") {
+                    description = "Nie znaleziono zapisanych zakupów dla tego konta.";
+                } else if (section === "downloads") {
+                    description = "Nie znaleziono zapisanych pobrań dla tego konta.";
+                } else if (section === "proposals") {
+                    description = "Nie znaleziono wysłanych propozycji.";
+                } else if (section === "custom") {
+                    description = "Nie znaleziono próśb o zamówienia Custom.";
+                }
+
+                container.appendChild(
+                    makeEmptyState("✦", title, description)
+                );
+            } else {
+                filtered.forEach(record => {
+                    container.appendChild(renderRecord(record, section));
+                });
+            }
+        }
+
+        function updateSummary() {
+            document.getElementById("summary-purchases").textContent =
+                allRecords.purchases.length;
+
+            document.getElementById("summary-downloads").textContent =
+                allRecords.downloads.length;
+
+            document.getElementById("summary-proposals").textContent =
+                allRecords.proposals.length;
+
+            document.getElementById("summary-custom").textContent =
+                allRecords.custom.length;
+        }
+
+        function applyFilter(filter) {
+            currentFilter = filter;
+
+            document.querySelectorAll("[data-section]").forEach(section => {
+                const name = section.dataset.section;
+
+                section.style.display =
+                    filter === "all" || filter === name ? "" : "none";
+            });
+
+            document.querySelectorAll("[data-filter]").forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.filter === filter
+                );
+            });
+        }
+
+        async function fetchSection(section, userId) {
+            const table = HISTORY_CONFIG.tables[section];
+
+            /*
+             * Zapytanie ogranicza wyniki do zalogowanego użytkownika.
+             * Odpowiednie polityki RLS w Supabase również powinny
+             * uniemożliwiać użytkownikom odczyt cudzych rekordów.
+             */
+            const { data, error } = await supabaseClient
+                .from(table)
+                .select("*")
+                .eq(HISTORY_CONFIG.userColumn, userId)
+                .order("created_at", { ascending: false })
+                .limit(HISTORY_CONFIG.limit);
+
+            if (error) {
+                throw new Error(
+                    "Nie udało się odczytać tabeli „" +
+                    table +
+                    "”. Sprawdź, czy tabela istnieje, zawiera kolumnę „" +
+                    HISTORY_CONFIG.userColumn +
+                    "” i pozwala użytkownikowi odczytać własne rekordy."
+                );
+            }
+
+            return Array.isArray(data) ? data : [];
+        }
+
+        async function loadHistory() {
+            const globalError = document.getElementById("global-error");
+            const refreshButton = document.getElementById("refresh-button");
+
+            globalError.style.display = "none";
+            refreshButton.disabled = true;
+            refreshButton.textContent = "Ładowanie...";
+
+            Object.keys(allRecords).forEach(section => {
+                allRecords[section] = [];
+                sectionErrors[section] = "";
+            });
+
+            Object.keys(allRecords).forEach(section => {
+                const container = document.getElementById("list-" + section);
+                container.replaceChildren(
+                    makeElement("div", "loading-text", "Ładowanie danych...")
+                );
+            });
+
+            try {
+                if (!supabaseClient) {
+                    initializeSupabase();
+                }
+
+                const {
+                    data: sessionData,
+                    error: sessionError
+                } = await supabaseClient.auth.getSession();
+
+                if (sessionError) throw sessionError;
+
+                const user = sessionData?.session?.user;
+
+                if (!user) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const sections = Object.keys(allRecords);
+
+                await Promise.all(
+                    sections.map(async section => {
+                        try {
+                            allRecords[section] = await fetchSection(section, user.id);
+                        } catch (error) {
+                            console.error(
+                                "Błąd historii — " + section + ":",
+                                error
+                            );
+
+                            sectionErrors[section] =
+                                error.message ||
+                                "Nie udało się pobrać tej sekcji.";
+                        }
+                    })
+                );
+
+                updateSummary();
+
+                sections.forEach(renderSection);
+                applyFilter(currentFilter);
+
+                const failedSections = sections.filter(
+                    section => Boolean(sectionErrors[section])
+                );
+
+                if (failedSections.length === sections.length) {
+                    globalError.textContent =
+                        "Nie udało się połączyć z tabelami historii. " +
+                        "Sprawdź konfigurację tabel i polityki RLS w Supabase.";
+                    globalError.style.display = "block";
+                }
+            } catch (error) {
+                console.error("Historia ShadowTale:", error);
+
+                globalError.textContent =
+                    error?.message ||
+                    "Nie udało się załadować historii.";
+
+                globalError.style.display = "block";
+
+                Object.keys(allRecords).forEach(section => {
+                    const container = document.getElementById("list-" + section);
+                    container.replaceChildren(
+                        makeEmptyState(
+                            "⚠️",
+                            "Nie udało się załadować danych",
+                            "Sprawdź połączenie i konfigurację Supabase."
+                        )
+                    );
+                });
+            } finally {
+                refreshButton.disabled = false;
+                refreshButton.textContent = "↻ Odśwież";
+            }
+        }
+
+        function createStars() {
+            const canvas = document.getElementById("stars");
+            const ctx = canvas.getContext("2d");
+
+            if (!ctx) return;
+
+            let width = 0;
+            let height = 0;
+            const stars = [];
+
+            function resize() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+                width = window.innerWidth;
+                height = window.innerHeight;
+
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                canvas.style.width = width + "px";
+                canvas.style.height = height + "px";
+
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                stars.length = 0;
+
+                const count = Math.min(
+                    150,
+                    Math.floor((width * height) / 8500)
+                );
+
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 1.4 + .2,
+                        alpha: Math.random() * .7 + .1,
+                        speed: Math.random() * .15 + .025
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (const star of stars) {
+                    star.y += star.speed;
+
+                    if (star.y > height) {
+                        star.y = 0;
+                        star.x = Math.random() * width;
+                    }
+
+                    ctx.beginPath();
+                    ctx.fillStyle = "rgba(255,255,255," + star.alpha + ")";
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            resize();
+            animate();
+
+            window.addEventListener("resize", resize);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            createStars();
+
+            document.querySelectorAll("[data-filter]").forEach(button => {
+                button.addEventListener("click", () => {
+                    applyFilter(button.dataset.filter);
+                });
+            });
+
+            document
+                .getElementById("history-search")
+                .addEventListener("input", () => {
+                    Object.keys(allRecords).forEach(renderSection);
+                });
+
+            document
+                .getElementById("refresh-button")
+                .addEventListener("click", loadHistory);
+
+            loadHistory();
+        });
+    </script>
+
+    <script src="music.js"></script>
+    <script src="stats-tracker.js"></script>
+</body>
+</html>
