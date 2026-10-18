@@ -1,427 +1,1058 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ShadowTale.pl — Muzyka</title>
-    <meta name="description" content="Muzyka Undertale — ShadowTale.pl">
+    <title>Biblioteka muzyki — ShadowTale</title>
+    <meta name="description" content="Biblioteka muzyki ShadowTale — utwory, teksty i wersje językowe.">
 
-    <link rel="icon" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
 
     <style>
-        :root {
-            --bg: #050509;
-            --panel: rgba(15, 12, 25, .94);
-            --purple: #9b5cff;
-            --purple2: #6d32d6;
-            --red: #d31335;
-            --text: #f7f2ff;
-            --muted: #aaa2b7;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            min-height: 100vh;
-            color: var(--text);
-            font-family: Arial, Helvetica, sans-serif;
-
-            background:
-                radial-gradient(
-                    circle at 20% 10%,
-                    rgba(155,92,255,.15),
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at 80% 20%,
-                    rgba(211,19,53,.10),
-                    transparent 35%
-                ),
-                linear-gradient(
-                    135deg,
-                    #050509,
-                    #090611
-                );
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-
-            min-height: 72px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 12px 25px;
-
-            background: rgba(5,5,9,.88);
-            backdrop-filter: blur(18px);
-
-            border-bottom: 1px solid rgba(155,92,255,.2);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 22px;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-
-        .logo img {
-            width: 44px;
-            height: 44px;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-
-        .logo span {
-            color: var(--purple);
-        }
-
-        .account {
-            padding: 10px 15px;
-
-            border-radius: 10px;
-
-            border: 1px solid rgba(155,92,255,.3);
-            background: rgba(255,255,255,.04);
-
-            transition: .2s;
-        }
-
-        .account:hover {
-            border-color: var(--purple);
-            background: rgba(155,92,255,.12);
-        }
-
-        main {
-            width: min(1200px, calc(100% - 30px));
-            margin: auto;
-
-            padding: 55px 0 80px;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .hero h1 {
-            font-size: clamp(38px, 7vw, 64px);
-            font-weight: 900;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #fff,
-                    var(--purple),
-                    var(--red)
-                );
-
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .hero p {
-            margin-top: 12px;
-            color: var(--muted);
-            font-size: 16px;
-        }
-
-        .back {
-            display: inline-block;
-
-            margin-top: 20px;
-
-            padding: 11px 18px;
-
-            border-radius: 11px;
-
-            border: 1px solid rgba(155,92,255,.3);
-            background: rgba(155,92,255,.08);
-
-            transition: .2s;
-        }
-
-        .back:hover {
-            background: rgba(155,92,255,.18);
-            border-color: var(--purple);
-            transform: translateY(-2px);
-        }
-
-        .music-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(250px, 1fr)
-                );
-
-            gap: 18px;
+        .music-library {
+            width: min(1100px, 94%);
+            margin: 35px auto;
+            color: #f4efff;
         }
 
         .music-card {
-            position: relative;
+            background: rgba(15, 12, 27, .96);
+            border: 1px solid rgba(155, 92, 255, .35);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .2);
+        }
 
-            min-height: 150px;
+        .music-card h1,
+        .music-card h2,
+        .music-card h3 { margin-top: 0; }
 
-            display: flex;
-            flex-direction: column;
+        .music-card h1 { color: #b78aff; }
+
+        .music-form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .music-form label {
+            display: grid;
+            gap: 7px;
+            font-weight: 600;
+        }
+
+        .music-form input,
+        .music-form textarea,
+        .music-form select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid rgba(155, 92, 255, .4);
+            border-radius: 9px;
+            background: #0b0912;
+            color: #fff;
+            font: inherit;
+        }
+
+        .music-form textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .music-form input:focus,
+        .music-form textarea:focus,
+        .music-form select:focus {
+            outline: 2px solid #9b5cff;
+            outline-offset: 1px;
+        }
+
+        .music-check {
+            display: flex !important;
+            align-items: center;
+            gap: 10px !important;
+        }
+
+        .music-check input {
+            width: auto;
+        }
+
+        .music-button {
+            display: inline-flex;
             justify-content: center;
-
-            padding: 25px;
-
-            border-radius: 18px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(155,92,255,.12),
-                    rgba(211,19,53,.05)
-                ),
-                var(--panel);
-
-            border: 1px solid rgba(155,92,255,.22);
-
-            overflow: hidden;
-
-            transition:
-                transform .2s,
-                border-color .2s,
-                box-shadow .2s;
-        }
-
-        .music-card::before {
-            content: "♪";
-
-            position: absolute;
-
-            right: 15px;
-            top: -12px;
-
-            font-size: 100px;
-
-            color: rgba(155,92,255,.06);
-
-            pointer-events: none;
-        }
-
-        .music-card:hover {
-            transform: translateY(-5px);
-
-            border-color: var(--purple);
-
-            box-shadow:
-                0 15px 40px rgba(0,0,0,.4),
-                0 0 25px rgba(155,92,255,.1);
-        }
-
-        .number {
-            color: var(--purple);
-
-            font-size: 12px;
-            font-weight: 900;
-
-            margin-bottom: 10px;
-        }
-
-        .music-card h2 {
-            position: relative;
-            z-index: 1;
-
-            font-size: 19px;
-            line-height: 1.3;
-        }
-
-        .open {
-            position: relative;
-            z-index: 1;
-
-            margin-top: 14px;
-
-            color: #bfa4eb;
-
-            font-size: 13px;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 17px;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            background: #9b5cff;
+            color: white;
+            font: inherit;
             font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
         }
 
-        footer {
-            text-align: center;
+        .music-button:hover { filter: brightness(1.12); }
 
-            padding: 30px 20px 50px;
-
-            color: #6f6879;
-
-            font-size: 13px;
+        .music-button:disabled {
+            opacity: .55;
+            cursor: wait;
         }
+
+        .music-button.secondary {
+            background: #282033;
+            border-color: #57416f;
+        }
+
+        .music-button.danger {
+            background: #a62e4b;
+        }
+
+        .music-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .music-status {
+            padding: 12px 14px;
+            border-radius: 9px;
+            margin: 14px 0;
+            background: rgba(155, 92, 255, .12);
+            border: 1px solid rgba(155, 92, 255, .3);
+            overflow-wrap: anywhere;
+        }
+
+        .music-status.error {
+            border-color: #ff5470;
+            color: #ffb4c0;
+        }
+
+        .music-status.success {
+            border-color: #39e58c;
+            color: #9af5c4;
+        }
+
+        .music-track {
+            padding: 22px 0;
+            border-top: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .music-track:first-child { border-top: 0; }
+
+        .music-track p {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .music-track-meta {
+            opacity: .8;
+            font-size: .92rem;
+        }
+
+        .music-version {
+            padding: 14px;
+            margin-top: 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .035);
+            border: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .music-version video {
+            width: 100%;
+            max-width: 700px;
+            display: block;
+            margin-top: 12px;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        .music-track details,
+        .music-editor {
+            margin-top: 16px;
+        }
+
+        .music-track summary,
+        .music-editor summary {
+            cursor: pointer;
+            font-weight: 700;
+            padding: 10px 0;
+        }
+
+        .music-editor {
+            padding: 14px;
+            border: 1px solid rgba(155, 92, 255, .3);
+            border-radius: 12px;
+            background: rgba(155, 92, 255, .045);
+        }
+
+        .music-empty {
+            opacity: .8;
+            padding: 16px 0;
+        }
+
+        .music-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            margin: 5px 5px 5px 0;
+            border-radius: 20px;
+            background: rgba(155, 92, 255, .15);
+            border: 1px solid rgba(155, 92, 255, .35);
+            font-size: .85rem;
+        }
+
+        .music-divider {
+            border: 0;
+            border-top: 1px solid rgba(255,255,255,.1);
+            margin: 22px 0;
+        }
+
+        [hidden] { display: none !important; }
 
         @media (max-width: 600px) {
-
-            header {
-                padding: 10px 15px;
-            }
-
-            .logo {
-                font-size: 18px;
-            }
-
-            .logo img {
-                width: 38px;
-                height: 38px;
-            }
-
-            main {
-                padding-top: 35px;
-            }
-
-            .music-grid {
-                grid-template-columns: 1fr;
-            }
+            .music-card { padding: 16px; }
+            .music-library { width: 94%; margin-top: 18px; }
         }
     </style>
 </head>
 
 <body>
+<main class="music-library">
 
-<header>
-
-    <a href="index.html" class="logo">
-        <img src="assets/logo.png" alt="ShadowTale">
-        <div>
-            SHADOW<span>TALE</span>
-        </div>
-    </a>
-
-    <a href="login.html" class="account">
-        👤 Konto
-    </a>
-
-</header>
-
-
-<main>
-
-    <section class="hero">
-
-        <h1>🎵 Muzyka</h1>
-
+    <header class="music-card">
+        <h1>🎵 Biblioteka muzyki ShadowTale</h1>
         <p>
-            Wybierz utwór, aby przejść do jego odtwarzacza.
+            Odkrywaj utwory, czytaj teksty i przeglądaj dostępne wersje.
+            Panel administracyjny jest dostępny wyłącznie dla właściciela.
         </p>
 
-        <a href="index.html" class="back">
-            ← Strona główna
-        </a>
+        <div class="music-actions">
+            <button class="music-button" id="toggle-admin" type="button" hidden>
+                ⚙️ Zarządzaj muzyką
+            </button>
 
+            <button class="music-button secondary" id="refresh-music" type="button">
+                🔄 Odśwież bibliotekę
+            </button>
+
+            <a class="music-button secondary" href="index.html">
+                ← Strona główna
+            </a>
+        </div>
+
+        <div id="music-status" class="music-status" role="status"
+             aria-live="polite" hidden></div>
+    </header>
+
+    <!-- Panel jest zamknięty domyślnie. -->
+    <section class="music-card" id="admin-panel" hidden>
+        <h2>🛠️ Panel zarządzania muzyką</h2>
+        <p class="music-track-meta">
+            Dodawanie i edycja są dostępne dla konta z rolą owner.
+        </p>
+
+        <div id="admin-status" class="music-status" role="status"
+             aria-live="polite" hidden></div>
+
+        <details id="create-track-details">
+            <summary>➕ Dodaj nowy utwór</summary>
+
+            <form id="create-track-form" class="music-form">
+                <label>
+                    Tytuł utworu
+                    <input name="title" maxlength="150" required
+                           placeholder="Np. OmegaTale — Main Theme">
+                </label>
+
+                <label>
+                    Opis
+                    <textarea name="description" maxlength="10000"
+                              placeholder="Opis utworu..."></textarea>
+                </label>
+
+                <label>
+                    Ostrzeżenie o treści
+                    <textarea name="warning" maxlength="3000"
+                              placeholder="Opcjonalne ostrzeżenie..."></textarea>
+                </label>
+
+                <label>
+                    Ocena wiekowa
+                    <select name="ageRating">
+                        <option value="all">Bez ograniczenia</option>
+                        <option value="3+">3+</option>
+                        <option value="7+">7+</option>
+                        <option value="12+">12+</option>
+                        <option value="13+">13+</option>
+                        <option value="16+">16+</option>
+                        <option value="18+">18+</option>
+                    </select>
+                </label>
+
+                <label class="music-check">
+                    <input type="checkbox" name="noLyrics" id="new-no-lyrics">
+                    Utwór nie ma tekstu piosenki
+                </label>
+
+                <label>
+                    Tekst piosenki
+                    <textarea name="lyrics" id="new-lyrics"
+                              placeholder="Wklej tekst piosenki..."></textarea>
+                </label>
+
+                <button class="music-button" type="submit" id="create-track-button">
+                    Utwórz utwór
+                </button>
+            </form>
+
+            <p class="music-track-meta">
+                Pliki MP4 umieszczaj w frontend/assets/music/.
+                Sam formularz nie przesyła plików z komputera.
+            </p>
+        </details>
     </section>
 
-
-    <section class="music-grid">
-
-        <a href="your-best-friend.html" class="music-card">
-            <span class="number">01</span>
-            <h2>Your Best Friend</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="heartache.html" class="music-card">
-            <span class="number">02</span>
-            <h2>Heartache</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="bonetrousle.html" class="music-card">
-            <span class="number">03</span>
-            <h2>Bonetrousle</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="spear-of-justice.html" class="music-card">
-            <span class="number">04</span>
-            <h2>Spear of Justice</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="battle-against-a-true-hero.html" class="music-card">
-            <span class="number">05</span>
-            <h2>Battle Against a True Hero</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="spider-dance.html" class="music-card">
-            <span class="number">06</span>
-            <h2>Spider Dance</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="death-by-glamour.html" class="music-card">
-            <span class="number">07</span>
-            <h2>Death by Glamour</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="story-of-undertale.html" class="music-card">
-            <span class="number">08</span>
-            <h2>Story of Undertale</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="megalovania.html" class="music-card">
-            <span class="number">09</span>
-            <h2>Megalovania</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="bergentrueckung-asgore.html" class="music-card">
-            <span class="number">10</span>
-            <h2>Bergentrückung + ASGORE</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="your-best-nightmare-finale.html" class="music-card">
-            <span class="number">11</span>
-            <h2>Your Best Nightmare + Finale</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="finale.html" class="music-card">
-            <span class="number">12</span>
-            <h2>Finale</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
-        <a href="traits-of-the-seven.html" class="music-card">
-            <span class="number">13</span>
-            <h2>Traits of the Seven</h2>
-            <span class="open">▶ Otwórz utwór</span>
-        </a>
-
+    <section class="music-card">
+        <h2>📚 Zapisane utwory</h2>
+        <div id="music-tracks">
+            <p class="music-empty">Ładowanie biblioteki...</p>
+        </div>
     </section>
 
 </main>
 
+<script>
+(() => {
+    "use strict";
 
-<footer>
-    ShadowTale.pl • Muzyka
-</footer>
+    const config = window.CONFIG || window.config || {};
 
+    const API_BASE = String(
+        config.apiBaseUrl ||
+        config.backendUrl ||
+        config.productFilesApi ||
+        "http://127.0.0.1:5500"
+    ).replace(/\/+$/, "");
+
+    const $ = id => document.getElementById(id);
+
+    const statusElement = $("music-status");
+    const adminStatus = $("admin-status");
+    const tracksElement = $("music-tracks");
+    const adminPanel = $("admin-panel");
+    const toggleAdmin = $("toggle-admin");
+    const createForm = $("create-track-form");
+    const createButton = $("create-track-button");
+    const refreshButton = $("refresh-music");
+
+    let clientPromise = null;
+    let isOwner = false;
+    let adminOpen = false;
+    let loadingTracks = false;
+
+    function showStatus(element, message, type = "") {
+        element.textContent = message;
+        element.className = "music-status" + (type ? " " + type : "");
+        element.hidden = false;
+    }
+
+    function clearStatus(element) {
+        element.textContent = "";
+        element.hidden = true;
+        element.className = "music-status";
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[char]);
+    }
+
+    function getSupabaseClient() {
+        const existing =
+            window.supabaseClient ||
+            window.authClient ||
+            window.db ||
+            window.supabaseInstance;
+
+        if (existing?.auth?.getSession) return existing;
+        if (clientPromise) return clientPromise;
+
+        clientPromise = (async () => {
+            const cfg = window.CONFIG || window.config || {};
+
+            const url =
+                cfg.supabaseUrl ||
+                cfg.SUPABASE_URL ||
+                cfg.supabase_url;
+
+            const key =
+                cfg.supabaseKey ||
+                cfg.SUPABASE_ANON_KEY ||
+                cfg.SUPABASE_PUBLISHABLE_KEY ||
+                cfg.supabaseAnonKey ||
+                cfg.publishableKey;
+
+            if (!window.supabase?.createClient) {
+                throw new Error("Biblioteka Supabase nie została załadowana.");
+            }
+
+            if (!url || !key) {
+                throw new Error(
+                    "Brakuje adresu lub klucza Supabase w config.js."
+                );
+            }
+
+            const client = window.supabase.createClient(url, key, {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true
+                }
+            });
+
+            window.supabaseClient = client;
+            window.authClient = client;
+
+            return client;
+        })();
+
+        return clientPromise;
+    }
+
+    async function getSession() {
+        const client = await getSupabaseClient();
+        const { data, error } = await client.auth.getSession();
+
+        if (error) throw new Error(error.message);
+        return data?.session || null;
+    }
+
+    /*
+     * Kontrola interfejsu:
+     * odczyt roli z tabeli profiles dla zalogowanego użytkownika.
+     * Backend nadal MUSI sam sprawdzać rolę owner przy zapisie.
+     */
+    async function checkOwner() {
+        isOwner = false;
+        adminOpen = false;
+        adminPanel.hidden = true;
+        toggleAdmin.hidden = true;
+
+        try {
+            const client = await getSupabaseClient();
+            const { data: sessionData, error: sessionError } =
+                await client.auth.getSession();
+
+            if (sessionError) throw sessionError;
+
+            const user = sessionData?.session?.user;
+            if (!user) return false;
+
+            const { data: profile, error } = await client
+                .from("profiles")
+                .select("role, roles")
+                .eq("id", user.id)
+                .maybeSingle();
+
+            if (error) {
+                console.error("Nie udało się sprawdzić roli owner:", error);
+                return false;
+            }
+
+            const roles = Array.isArray(profile?.roles)
+                ? profile.roles
+                : typeof profile?.roles === "string"
+                    ? [profile.roles]
+                    : [];
+
+            isOwner =
+                String(profile?.role || "").toLowerCase() === "owner" ||
+                roles.some(role => String(role).toLowerCase() === "owner");
+
+            toggleAdmin.hidden = !isOwner;
+            return isOwner;
+        } catch (error) {
+            console.warn("Kontrola uprawnień:", error.message);
+            return false;
+        }
+    }
+
+    function closeAdmin() {
+        adminOpen = false;
+        adminPanel.hidden = true;
+        toggleAdmin.setAttribute("aria-expanded", "false");
+        toggleAdmin.textContent = "⚙️ Zarządzaj muzyką";
+    }
+
+    toggleAdmin.addEventListener("click", async () => {
+        if (!isOwner) {
+            await checkOwner();
+        }
+
+        if (!isOwner) {
+            closeAdmin();
+            showStatus(
+                statusElement,
+                "Panel dostępny tylko dla zalogowanego właściciela (owner).",
+                "error"
+            );
+            return;
+        }
+
+        adminOpen = !adminOpen;
+        adminPanel.hidden = !adminOpen;
+        toggleAdmin.setAttribute("aria-expanded", String(adminOpen));
+        toggleAdmin.textContent = adminOpen
+            ? "✖ Zamknij panel zarządzania"
+            : "⚙️ Zarządzaj muzyką";
+
+        if (adminOpen) {
+            clearStatus(statusElement);
+            adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    });
+
+    async function apiRequest(path, options = {}) {
+        const method = String(options.method || "GET").toUpperCase();
+        const headers = new Headers(options.headers || {});
+
+        if (options.body !== undefined && !headers.has("Content-Type")) {
+            headers.set("Content-Type", "application/json");
+        }
+
+        /*
+         * GET pozostaje publiczny. Każda operacja zmieniająca dane
+         * wymaga tokenu; server.js musi dodatkowo zweryfikować owner.
+         */
+        if (method !== "GET" && method !== "HEAD") {
+            if (!isOwner) {
+                throw new Error("Brak uprawnień. Zaloguj się jako owner.");
+            }
+
+            const session = await getSession();
+            const token = session?.access_token;
+
+            if (!token) {
+                throw new Error("Sesja wygasła. Zaloguj się ponownie.");
+            }
+
+            headers.set("Authorization", "Bearer " + token);
+        }
+
+        let response;
+
+        try {
+            response = await fetch(API_BASE + path, {
+                ...options,
+                method,
+                headers
+            });
+        } catch {
+            throw new Error(
+                "Nie można połączyć się z backendem. Sprawdź, czy server.js działa."
+            );
+        }
+
+        const raw = await response.text();
+        let data = {};
+
+        if (raw) {
+            try {
+                data = JSON.parse(raw);
+            } catch {
+                throw new Error(
+                    "Backend zwrócił nieprawidłową odpowiedź. Sprawdź server.js."
+                );
+            }
+        }
+
+        if (!response.ok || data.success === false || data.error) {
+            throw new Error(
+                data.message || data.error || ("Błąd HTTP " + response.status)
+            );
+        }
+
+        return data;
+    }
+
+    function getTracks(data) {
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data?.tracks)) return data.tracks;
+        if (Array.isArray(data?.music)) return data.music;
+        if (Array.isArray(data?.data?.tracks)) return data.data.tracks;
+        if (Array.isArray(data?.data)) return data.data;
+        return [];
+    }
+
+    function getSlug(track) {
+        return String(track?.slug || track?.id || "");
+    }
+
+    function hasNoLyrics(track) {
+        return track?.noLyrics === true ||
+            track?.noLyrics === "true" ||
+            track?.lyrics === null;
+    }
+
+    function getLyrics(track) {
+        return hasNoLyrics(track) ? "" : (track?.lyrics ?? "");
+    }
+
+    function getVersions(track) {
+        if (Array.isArray(track?.versions)) return track.versions;
+        if (Array.isArray(track?.languages)) return track.languages;
+        return [];
+    }
+
+    function getAgeRating(track) {
+        const value = track?.ageRating || track?.age_rating || "all";
+        const allowed = ["all", "3+", "7+", "12+", "13+", "16+", "18+"];
+        return allowed.includes(value) ? value : "all";
+    }
+
+    function ageOptions(selected) {
+        return [
+            ["all", "Bez ograniczenia"],
+            ["3+", "3+"],
+            ["7+", "7+"],
+            ["12+", "12+"],
+            ["13+", "13+"],
+            ["16+", "16+"],
+            ["18+", "18+"]
+        ].map(([value, label]) => `
+            <option value="${value}" ${selected === value ? "selected" : ""}>
+                ${label}
+            </option>
+        `).join("");
+    }
+
+    function renderVersion(version) {
+        const name = version?.name || version?.language || "Wersja";
+        const language = version?.language || "—";
+        const filename = version?.filename || "";
+
+        /*
+         * Zgodność z backendem, który przechowuje nazwę pliku
+         * w frontend/assets/music/.
+         */
+        let src = version?.src || version?.url || "";
+
+        if (!src && filename && /^[^/\\]+\.mp4$/i.test(filename)) {
+            src = "assets/music/" + filename;
+        }
+
+        let media = "";
+
+        if (
+            src &&
+            !/^\s*(javascript|data):/i.test(src)
+        ) {
+            media = `
+                <video controls preload="metadata">
+                    <source src="${escapeHTML(src)}" type="video/mp4">
+                    Twoja przeglądarka nie obsługuje odtwarzania tego pliku.
+                </video>
+            `;
+        }
+
+        return `
+            <div class="music-version">
+                <strong>${escapeHTML(name)}</strong>
+                <div class="music-track-meta">
+                    Język: ${escapeHTML(language)}
+                    ${filename ? " · Plik: " + escapeHTML(filename) : ""}
+                </div>
+                ${media}
+            </div>
+        `;
+    }
+
+    function renderTrack(track) {
+        const slug = getSlug(track);
+        const rating = getAgeRating(track);
+        const noLyrics = hasNoLyrics(track);
+        const versions = getVersions(track);
+
+        const lyricsSection = noLyrics
+            ? '<p class="music-empty">Ten utwór nie ma tekstu piosenki.</p>'
+            : track.lyrics
+                ? `<p>${escapeHTML(track.lyrics)}</p>`
+                : '<p class="music-empty">Tekst nie został jeszcze dodany.</p>';
+
+        const adminControls = isOwner ? `
+            <details class="music-editor">
+                <summary>✏️ Edytuj cały utwór</summary>
+
+                <form class="music-form edit-track-form"
+                      data-track-slug="${escapeHTML(slug)}">
+
+                    <label>
+                        Tytuł utworu
+                        <input name="title" maxlength="150" required
+                               value="${escapeHTML(track.title || track.name || "")}">
+                    </label>
+
+                    <label>
+                        Opis
+                        <textarea name="description" maxlength="10000">${escapeHTML(track.description || "")}</textarea>
+                    </label>
+
+                    <label>
+                        Ostrzeżenie o treści
+                        <textarea name="warning" maxlength="3000">${escapeHTML(track.warning || "")}</textarea>
+                    </label>
+
+                    <label>
+                        Ocena wiekowa
+                        <select name="ageRating">
+                            ${ageOptions(rating)}
+                        </select>
+                    </label>
+
+                    <label class="music-check">
+                        <input type="checkbox" name="noLyrics"
+                               ${noLyrics ? "checked" : ""}>
+                        Utwór nie ma tekstu piosenki
+                    </label>
+
+                    <label>
+                        Tekst piosenki
+                        <textarea name="lyrics" maxlength="50000"
+                                  ${noLyrics ? "disabled" : ""}
+                                  placeholder="Dodaj lub edytuj tekst...">${escapeHTML(getLyrics(track))}</textarea>
+                    </label>
+
+                    <div class="music-actions">
+                        <button class="music-button" type="submit">💾 Zapisz wszystkie zmiany</button>
+                        <button class="music-button danger delete-track-button"
+                                type="button">🗑️ Usuń utwór</button>
+                    </div>
+
+                    <div class="edit-status music-status" role="status" hidden></div>
+                </form>
+            </details>
+
+            <details>
+                <summary>➕ Dodaj wersję językową / MP4</summary>
+
+                <form class="music-form add-version-form"
+                      data-track-slug="${escapeHTML(slug)}">
+
+                    <label>
+                        Język
+                        <select name="language" required>
+                            <option value="pl">Polski (PL)</option>
+                            <option value="en">Angielski (EN)</option>
+                            <option value="other">Inny</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Nazwa wersji
+                        <input name="name" maxlength="150" required
+                               placeholder="Np. Wersja polska">
+                    </label>
+
+                    <label>
+                        Nazwa pliku MP4
+                        <input name="filename" maxlength="255" required
+                               pattern="[^/\\\\]+\\.mp4"
+                               placeholder="np. omegatale-pl.mp4">
+                    </label>
+
+                    <p class="music-track-meta">
+                        Umieść plik w frontend/assets/music/ i podaj samą nazwę pliku.
+                    </p>
+
+                    <button class="music-button" type="submit">Dodaj wersję</button>
+                </form>
+            </details>
+        ` : "";
+
+        return `
+            <article class="music-track">
+                <h3>${escapeHTML(track.title || track.name || "Bez tytułu")}</h3>
+
+                <span class="music-badge">Wiek: ${escapeHTML(rating === "all" ? "Bez ograniczenia" : rating)}</span>
+                ${noLyrics ? '<span class="music-badge">Instrumentalny / bez tekstu</span>' : '<span class="music-badge">Tekst piosenki</span>'}
+
+                <p>${escapeHTML(track.description || "Brak opisu.")}</p>
+
+                ${track.warning ? `
+                    <p><strong>⚠️ Ostrzeżenie:</strong><br>${escapeHTML(track.warning)}</p>
+                ` : ""}
+
+                <details>
+                    <summary>🎤 Tekst utworu</summary>
+                    ${lyricsSection}
+                </details>
+
+                <details>
+                    <summary>🎧 Wersje językowe (${versions.length})</summary>
+                    ${
+                        versions.length
+                            ? versions.map(renderVersion).join("")
+                            : '<p class="music-empty">Brak dodanych wersji.</p>'
+                    }
+                </details>
+
+                ${adminControls}
+            </article>
+        `;
+    }
+
+    async function loadTracks() {
+        if (loadingTracks) return;
+        loadingTracks = true;
+
+        tracksElement.innerHTML =
+            '<p class="music-empty">Ładowanie biblioteki...</p>';
+
+        try {
+            const data = await apiRequest("/api/music");
+            const tracks = getTracks(data);
+
+            if (!tracks.length) {
+                tracksElement.innerHTML =
+                    '<p class="music-empty">Biblioteka jest pusta.</p>';
+                return;
+            }
+
+            tracksElement.innerHTML = tracks.map(renderTrack).join("");
+        } catch (error) {
+            tracksElement.innerHTML =
+                '<p class="music-empty">Nie udało się pobrać biblioteki.</p>';
+            showStatus(statusElement, error.message, "error");
+        } finally {
+            loadingTracks = false;
+        }
+    }
+
+    $("new-no-lyrics").addEventListener("change", event => {
+        const lyrics = $("new-lyrics");
+        lyrics.disabled = event.target.checked;
+        if (event.target.checked) lyrics.value = "";
+    });
+
+    tracksElement.addEventListener("change", event => {
+        if (!event.target.matches('input[name="noLyrics"]')) return;
+
+        const form = event.target.closest("form");
+        const lyrics = form?.elements?.lyrics;
+
+        if (!lyrics) return;
+
+        lyrics.disabled = event.target.checked;
+        if (event.target.checked) lyrics.value = "";
+    });
+
+    createForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        clearStatus(adminStatus);
+
+        if (!isOwner) {
+            showStatus(adminStatus, "Brak uprawnień owner.", "error");
+            return;
+        }
+
+        const form = event.currentTarget;
+        const noLyrics = form.elements.noLyrics.checked;
+
+        const payload = {
+            title: form.elements.title.value.trim(),
+            description: form.elements.description.value.trim(),
+            warning: form.elements.warning.value.trim(),
+            ageRating: form.elements.ageRating.value,
+            noLyrics,
+            lyrics: noLyrics ? null : form.elements.lyrics.value
+        };
+
+        createButton.disabled = true;
+        createButton.textContent = "Tworzenie...";
+
+        try {
+            await apiRequest("/api/music/tracks", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            form.reset();
+            $("new-lyrics").disabled = false;
+
+            showStatus(adminStatus, "Utwór został dodany.", "success");
+            $("create-track-details").open = false;
+
+            await loadTracks();
+        } catch (error) {
+            showStatus(adminStatus, error.message, "error");
+        } finally {
+            createButton.disabled = false;
+            createButton.textContent = "Utwórz utwór";
+        }
+    });
+
+    tracksElement.addEventListener("submit", async event => {
+        const form = event.target;
+
+        if (form.matches(".edit-track-form")) {
+            event.preventDefault();
+
+            if (!isOwner) {
+                showStatus(statusElement, "Brak uprawnień owner.", "error");
+                return;
+            }
+
+            const slug = form.dataset.trackSlug;
+            const status = form.querySelector(".edit-status");
+            const button = form.querySelector('button[type="submit"]');
+
+            if (!slug) {
+                showStatus(status, "Brak identyfikatora utworu.", "error");
+                return;
+            }
+
+            const noLyrics = form.elements.noLyrics.checked;
+
+            const payload = {
+                title: form.elements.title.value.trim(),
+                description: form.elements.description.value.trim(),
+                warning: form.elements.warning.value.trim(),
+                ageRating: form.elements.ageRating.value,
+                noLyrics,
+                lyrics: noLyrics ? null : form.elements.lyrics.value
+            };
+
+            button.disabled = true;
+            button.textContent = "Zapisywanie...";
+
+            try {
+                await apiRequest(
+                    "/api/music/tracks/" + encodeURIComponent(slug),
+                    {
+                        method: "PATCH",
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                showStatus(status, "Utwór został zaktualizowany.", "success");
+                await loadTracks();
+            } catch (error) {
+                showStatus(status, error.message, "error");
+            } finally {
+                button.disabled = false;
+                button.textContent = "💾 Zapisz wszystkie zmiany";
+            }
+        }
+
+        if (form.matches(".add-version-form")) {
+            event.preventDefault();
+
+            if (!isOwner) {
+                showStatus(statusElement, "Brak uprawnień owner.", "error");
+                return;
+            }
+
+            const slug = form.dataset.trackSlug;
+            const formData = new FormData(form);
+            const filename = String(formData.get("filename") || "").trim();
+
+            if (!slug || !/^[^/\\]+\.mp4$/i.test(filename)) {
+                showStatus(statusElement, "Podaj poprawną nazwę pliku MP4.", "error");
+                return;
+            }
+
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+
+            try {
+                await apiRequest(
+                    "/api/music/tracks/" + encodeURIComponent(slug) + "/versions",
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            language: String(formData.get("language") || ""),
+                            name: String(formData.get("name") || "").trim(),
+                            filename
+                        })
+                    }
+                );
+
+                showStatus(statusElement, "Wersja została dodana.", "success");
+                await loadTracks();
+            } catch (error) {
+                showStatus(statusElement, error.message, "error");
+            } finally {
+                button.disabled = false;
+            }
+        }
+    });
+
+    tracksElement.addEventListener("click", async event => {
+        const button = event.target.closest(".delete-track-button");
+        if (!button) return;
+
+        if (!isOwner) {
+            showStatus(statusElement, "Brak uprawnień owner.", "error");
+            return;
+        }
+
+        const form = button.closest(".edit-track-form");
+        const slug = form?.dataset.trackSlug;
+
+        if (!slug) {
+            showStatus(statusElement, "Brak identyfikatora utworu.", "error");
+            return;
+        }
+
+        if (!confirm(
+            "Czy na pewno chcesz usunąć ten utwór? Tej operacji nie można cofnąć."
+        )) return;
+
+        button.disabled = true;
+
+        try {
+            await apiRequest(
+                "/api/music/tracks/" + encodeURIComponent(slug),
+                { method: "DELETE" }
+            );
+
+            showStatus(statusElement, "Utwór został usunięty.", "success");
+            await loadTracks();
+        } catch (error) {
+            showStatus(statusElement, error.message, "error");
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+    refreshButton.addEventListener("click", async () => {
+        clearStatus(statusElement);
+        await checkOwner();
+        await loadTracks();
+    });
+
+    async function init() {
+        await checkOwner();
+
+        if (!isOwner) {
+            closeAdmin();
+        }
+
+        await loadTracks();
+    }
+
+    init();
+})();
+</script>
 </body>
 </html>
