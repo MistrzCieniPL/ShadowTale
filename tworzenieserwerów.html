@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowTale — Centrum serwerów</title>
+    <meta name="description" content="Panel zarządzania serwerami Discord i szablonami ShadowTale.">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+        :root {
+            --st-bg: #070711;
+            --st-panel: #10101d;
+            --st-panel2: #151528;
+            --st-border: rgba(166, 133, 255, .18);
+            --st-purple: #9b5cff;
+            --st-blue: #596cff;
+            --st-text: #f3f0ff;
+            --st-muted: #a4a1bd;
+            --st-green: #39e58c;
+            --st-red: #ff5470;
+            --st-yellow: #ffd166;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--st-text);
+            background:
+                radial-gradient(ellipse at 15% 0%, rgba(117, 65, 255, .14), transparent 40%),
+                radial-gradient(ellipse at 90% 20%, rgba(60, 90, 255, .10), transparent 35%),
+                var(--st-bg);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+        }
+
+        button, input, textarea, select { font: inherit; }
+        button { cursor: pointer; }
+        a { color: inherit; text-decoration: none; }
+
+        .topbar {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 0 30px;
+            border-bottom: 1px solid var(--st-border);
+            background: rgba(7, 7, 17, .88);
+            backdrop-filter: blur(18px);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+            letter-spacing: .4px;
+        }
+
+        .brand img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+        }
+
+        .brand span { color: #bd96ff; }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--st-border);
+            border-radius: 30px;
+            padding: 9px 13px;
+            color: var(--st-muted);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #85839a;
+            border-radius: 50%;
+        }
+
+        .status.online .status-dot { background: var(--st-green); }
+        .status.error .status-dot { background: var(--st-red); }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 245px minmax(0, 1fr);
+            min-height: calc(100vh - 72px);
+        }
+
+        .sidebar {
+            border-right: 1px solid var(--st-border);
+            padding: 22px 14px;
+            background: rgba(10, 10, 24, .65);
+        }
+
+        .side-label {
+            padding: 12px 12px 8px;
+            color: #77748f;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin: 3px 0;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            background: transparent;
+            color: var(--st-muted);
+            text-align: left;
+            transition: .2s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: white;
+            background: linear-gradient(100deg, rgba(155,92,255,.18), rgba(89,108,255,.08));
+            border-color: var(--st-border);
+        }
+
+        .nav-icon {
+            width: 25px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .main {
+            min-width: 0;
+            padding: 28px;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .hero {
+            padding: 27px;
+            border: 1px solid var(--st-border);
+            border-radius: 19px;
+            background: linear-gradient(115deg, rgba(155,92,255,.14), rgba(89,108,255,.06) 65%, rgba(20,20,42,.8));
+            margin-bottom: 23px;
+        }
+
+        .eyebrow {
+            color: #bb9aff;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        h1 { font-size: clamp(25px, 3vw, 36px); margin: 10px 0; }
+        h2 { font-size: 20px; margin: 0 0 17px; }
+        h3 { font-size: 16px; margin: 0 0 8px; }
+        p { color: var(--st-muted); line-height: 1.65; }
+        .hero p { margin: 0; max-width: 760px; }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat, .panel, .guild-card, .template-card {
+            background: rgba(16,16,29,.9);
+            border: 1px solid var(--st-border);
+            border-radius: 15px;
+        }
+
+        .stat { padding: 19px; }
+        .stat-label { color: var(--st-muted); font-size: 12px; }
+        .stat-value { font-size: 27px; font-weight: 900; margin-top: 8px; }
+        .stat-value.purple { color: #bd96ff; }
+
+        .panel { padding: 21px; margin-bottom: 19px; min-width: 0; }
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 17px;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--st-border);
+            color: white;
+            background: var(--st-panel2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-weight: 700;
+            font-size: 12px;
+            transition: .2s;
+        }
+
+        .btn:hover { border-color: var(--st-purple); transform: translateY(-1px); }
+        .btn.primary { border: 0; background: linear-gradient(110deg, var(--st-purple), var(--st-blue)); }
+        .btn.danger { color: #ff9aaa; border-color: rgba(255,84,112,.3); }
+        .btn.success { color: var(--st-green); }
+        .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+        .btn.small { padding: 7px 10px; }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+
+        .guild-card, .template-card { padding: 18px; }
+        .guild-top { display: flex; gap: 12px; align-items: center; }
+        .guild-icon {
+            width: 47px;
+            height: 47px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: #292441;
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .guild-name { font-weight: 800; }
+        .guild-id { color: #77748f; font-size: 11px; overflow-wrap: anywhere; margin-top: 5px; }
+        .guild-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 8px;
+            border: 1px solid var(--st-border);
+            background: rgba(155,92,255,.08);
+            color: #c9b1ff;
+            font-size: 10px;
+            border-radius: 7px;
+        }
+
+        .tag.green { color: var(--st-green); }
+        .tag.yellow { color: var(--st-yellow); }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .field { margin-bottom: 15px; min-width: 0; }
+        .field label {
+            display: block;
+            color: #c7c3dc;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .field input, .field textarea, .field select {
+            width: 100%;
+            min-width: 0;
+            background: #0a0a16;
+            color: white;
+            border: 1px solid var(--st-border);
+            border-radius: 10px;
+            padding: 12px;
+            outline: none;
+        }
+
+        .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--st-purple); }
+        .field textarea { min-height: 90px; resize: vertical; }
+        .field select option { background: #111121; }
+
+        .form-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+        .muted { color: var(--st-muted); font-size: 12px; }
+        .empty { padding: 25px; text-align: center; color: var(--st-muted); border: 1px dashed var(--st-border); border-radius: 12px; }
+        .divider { height: 1px; background: var(--st-border); margin: 19px 0; }
+        .hidden { display: none !important; }
+
+        .builder-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 17px; }
+        .builder-tab {
+            padding: 9px 12px;
+            border: 1px solid var(--st-border);
+            background: transparent;
+            color: var(--st-muted);
+            border-radius: 9px;
+            font-size: 12px;
+        }
+        .builder-tab.active { background: rgba(155,92,255,.18); color: white; border-color: var(--st-purple); }
+
+        .builder-pane { display: none; }
+        .builder-pane.active { display: block; }
+
+        .item-list { display: grid; gap: 9px; }
+        .builder-item {
+            padding: 12px;
+            background: #0b0b18;
+            border: 1px solid var(--st-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .builder-item strong { font-size: 13px; }
+        .builder-item small { display: block; color: var(--st-muted); margin-top: 5px; overflow-wrap: anywhere; }
+        .check-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+        .check-option {
+            display: flex !important;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid var(--st-border);
+            border-radius: 9px;
+            padding: 10px;
+            font-weight: 500 !important;
+            margin: 0 !important;
+        }
+        .check-option input { width: auto; accent-color: var(--st-purple); }
+
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 520px; }
+        th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--st-border); font-size: 12px; }
+        th { color: var(--st-muted); font-weight: 700; }
+        td { overflow-wrap: anywhere; }
+
+        .notice {
+            border: 1px solid rgba(255,209,102,.24);
+            background: rgba(255,209,102,.055);
+            color: #f2d99a;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.65;
+            margin-bottom: 16px;
+        }
+
+        .notice.info {
+            border-color: rgba(155,92,255,.25);
+            background: rgba(155,92,255,.06);
+            color: #d4c2ff;
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 100;
+            max-width: min(390px, calc(100vw - 40px));
+            padding: 14px 17px;
+            background: #17172a;
+            border: 1px solid var(--st-border);
+            border-radius: 12px;
+            box-shadow: 0 12px 50px #0008;
+            font-size: 13px;
+            display: none;
+        }
+
+        .toast.show { display: block; }
+        .footer { padding: 20px 0 5px; color: #77748f; text-align: center; font-size: 11px; }
+
+        @media (max-width: 1100px) {
+            .stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+            .grid-3 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+        }
+
+        @media (max-width: 760px) {
+            .topbar { padding: 0 15px; height: 62px; }
+            .top-actions .status { display: none; }
+            .layout { grid-template-columns: 1fr; }
+            .sidebar {
+                display: flex;
+                overflow-x: auto;
+                gap: 5px;
+                padding: 10px;
+                border-right: 0;
+                border-bottom: 1px solid var(--st-border);
+            }
+            .side-label { display: none; }
+            .nav-btn { width: auto; white-space: nowrap; margin: 0; padding: 10px; }
+            .main { padding: 15px; }
+            .hero { padding: 20px; }
+            .grid-2, .grid-3, .form-row { grid-template-columns: 1fr; }
+            .stats { gap: 9px; }
+            .stat { padding: 13px; }
+            .stat-value { font-size: 22px; }
+            .panel { padding: 15px; }
+            .check-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+<header class="topbar">
+    <a href="discord-panel.html" class="brand">
+        <img src="assets/logo.png" alt="ShadowTale"
+             onerror="this.style.display='none'">
+        <div>SHADOW<span>TALE</span></div>
+    </a>
+
+    <div class="top-actions">
+        <div class="status" id="connectionStatus">
+            <span class="status-dot"></span>
+            <span id="connectionText">Sprawdzanie połączenia…</span>
+        </div>
+        <a class="btn" href="serwer.html">Sklep serwerów</a>
+        <a class="btn" href="discord-panel.html">← Panel</a>
+    </div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="side-label">Zarządzanie</div>
+        <button class="nav-btn active" data-section="dashboard"><span class="nav-icon">⌂</span>Przegląd</button>
+        <button class="nav-btn" data-section="guilds"><span class="nav-icon">◈</span>Moje serwery</button>
+        <button class="nav-btn" data-section="builder"><span class="nav-icon">✦</span>Kreator szablonów</button>
+        <button class="nav-btn" data-section="templates"><span class="nav-icon">▤</span>Moje szablony</button>
+        <button class="nav-btn" data-section="deploy"><span class="nav-icon">↗</span>Wdrażanie</button>
+
+        <div class="side-label">Discord</div>
+        <button class="nav-btn" data-section="messages"><span class="nav-icon">✉</span>Wiadomości</button>
+        <button class="nav-btn" data-section="permissions"><span class="nav-icon">⚿</span>Uprawnienia bota</button>
+
+        <div class="side-label">Sprzedaż</div>
+        <button class="nav-btn" data-section="sales"><span class="nav-icon">◇</span>Zamówienia</button>
+        <button class="nav-btn" data-section="settings"><span class="nav-icon">⚙</span>Połączenie i ustawienia</button>
+    </aside>
+
+    <main class="main">
+        <div class="hero">
+            <div class="eyebrow">ShadowTale · Discord Management</div>
+            <h1>Centrum serwerów</h1>
+            <p>Projektuj serwery Discord, twórz szablony na sprzedaż, zarządzaj strukturą kanałów i wdrażaj przygotowane konfiguracje.</p>
+        </div>
+
+        <!-- DASHBOARD -->
+        <section class="section active" id="section-dashboard">
+            <div class="stats">
+                <div class="stat"><div class="stat-label">Serwery bota</div><div class="stat-value purple" id="statGuilds">—</div></div>
+                <div class="stat"><div class="stat-label">Twoje szablony</div><div class="stat-value" id="statTemplates">0</div></div>
+                <div class="stat"><div class="stat-label">Aktywne oferty</div><div class="stat-value" id="statOffers">0</div></div>
+                <div class="stat"><div class="stat-label">Oczekujące zamówienia</div><div class="stat-value" id="statOrders">—</div></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <h2>Połączenie z botem</h2>
+                    <button class="btn" id="refreshBtn">↻ Odśwież</button>
+                </div>
+                <div class="notice info">
+                    Token bota jest przechowywany wyłącznie w backendzie. Panel nie prosi o niego w przeglądarce.
+                    Aby połączyć bota, skonfiguruj token w pliku <code>.env</code> backendu i uruchom usługę.
+                </div>
+                <p id="dashboardConnection">Oczekiwanie na odpowiedź backendu.</p>
+                <div class="actions">
+                    <button class="btn primary" data-go="guilds">Zobacz serwery</button>
+                    <button class="btn" data-go="builder">Utwórz szablon</button>
+                    <button class="btn" data-go="settings">Konfiguracja</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head"><h2>Ostatnio dostępne serwery</h2></div>
+                <div id="dashboardGuilds" class="grid-2">
+                    <div class="empty">Lista serwerów pojawi się po podłączeniu backendu.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GUILDS -->
+        <section class="section" id="section-guilds">
+            <div class="panel">
+                <div class="panel-head">
+                    <div><h2>Moje serwery Discord</h2><div class="muted">Serwery, do których bot ma dostęp.</div></div>
+                    <button class="btn" id="refreshGuildsBtn">↻ Odśwież</button>
+                </div>
+                <div class="notice info">
+                    Bot zobaczy tylko serwery, do których został dodany. Dostępne operacje zależą od jego uprawnień
+                    oraz uprawnień Twojego konta.
+                </div>
+                <div id="guildList" class="grid-2">
+                    <div class="empty">Najpierw skonfiguruj backend.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEMPLATE BUILDER -->
+        <section class="section" id="section-builder">
+            <div class="panel">
+                <div class="panel-head">
+                    <div><h2>Kreator szablonów</h2><div class="muted">Zaprojektuj układ serwera i przygotuj ofertę.</div></div>
+                    <button class="btn" id="resetBuilderBtn">Wyczyść</button>
+                </div>
+
+                <div class="notice info">
+                    Ten edytor pozwala przygotować definicję szablonu. Zapis, publikacja i wdrożenie na Discordzie
+                    wymagają podłączonego backendu. W tej wersji roboczej szablony pozostają w pamięci bieżącej karty.
+                </div>
+
+                <form id="templateForm">
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="templateName">Nazwa szablonu *</label>
+                            <input id="templateName" maxlength="100" required
+                                   placeholder="Serwer dla małego community na start">
+                        </div>
+                        <div class="field">
+                            <label for="templatePrice">Cena (PLN)</label>
+                            <input id="templatePrice" type="number" min="0" max="100000" step="0.01" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="templateCategory">Kategoria oferty</label>
+                            <select id="templateCategory">
+                                <option value="community">Małe community</option>
+                                <option value="gaming">Gaming</option>
+                                <option value="creator">Twórca / streamer</option>
+                                <option value="support">Pomoc i support</option>
+                                <option value="store">Sklep / biznes</option>
+                                <option value="other">Inne</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="templateVisibility">Publikacja</label>
+                            <select id="templateVisibility">
+                                <option value="draft">Szkic — tylko dla mnie</option>
+                                <option value="private">Prywatna oferta</option>
+                                <option value="public">Publiczna oferta w sklepie</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="templateDescription">Opis oferty</label>
+                        <textarea id="templateDescription" maxlength="3000"
+                                  placeholder="Opisz, dla kogo jest szablon, co zawiera i co kupujący otrzyma."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="serverName">Domyślna nazwa serwera</label>
+                            <input id="serverName" maxlength="100" placeholder="Moje Community">
+                        </div>
+                        <div class="field">
+                            <label for="serverIcon">Adres URL ikony (opcjonalnie)</label>
+                            <input id="serverIcon" type="url" placeholder="https://example.com/ikona.png">
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="builder-tabs">
+                        <button type="button" class="builder-tab active" data-pane="roles">⚿ Role</button>
+                        <button type="button" class="builder-tab" data-pane="categories">▤ Kategorie</button>
+                        <button type="button" class="builder-tab" data-pane="channels"># Kanały</button>
+                        <button type="button" class="builder-tab" data-pane="review">✓ Podsumowanie</button>
+                    </div>
+
+                    <!-- ROLES -->
+                    <div class="builder-pane active" id="pane-roles">
+                        <h3>Role i uprawnienia</h3>
+                        <p class="muted">Dodaj role, a następnie zaznacz uprawnienia Discorda, które ma otrzymać każda z nich.</p>
+
+                        <div class="form-row">
+                            <div class="field">
+                                <label for="roleName">Nazwa roli</label>
+                                <input id="roleName" maxlength="100" placeholder="Moderator">
+                            </div>
+                            <div class="field">
+                                <label for="roleColor">Kolor roli</label>
+                                <input id="roleColor" type="color" value="#9b5cff"
+                                       style="height:43px;padding:5px">
+                            </div>
+                        </div>
+
+                        <div class="check-grid" id="rolePermissionChoices">
+                            <label class="check-option"><input type="checkbox" value="VIEW_CHANNEL" checked> Wyświetlanie kanałów</label>
+                            <label class="check-option"><input type="checkbox" value="SEND_MESSAGES" checked> Wysyłanie wiadomości</label>
+                            <label class="check-option"><input type="checkbox" value="READ_MESSAGE_HISTORY" checked> Historia wiadomości</label>
+                            <label class="check-option"><input type="checkbox" value="MANAGE_MESSAGES"> Zarządzanie wiadomościami</label>
+                            <label class="check-option"><input type="checkbox" value="KICK_MEMBERS"> Wyrzucanie członków</label>
+                            <label class="check-option"><input type="checkbox" value="BAN_MEMBERS"> Banowanie członków</label>
+                            <label class="check-option"><input type="checkbox" value="MODERATE_MEMBERS"> Timeout członków</label>
+                            <label class="check-option"><input type="checkbox" value="MANAGE_CHANNELS"> Zarządzanie kanałami</label>
+                            <label class="check-option"><input type="checkbox" value="MANAGE_ROLES"> Zarządzanie rolami</label>
+                            <label class="check-option"><input type="checkbox" value="MANAGE_NICKNAMES"> Zmiana pseudonimów</label>
+                            <label class="check-option"><input type="checkbox" value="CONNECT"> Łączenie z voice</label>
+                            <label class="check-option"><input type="checkbox" value="SPEAK"> Mówienie na voice</label>
+                        </div>
+
+                        <div class="notice" style="margin-top:14px">
+                            Nie dodawaj <code>ADMINISTRATOR</code> zwykłym rolom. Pełne uprawnienia omijają wiele
+                            ograniczeń Discorda. Role tworzone przez bota będą też podlegały hierarchii ról Discorda.
+                        </div>
+
+                        <button type="button" class="btn primary" id="addRoleBtn">＋ Dodaj rolę</button>
+                        <div class="divider"></div>
+                        <div id="roleItems" class="item-list"><div class="empty">Nie dodano jeszcze ról.</div></div>
+                    </div>
+
+                    <!-- CATEGORIES -->
+                    <div class="builder-pane" id="pane-categories">
+                        <h3>Kategorie kanałów</h3>
+                        <p class="muted">Kategorie porządkują kanały tekstowe i głosowe.</p>
+                        <div class="form-row">
+                            <div class="field">
+                                <label for="categoryName">Nazwa kategorii</label>
+                                <input id="categoryName" maxlength="100" placeholder="INFORMACJE">
+                            </div>
+                            <div class="field">
+                                <label for="categoryPosition">Pozycja</label>
+                                <input id="categoryPosition" type="number" min="0" max="100" value="0">
+                            </div>
+                        </div>
+                        <button type="button" class="btn primary" id="addCategoryBtn">＋ Dodaj kategorię</button>
+                        <div class="divider"></div>
+                        <div id="categoryItems" class="item-list"><div class="empty">Nie dodano jeszcze kategorii.</div></div>
+                    </div>
+
+                    <!-- CHANNELS -->
+                    <div class="builder-pane" id="pane-channels">
+                        <h3>Kanały</h3>
+                        <p class="muted">Utwórz kanały tekstowe, głosowe, forum lub kanały z ogłoszeniami.</p>
+
+                        <div class="form-row">
+                            <div class="field">
+                                <label for="channelName">Nazwa kanału</label>
+                                <input id="channelName" maxlength="100" placeholder="regulamin">
+                            </div>
+                            <div class="field">
+                                <label for="channelType">Typ kanału</label>
+                                <select id="channelType">
+                                    <option value="text">Tekstowy</option>
+                                    <option value="voice">Głosowy</option>
+                                    <option value="announcement">Ogłoszenia</option>
+                                    <option value="forum">Forum</option>
+                                    <option value="stage">Scena</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="channelCategory">Kategoria</label>
+                            <select id="channelCategory"><option value="">Bez kategorii</option></select>
+                        </div>
+
+                        <div class="field">
+                            <label for="channelTopic">Opis / temat kanału</label>
+                            <input id="channelTopic" maxlength="1024" placeholder="Ważne informacje o serwerze">
+                        </div>
+
+                        <button type="button" class="btn primary" id="addChannelBtn">＋ Dodaj kanał</button>
+                        <div class="divider"></div>
+                        <div id="channelItems" class="item-list"><div class="empty">Nie dodano jeszcze kanałów.</div></div>
+                    </div>
+
+                    <!-- REVIEW -->
+                    <div class="builder-pane" id="pane-review">
+                        <h3>Podsumowanie szablonu</h3>
+                        <div id="templateReview" class="empty">Wypełnij formularz, aby zobaczyć podsumowanie.</div>
+                    </div>
+
+                    <div class="divider"></div>
+                    <div class="actions">
+                        <button class="btn primary" type="submit">Zapisz szablon</button>
+                        <button class="btn" type="button" id="exportTemplateBtn">Eksportuj JSON</button>
+                        <button class="btn" type="button" id="publishTemplateBtn">Opublikuj przez backend</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- TEMPLATES -->
+        <section class="section" id="section-templates">
+            <div class="panel">
+                <div class="panel-head">
+                    <div><h2>Moje szablony</h2><div class="muted">Szkice i zapisane definicje szablonów.</div></div>
+                    <button class="btn primary" data-go="builder">＋ Nowy szablon</button>
+                </div>
+                <div id="templateList" class="grid-2">
+                    <div class="empty">Nie utworzono jeszcze szablonów.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEPLOY -->
+        <section class="section" id="section-deploy">
+            <div class="panel">
+                <h2>Wdrażanie szablonu</h2>
+                <p>Wybierz zapisany szablon i zdecyduj, gdzie ma zostać wdrożony.</p>
+
+                <div class="notice">
+                    Wdrożenie może tworzyć role i kanały oraz zmieniać ustawienia istniejącego serwera.
+                    Przed wdrożeniem backend powinien pokazać plan zmian i wymagać potwierdzenia.
+                    Operacji nie należy wykonywać automatycznie bez zgody administratora serwera.
+                </div>
+
+                <div class="field">
+                    <label for="deployTemplate">Szablon</label>
+                    <select id="deployTemplate"><option value="">Wybierz szablon</option></select>
+                </div>
+
+                <div class="field">
+                    <label for="deployMode">Tryb wdrażania</label>
+                    <select id="deployMode">
+                        <option value="existing">Wdrożenie na istniejący serwer</option>
+                        <option value="new">Utworzenie nowego serwera</option>
+                    </select>
+                </div>
+
+                <div class="field" id="existingGuildField">
+                    <label for="deployGuild">Istniejący serwer</label>
+                    <select id="deployGuild"><option value="">Wybierz serwer</option></select>
+                </div>
+
+                <div id="newGuildFields" class="hidden">
+                    <div class="field">
+                        <label for="newGuildName">Nazwa nowego serwera</label>
+                        <input id="newGuildName" maxlength="100" placeholder="Moje Community">
+                    </div>
+                    <p class="muted">Utworzenie nowego serwera wymaga osobnego, obsługiwanego przez Discord procesu autoryzacji użytkownika. Sam bot nie może dowolnie utworzyć serwera na Twoim koncie.</p>
+                </div>
+
+                <label class="check-option" style="margin-bottom:15px!important">
+                    <input id="deployConfirm" type="checkbox">
+                    Rozumiem zakres zmian i mam uprawnienia do zarządzania wybranym serwerem.
+                </label>
+
+                <button class="btn primary" id="deployBtn">Przygotuj wdrożenie</button>
+                <div id="deployResult" style="margin-top:15px"></div>
+            </div>
+        </section>
+
+        <!-- MESSAGES -->
+        <section class="section" id="section-messages">
+            <div class="panel">
+                <h2>Wiadomości Discord</h2>
+                <p>Wysyłaj wiadomości na kanały, na których bot ma wymagane uprawnienia.</p>
+
+                <div class="field">
+                    <label for="messageGuild">Serwer</label>
+                    <select id="messageGuild"><option value="">Wybierz serwer</option></select>
+                </div>
+
+                <div class="field">
+                    <label for="messageChannel">Kanał</label>
+                    <select id="messageChannel"><option value="">Najpierw wybierz serwer</option></select>
+                </div>
+
+                <div class="field">
+                    <label for="messageContent">Treść wiadomości</label>
+                    <textarea id="messageContent" maxlength="2000" placeholder="Treść wiadomości (maksymalnie 2000 znaków)"></textarea>
+                </div>
+
+                <label class="check-option" style="margin-bottom:15px!important">
+                    <input id="disableMentions" type="checkbox" checked>
+                    Zablokuj automatyczne wzmianki o użytkownikach i rolach
+                </label>
+
+                <button class="btn primary" id="sendMessageBtn">Wyślij wiadomość</button>
+                <div class="notice info" style="margin-top:15px">
+                    Wysyłanie jest dostępne dopiero po podłączeniu backendu. Nie wpisuj tu tokenu bota ani haseł.
+                </div>
+            </div>
+        </section>
+
+        <!-- BOT PERMISSIONS -->
+        <section class="section" id="section-permissions">
+            <div class="panel">
+                <h2>Uprawnienia bota</h2>
+                <p>Sprawdź uprawnienia bota na poszczególnych serwerach. Brakujące uprawnienia należy nadać przez ustawienia Discorda.</p>
+                <div class="field">
+                    <label for="permissionsGuild">Serwer</label>
+                    <select id="permissionsGuild"><option value="">Wybierz serwer</option></select>
+                </div>
+                <button class="btn" id="checkPermissionsBtn">Sprawdź uprawnienia</button>
+                <div id="permissionsResult" style="margin-top:16px">
+                    <div class="empty">Wybierz serwer, aby sprawdzić wynik backendu.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SALES -->
+        <section class="section" id="section-sales">
+            <div class="panel">
+                <div class="panel-head">
+                    <div><h2>Zamówienia i sprzedaż</h2><div class="muted">Zamówienia na gotowe szablony serwerów.</div></div>
+                    <button class="btn" id="refreshOrdersBtn">↻ Odśwież</button>
+                </div>
+
+                <div class="notice">
+                    Zamówienie nie oznacza otrzymania pieniędzy. Status „opłacone” może ustawić wyłącznie backend
+                    po zweryfikowaniu transakcji u operatora płatności. Nie udostępniaj szablonu ani zaproszenia
+                    do serwera na podstawie samego zrzutu ekranu od kupującego.
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Zamówienie</th>
+                                <th>Szablon</th>
+                                <th>Discord kupującego</th>
+                                <th>Kwota</th>
+                                <th>Status płatności</th>
+                                <th>Dostawa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr><td colspan="6">Zamówienia pojawią się po podłączeniu backendu.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="section" id="section-settings">
+            <div class="panel">
+                <h2>Połączenie i ustawienia</h2>
+
+                <div class="notice">
+                    <strong>Bezpieczeństwo tokenu</strong><br>
+                    Nie wklejaj tokenu bota do HTML, konsoli przeglądarki ani publicznego repozytorium.
+                    Jeśli token został już gdzieś ujawniony, zresetuj go w Discord Developer Portal.
+                </div>
+
+                <div class="field">
+                    <label for="apiBase">Adres API backendu</label>
+                    <input id="apiBase" type="url" placeholder="np. http://127.0.0.1:5500">
+                </div>
+
+                <button class="btn primary" id="saveApiBtn">Ustaw adres API</button>
+                <button class="btn" id="testApiBtn">Sprawdź połączenie</button>
+
+                <div class="divider"></div>
+
+                <h3>Konfiguracja backendu</h3>
+                <p>Przykładowe zmienne środowiskowe dla lokalnego backendu:</p>
+                <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#080812;border:1px solid var(--st-border);border-radius:10px;padding:14px;color:#c7b4ff;font-size:12px">DISCORD_BOT_TOKEN=TWÓJ_TOKEN_TUTAJ
+SHADOWTALE_OWNER_ID=ID_TWOJEGO_KONTA_DISCORD
+PORT=5500</pre>
+
+                <p class="muted">To przykład konfiguracji serwera. Nie wpisuj prawdziwego tokenu w tym pliku HTML. Plik .env dodaj do .gitignore.</p>
+                <div id="apiSettingsStatus" class="muted"></div>
+            </div>
+        </section>
+
+        <div class="footer">ShadowTale © 2026 · Centrum zarządzania Discord</div>
+    </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+    "use strict";
+
+    /*
+      Backend API, które należy zaimplementować w serwerze:
+      GET  /api/discord-panel/status
+      GET  /api/discord-panel/guilds
+      GET  /api/discord-panel/guilds/:id/channels
+      GET  /api/discord-panel/guilds/:id/permissions
+      POST /api/discord-panel/messages
+      GET  /api/discord-panel/templates
+      POST /api/discord-panel/templates
+      POST /api/discord-panel/templates/:id/publish
+      POST /api/discord-panel/deploy/preview
+      POST /api/discord-panel/deploy
+      GET  /api/discord-panel/orders
+      POST /api/discord-panel/orders/:id/deliver
+
+      Wszystkie endpointy muszą weryfikować sesję użytkownika i rolę owner
+      po stronie backendu. Nie ufaj samemu ukryciu elementów w HTML.
+    */
+
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+        apiBase: "http://127.0.0.1:5500",
+        connected: false,
+        guilds: [],
+        templates: [],
+        orders: [],
+        roles: [],
+        categories: [],
+        channels: [],
+        currentTemplateId: null
+    };
+
+    const PERMISSION_NAMES = {
+        VIEW_CHANNEL: "Wyświetlanie kanałów",
+        SEND_MESSAGES: "Wysyłanie wiadomości",
+        READ_MESSAGE_HISTORY: "Historia wiadomości",
+        MANAGE_MESSAGES: "Zarządzanie wiadomościami",
+        KICK_MEMBERS: "Wyrzucanie członków",
+        BAN_MEMBERS: "Banowanie członków",
+        MODERATE_MEMBERS: "Timeout członków",
+        MANAGE_CHANNELS: "Zarządzanie kanałami",
+        MANAGE_ROLES: "Zarządzanie rolami",
+        MANAGE_NICKNAMES: "Zmiana pseudonimów",
+        CONNECT: "Łączenie z voice",
+        SPEAK: "Mówienie na voice"
+    };
+
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;",
+            '"': "&quot;", "'": "&#39;"
+        })[char]);
+    }
+
+    function money(value) {
+        return new Intl.NumberFormat("pl-PL", {
+            style: "currency", currency: "PLN"
+        }).format(Number(value) || 0);
+    }
+
+    function toast(message) {
+        const el = $("toast");
+        el.textContent = message;
+        el.classList.add("show");
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(() => el.classList.remove("show"), 3500);
+    }
+
+    function setConnection(online, message) {
+        state.connected = online;
+        $("connectionStatus").classList.toggle("online", online);
+        $("connectionStatus").classList.toggle("error", !online);
+        $("connectionText").textContent = message;
+        $("dashboardConnection").textContent = message;
+    }
+
+    function apiUrl(path) {
+        return state.apiBase.replace(/\/+$/, "") + path;
+    }
+
+    async function api(path, options = {}) {
+        const response = await fetch(apiUrl(path), {
+            ...options,
+            credentials: "include",
+            headers: {
+                ...(options.body ? { "Content-Type": "application/json" } : {}),
+                ...(options.headers || {})
+            }
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || `Błąd API (${response.status})`);
+        }
+
+        return data;
+    }
+
+    async function checkBackend() {
+        try {
+            const data = await api("/api/discord-panel/status");
+            if (data.authorized === false) {
+                setConnection(false, "Brak uprawnień do panelu");
+                return false;
+            }
+            setConnection(Boolean(data.botOnline), data.botOnline
+                ? "Bot online"
+                : "Backend działa, bot offline");
+            return true;
+        } catch (error) {
+            setConnection(false, "Backend niedostępny");
+            $("apiSettingsStatus").textContent =
+                "Nie udało się połączyć: " + error.message;
+            return false;
+        }
+    }
+
+    function showSection(name) {
+        document.querySelectorAll(".section").forEach(section => {
+            section.classList.toggle("active", section.id === "section-" + name);
+        });
+        document.querySelectorAll(".nav-btn").forEach(button => {
+            button.classList.toggle("active", button.dataset.section === name);
+        });
+
+        if (name === "guilds") loadGuilds();
+        if (name === "templates") renderTemplates();
+        if (name === "sales") loadOrders();
+        if (name === "dashboard") renderDashboard();
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+        button.addEventListener("click", () => showSection(button.dataset.section));
+    });
+
+    document.querySelectorAll("[data-go]").forEach(button => {
+        button.addEventListener("click", () => showSection(button.dataset.go));
+    });
+
+    document.querySelectorAll(".builder-tab").forEach(button => {
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".builder-tab").forEach(tab =>
+                tab.classList.toggle("active", tab === button));
+            document.querySelectorAll(".builder-pane").forEach(pane =>
+                pane.classList.toggle("active", pane.id === "pane-" + button.dataset.pane));
+            if (button.dataset.pane === "review") updateReview();
+        });
+    });
+
+    function renderDashboard() {
+        $("statGuilds").textContent = state.connected ? state.guilds.length : "—";
+        $("statTemplates").textContent = state.templates.length;
+        $("statOffers").textContent = state.templates.filter(t => t.visibility === "public").length;
+        $("statOrders").textContent = state.connected ? state.orders.filter(o =>
+            o.paymentStatus !== "paid").length : "—";
+
+        const host = $("dashboardGuilds");
+        const recent = state.guilds.slice(0, 4);
+
+        if (!recent.length) {
+            host.innerHTML = '<div class="empty">Brak serwerów do wyświetlenia albo backend nie jest jeszcze podłączony.</div>';
+            return;
+        }
+
+        host.innerHTML = recent.map(guildCardHtml).join("");
+    }
+
+    function guildCardHtml(guild) {
+        return `
+            <div class="guild-card">
+                <div class="guild-top">
+                    <div class="guild-icon">${guild.iconUrl
+                        ? `<img class="guild-icon" src="${escapeHtml(guild.iconUrl)}" alt="" onerror="this.style.display='none'">`
+                        : "◈"}</div>
+                    <div style="min-width:0">
+                        <div class="guild-name">${escapeHtml(guild.name)}</div>
+                        <div class="guild-id">ID: ${escapeHtml(guild.id)}</div>
+                    </div>
+                </div>
+                <div class="guild-meta">
+                    <span class="tag">${Number(guild.memberCount) || 0} członków</span>
+                    <span class="tag ${guild.botCanManage ? "green" : "yellow"}">
+                        ${guild.botCanManage ? "Bot ma dostęp" : "Ograniczone uprawnienia"}
+                    </span>
+                </div>
+                <div class="actions">
+                    <button class="btn small" data-guild-action="channels" data-guild-id="${escapeHtml(guild.id)}">Kanały</button>
+                    <button class="btn small" data-guild-action="permissions" data-guild-id="${escapeHtml(guild.id)}">Uprawnienia</button>
+                    <button class="btn small" data-guild-action="deploy" data-guild-id="${escapeHtml(guild.id)}">Wdróż szablon</button>
+                </div>
+            </div>`;
+    }
+
+    document.addEventListener("click", event => {
+        const button = event.target.closest("[data-guild-action]");
+        if (!button) return;
+
+        const id = button.dataset.guildId;
+
+        if (button.dataset.guildAction === "channels") {
+            showSection("messages");
+            $("messageGuild").value = id;
+            loadChannels(id, $("messageChannel"));
+        } else if (button.dataset.guildAction === "permissions") {
+            showSection("permissions");
+            $("permissionsGuild").value = id;
+            checkPermissions();
+        } else if (button.dataset.guildAction === "deploy") {
+            showSection("deploy");
+            $("deployGuild").value = id;
+            $("deployMode").value = "existing";
+            updateDeployMode();
+        }
+    });
+
+    async function loadGuilds() {
+        try {
+            const data = await api("/api/discord-panel/guilds");
+            state.guilds = Array.isArray(data.guilds) ? data.guilds : [];
+            renderGuilds();
+            renderGuildSelects();
+            renderDashboard();
+        } catch (error) {
+            $("guildList").innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
+        }
+    }
+
+    function renderGuilds() {
+        $("guildList").innerHTML = state.guilds.length
+            ? state.guilds.map(guildCardHtml).join("")
+            : '<div class="empty">Bot nie ma dostępu do żadnego serwera lub API zwróciło pustą listę.</div>';
+    }
+
+    function renderGuildSelects() {
+        const selects = ["deployGuild", "messageGuild", "permissionsGuild"];
+        for (const id of selects) {
+            const select = $(id);
+            const previous = select.value;
+            select.innerHTML = '<option value="">Wybierz serwer</option>' +
+                state.guilds.map(g =>
+                    `<option value="${escapeHtml(g.id)}">${escapeHtml(g.name)}</option>`
+                ).join("");
+            if (state.guilds.some(g => g.id === previous)) select.value = previous;
+        }
+    }
+
+    async function loadChannels(guildId, select) {
+        select.innerHTML = '<option value="">Ładowanie kanałów…</option>';
+        if (!guildId) {
+            select.innerHTML = '<option value="">Najpierw wybierz serwer</option>';
+            return;
+        }
+
+        try {
+            const data = await api(`/api/discord-panel/guilds/${encodeURIComponent(guildId)}/channels`);
+            const channels = Array.isArray(data.channels) ? data.channels : [];
+            select.innerHTML = '<option value="">Wybierz kanał</option>' +
+                channels.filter(c => ["text", "announcement"].includes(c.type)).map(c =>
+                    `<option value="${escapeHtml(c.id)}"># ${escapeHtml(c.name)}</option>`
+                ).join("");
+        } catch (error) {
+            select.innerHTML = '<option value="">Nie udało się pobrać kanałów</option>';
+            toast(error.message);
+        }
+    }
+
+    $("messageGuild").addEventListener("change", () => {
+        loadChannels($("messageGuild").value, $("messageChannel"));
+    });
+
+    $("addRoleBtn").addEventListener("click", () => {
+        const name = $("roleName").value.trim();
+        if (!name) return toast("Wpisz nazwę roli.");
+
+        const permissions = [...$("rolePermissionChoices").querySelectorAll("input:checked")]
+            .map(input => input.value);
+
+        state.roles.push({
+            id: crypto.randomUUID(),
+            name,
+            color: $("roleColor").value,
+            permissions
+        });
+
+        $("roleName").value = "";
+        renderRoles();
+    });
+
+    function renderRoles() {
+        $("roleItems").innerHTML = state.roles.length ? state.roles.map(role => `
+            <div class="builder-item">
+                <div style="min-width:0">
+                    <strong><span style="color:${escapeHtml(role.color)}">●</span> ${escapeHtml(role.name)}</strong>
+                    <small>${role.permissions.map(p => PERMISSION_NAMES[p] || p).map(escapeHtml).join(", ") || "Brak zaznaczonych uprawnień"}</small>
+                </div>
+                <button type="button" class="btn small danger" data-remove-role="${escapeHtml(role.id)}">Usuń</button>
+            </div>`).join("") : '<div class="empty">Nie dodano jeszcze ról.</div>';
+        updateReview();
+    }
+
+    $("roleItems").addEventListener("click", event => {
+        const button = event.target.closest("[data-remove-role]");
+        if (!button) return;
+        state.roles = state.roles.filter(role => role.id !== button.dataset.removeRole);
+        renderRoles();
+    });
+
+    $("addCategoryBtn").addEventListener("click", () => {
+        const name = $("categoryName").value.trim();
+        if (!name) return toast("Wpisz nazwę kategorii.");
+
+        state.categories.push({
+            id: crypto.randomUUID(),
+            name,
+            position: Math.max(0, Number($("categoryPosition").value) || 0)
+        });
+
+        $("categoryName").value = "";
+        renderCategories();
+    });
+
+    function renderCategories() {
+        $("categoryItems").innerHTML = state.categories.length ? state.categories.map(category => `
+            <div class="builder-item">
+                <div><strong>▤ ${escapeHtml(category.name)}</strong><small>Pozycja: ${category.position}</small></div>
+                <button type="button" class="btn small danger" data-remove-category="${escapeHtml(category.id)}">Usuń</button>
+            </div>`).join("") : '<div class="empty">Nie dodano jeszcze kategorii.</div>';
+
+        const select = $("channelCategory");
+        const previous = select.value;
+        select.innerHTML = '<option value="">Bez kategorii</option>' + state.categories.map(c =>
+            `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`
+        ).join("");
+        if (state.categories.some(c => c.id === previous)) select.value = previous;
+
+        updateReview();
+    }
+
+    $("categoryItems").addEventListener("click", event => {
+        const button = event.target.closest("[data-remove-category]");
+        if (!button) return;
+        const id = button.dataset.removeCategory;
+        state.categories = state.categories.filter(category => category.id !== id);
+        state.channels.forEach(channel => {
+            if (channel.categoryId === id) channel.categoryId = "";
+        });
+        renderCategories();
+        renderChannels();
+    });
+
+    $("addChannelBtn").addEventListener("click", () => {
+        const name = $("channelName").value.trim();
+        if (!name) return toast("Wpisz nazwę kanału.");
+
+        state.channels.push({
+            id: crypto.randomUUID(),
+            name: name.toLowerCase().replace(/\s+/g, "-"),
+            type: $("channelType").value,
+            categoryId: $("channelCategory").value,
+            topic: $("channelTopic").value.trim()
+        });
+
+        $("channelName").value = "";
+        $("channelTopic").value = "";
+        renderChannels();
+    });
+
+    function renderChannels() {
+        const types = {
+            text: "Tekstowy",
+            voice: "Głosowy",
+            announcement: "Ogłoszenia",
+            forum: "Forum",
+            stage: "Scena"
+        };
+
+        $("channelItems").innerHTML = state.channels.length ? state.channels.map(channel => {
+            const category = state.categories.find(c => c.id === channel.categoryId);
+            return `
+                <div class="builder-item">
+                    <div style="min-width:0">
+                        <strong>${channel.type === "voice" || channel.type === "stage" ? "◖" : "#"} ${escapeHtml(channel.name)}</strong>
+                        <small>${escapeHtml(types[channel.type])} · ${escapeHtml(category ? category.name : "Bez kategorii")}${channel.topic ? " · " + escapeHtml(channel.topic) : ""}</small>
+                    </div>
+                    <button type="button" class="btn small danger" data-remove-channel="${escapeHtml(channel.id)}">Usuń</button>
+                </div>`;
+        }).join("") : '<div class="empty">Nie dodano jeszcze kanałów.</div>';
+
+        updateReview();
+    }
+
+    $("channelItems").addEventListener("click", event => {
+        const button = event.target.closest("[data-remove-channel]");
+        if (!button) return;
+        state.channels = state.channels.filter(channel => channel.id !== button.dataset.removeChannel);
+        renderChannels();
+    });
+
+    function getTemplatePayload() {
+        return {
+            id: state.currentTemplateId || crypto.randomUUID(),
+            name: $("templateName").value.trim(),
+            price: Math.max(0, Number($("templatePrice").value) || 0),
+            category: $("templateCategory").value,
+            visibility: $("templateVisibility").value,
+            description: $("templateDescription").value.trim(),
+            server: {
+                name: $("serverName").value.trim(),
+                iconUrl: $("serverIcon").value.trim()
+            },
+            roles: state.roles.map(role => ({ ...role, permissions: [...role.permissions] })),
+            categories: state.categories.map(category => ({ ...category })),
+            channels: state.channels.map(channel => ({ ...channel })),
+            updatedAt: new Date().toISOString()
+        };
+    }
+
+    function updateReview() {
+        const host = $("templateReview");
+        if (!host) return;
+
+        const data = getTemplatePayload();
+        host.innerHTML = `
+            <div class="grid-2">
+                <div class="stat"><div class="stat-label">Nazwa</div><div style="font-weight:800;margin-top:8px">${escapeHtml(data.name || "Bez nazwy")}</div></div>
+                <div class="stat"><div class="stat-label">Cena</div><div class="stat-value purple">${money(data.price)}</div></div>
+                <div class="stat"><div class="stat-label">Role</div><div class="stat-value">${data.roles.length}</div></div>
+                <div class="stat"><div class="stat-label">Kategorie i kanały</div><div class="stat-value">${data.categories.length} / ${data.channels.length}</div></div>
+            </div>
+            <div class="divider"></div>
+            <p>${escapeHtml(data.description || "Brak opisu.")}</p>
+            <div class="guild-meta">
+                <span class="tag">${escapeHtml(data.category)}</span>
+                <span class="tag">${escapeHtml(data.visibility)}</span>
+            </div>`;
+    }
+
+    $("templateForm").addEventListener("input", event => {
+        if (event.target.closest("#templateForm")) updateReview();
+    });
+
+    function resetBuilder() {
+        $("templateForm").reset();
+        $("templatePrice").value = "0";
+        $("roleColor").value = "#9b5cff";
+        state.currentTemplateId = null;
+        state.roles = [];
+        state.categories = [];
+        state.channels = [];
+        renderRoles();
+        renderCategories();
+        renderChannels();
+        updateReview();
+    }
+
+    $("resetBuilderBtn").addEventListener("click", () => {
+        if (!confirm("Wyczyścić bieżący formularz? Niezapisane zmiany zostaną utracone.")) return;
+        resetBuilder();
+    });
+
+    $("templateForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        const template = getTemplatePayload();
+
+        if (!template.name) return toast("Podaj nazwę szablonu.");
+        if (!template.roles.length && !template.categories.length && !template.channels.length) {
+            if (!confirm("Szablon nie zawiera jeszcze ról, kategorii ani kanałów. Zapisać mimo to?")) return;
+        }
+
+        try {
+            const result = await api("/api/discord-panel/templates", {
+                method: "POST",
+                body: JSON.stringify(template)
+            });
+
+            const saved = result.template || template;
+            state.templates = [
+                saved,
+                ...state.templates.filter(item => item.id !== saved.id)
+            ];
+            state.currentTemplateId = saved.id;
+            renderTemplates();
+            renderTemplateSelect();
+            renderDashboard();
+            toast("Szablon zapisany w backendzie.");
+        } catch (error) {
+            // Prototyp lokalny: niezapisany na serwerze.
+            const localTemplate = {
+                ...template,
+                localOnly: true
+            };
+            state.templates = [
+                localTemplate,
+                ...state.templates.filter(item => item.id !== localTemplate.id)
+            ];
+            state.currentTemplateId = localTemplate.id;
+            renderTemplates();
+            renderTemplateSelect();
+            renderDashboard();
+            toast("Backend nie zapisał szablonu. Zachowano go tylko w pamięci tej karty: " + error.message);
+        }
+    });
+
+    function renderTemplates() {
+        $("templateList").innerHTML = state.templates.length ? state.templates.map(template => `
+            <div class="template-card">
+                <div class="eyebrow">${escapeHtml(template.category || "Szablon")}</div>
+                <h3 style="margin-top:9px">${escapeHtml(template.name)}</h3>
+                <p>${escapeHtml(template.description || "Brak opisu.")}</p>
+                <div class="guild-meta">
+                    <span class="tag">${money(template.price)}</span>
+                    <span class="tag">${(template.roles || []).length} ról</span>
+                    <span class="tag">${(template.channels || []).length} kanałów</span>
+                    <span class="tag ${template.localOnly ? "yellow" : "green"}">${template.localOnly ? "Tylko lokalnie" : escapeHtml(template.visibility || "Zapisany")}</span>
+                </div>
+                <div class="actions">
+                    <button class="btn small" data-edit-template="${escapeHtml(template.id)}">Edytuj</button>
+                    <button class="btn small" data-deploy-template="${escapeHtml(template.id)}">Wdrażaj</button>
+                    <button class="btn small danger" data-delete-template="${escapeHtml(template.id)}">Usuń</button>
+                </div>
+            </div>`).join("") : '<div class="empty">Nie utworzono jeszcze szablonów.</div>';
+    }
+
+    $("templateList").addEventListener("click", async event => {
+        const edit = event.target.closest("[data-edit-template]");
+        const deploy = event.target.closest("[data-deploy-template]");
+        const remove = event.target.closest("[data-delete-template]");
+
+        if (edit) {
+            const template = state.templates.find(t => t.id === edit.dataset.editTemplate);
+            if (!template) return;
+            loadTemplateIntoBuilder(template);
+            showSection("builder");
+        }
+
+        if (deploy) {
+            $("deployTemplate").value = deploy.dataset.deployTemplate;
+            showSection("deploy");
+        }
+
+        if (remove) {
+            const template = state.templates.find(t => t.id === remove.dataset.deleteTemplate);
+            if (!template) return;
+            if (!confirm(`Usunąć szablon „${template.name}”?`)) return;
+
+            try {
+                await api(`/api/discord-panel/templates/${encodeURIComponent(template.id)}`, {
+                    method: "DELETE"
+                });
+            } catch (error) {
+                if (!template.localOnly) return toast("Nie udało się usunąć szablonu z backendu: " + error.message);
+            }
+
+            state.templates = state.templates.filter(t => t.id !== template.id);
+            renderTemplates();
+            renderTemplateSelect();
+            renderDashboard();
+            toast("Szablon usunięty z bieżącej listy.");
+        }
+    });
+
+    function loadTemplateIntoBuilder(template) {
+        state.currentTemplateId = template.id;
+        $("templateName").value = template.name || "";
+        $("templatePrice").value = Number(template.price) || 0;
+        $("templateCategory").value = template.category || "community";
+        $("templateVisibility").value = template.visibility || "draft";
+        $("templateDescription").value = template.description || "";
+        $("serverName").value = template.server?.name || "";
+        $("serverIcon").value = template.server?.iconUrl || "";
+        state.roles = (template.roles || []).map(role => ({ ...role }));
+        state.categories = (template.categories || []).map(category => ({ ...category }));
+        state.channels = (template.channels || []).map(channel => ({ ...channel }));
+        renderRoles();
+        renderCategories();
+        renderChannels();
+        updateReview();
+    }
+
+    function renderTemplateSelect() {
+        const select = $("deployTemplate");
+        const previous = select.value;
+        select.innerHTML = '<option value="">Wybierz szablon</option>' +
+            state.templates.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.name)}</option>`).join("");
+        if (state.templates.some(t => t.id === previous)) select.value = previous;
+    }
+
+    $("exportTemplateBtn").addEventListener("click", () => {
+        const template = getTemplatePayload();
+        if (!template.name) return toast("Najpierw wpisz nazwę szablonu.");
+
+        const blob = new Blob([JSON.stringify(template, null, 2)], {
+            type: "application/json;charset=utf-8"
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = (template.name.toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "szablon") + ".json";
+        link.click();
+        URL.revokeObjectURL(url);
+        toast("Wyeksportowano definicję JSON.");
+    });
+
+    $("publishTemplateBtn").addEventListener("click", async () => {
+        const template = getTemplatePayload();
+        if (!template.name) return toast("Podaj nazwę szablonu.");
+
+        if (template.visibility !== "public") {
+            if (!confirm("Ten szablon nie jest oznaczony jako publiczny. Opublikować go mimo to?")) return;
+        }
+
+        if (!template.id) return toast("Najpierw zapisz szablon.");
+
+        try {
+            await api(`/api/discord-panel/templates/${encodeURIComponent(template.id)}/publish`, {
+                method: "POST",
+                body: JSON.stringify({ visibility: "public" })
+            });
+            toast("Backend potwierdził publikację szablonu.");
+        } catch (error) {
+            toast("Nie opublikowano oferty: " + error.message);
+        }
+    });
+
+    function updateDeployMode() {
+        const isNew = $("deployMode").value === "new";
+        $("newGuildFields").classList.toggle("hidden", !isNew);
+        $("existingGuildField").classList.toggle("hidden", isNew);
+    }
+
+    $("deployMode").addEventListener("change", updateDeployMode);
+
+    $("deployBtn").addEventListener("click", async () => {
+        const templateId = $("deployTemplate").value;
+        if (!templateId) return toast("Wybierz szablon.");
+        if (!$("deployConfirm").checked) return toast("Potwierdź, że masz uprawnienia do wdrożenia.");
+
+        const mode = $("deployMode").value;
+        const payload = {
+            templateId,
+            mode,
+            guildId: mode === "existing" ? $("deployGuild").value : null,
+            guildName: mode === "new" ? $("newGuildName").value.trim() : null
+        };
+
+        if (mode === "existing" && !payload.guildId) return toast("Wybierz istniejący serwer.");
+        if (mode === "new") {
+            $("deployResult").innerHTML = '<div class="notice">Nowy serwer musi zostać utworzony przez użytkownika w Discordzie. Po utworzeniu dodaj do niego bota, a następnie wybierz go na liście istniejących serwerów.</div>';
+            return;
+        }
+
+        const confirmed = confirm(
+            "Backend powinien teraz przygotować podgląd zmian. Kontynuować do etapu podglądu?"
+        );
+        if (!confirmed) return;
+
+        try {
+            const preview = await api("/api/discord-panel/deploy/preview", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            const summary = Array.isArray(preview.changes)
+                ? preview.changes.map(change => "• " + escapeHtml(change)).join("<br>")
+                : "Backend nie zwrócił listy zmian.";
+
+            $("deployResult").innerHTML = `
+                <div class="panel">
+                    <h3>Podgląd wdrożenia</h3>
+                    <p>${summary}</p>
+                    <p class="muted">Sprawdź plan zmian przed wdrożeniem.</p>
+                    <button class="btn primary" id="confirmDeployBtn">Potwierdź i wdróż</button>
+                </div>`;
+
+            $("confirmDeployBtn").addEventListener("click", async () => {
+                if (!confirm("Czy na pewno wykonać te zmiany na wybranym serwerze?")) return;
+
+                try {
+                    const result = await api("/api/discord-panel/deploy", {
+                        method: "POST",
+                        body: JSON.stringify({ ...payload, confirmation: true })
+                    });
+                    $("deployResult").innerHTML =
+                        `<div class="notice info">${escapeHtml(result.message || "Backend zakończył operację.")}</div>`;
+                } catch (error) {
+                    toast("Wdrożenie nie powiodło się: " + error.message);
+                }
+            });
+        } catch (error) {
+            $("deployResult").innerHTML =
+                `<div class="notice">Nie udało się przygotować wdrożenia: ${escapeHtml(error.message)}</div>`;
+        }
+    });
+
+    $("sendMessageBtn").addEventListener("click", async () => {
+        const guildId = $("messageGuild").value;
+        const channelId = $("messageChannel").value;
+        const content = $("messageContent").value.trim();
+
+        if (!guildId || !channelId || !content) {
+            return toast("Wybierz serwer, kanał i wpisz treść wiadomości.");
+        }
+
+        if (!confirm("Wysłać tę wiadomość na wybrany kanał Discord?")) return;
+
+        try {
+            await api("/api/discord-panel/messages", {
+                method: "POST",
+                body: JSON.stringify({
+                    guildId,
+                    channelId,
+                    content,
+                    allowedMentions: $("disableMentions").checked
+                        ? { parse: [] }
+                        : { parse: ["users", "roles"] }
+                })
+            });
+            toast("Backend potwierdził wysłanie wiadomości.");
+            $("messageContent").value = "";
+        } catch (error) {
+            toast("Nie udało się wysłać wiadomości: " + error.message);
+        }
+    });
+
+    async function checkPermissions() {
+        const guildId = $("permissionsGuild").value;
+        if (!guildId) return toast("Wybierz serwer.");
+
+        $("permissionsResult").innerHTML = '<div class="empty">Sprawdzanie uprawnień…</div>';
+
+        try {
+            const data = await api(`/api/discord-panel/guilds/${encodeURIComponent(guildId)}/permissions`);
+            const permissions = Array.isArray(data.permissions) ? data.permissions : [];
+            $("permissionsResult").innerHTML = permissions.length ? `
+                <div class="item-list">
+                    ${permissions.map(p => `
+                        <div class="builder-item">
+                            <div>
+                                <strong>${escapeHtml(p.name || p.permission)}</strong>
+                                <small>${escapeHtml(p.description || "")}</small>
+                            </div>
+                            <span class="tag ${p.granted ? "green" : "yellow"}">${p.granted ? "Dostępne" : "Brak"}</span>
+                        </div>`).join("")}
+                </div>` : '<div class="empty">Backend nie zwrócił listy uprawnień.</div>';
+        } catch (error) {
+            $("permissionsResult").innerHTML = `<div class="notice">Nie udało się sprawdzić uprawnień: ${escapeHtml(error.message)}</div>`;
+        }
+    }
+
+    $("checkPermissionsBtn").addEventListener("click", checkPermissions);
+    $("permissionsGuild").addEventListener("change", () => {
+        if ($("permissionsGuild").value) checkPermissions();
+    });
+
+    async function loadOrders() {
+        try {
+            const data = await api("/api/discord-panel/orders");
+            state.orders = Array.isArray(data.orders) ? data.orders : [];
+            renderOrders();
+            renderDashboard();
+        } catch (error) {
+            $("ordersTable").innerHTML = `<tr><td colspan="6">${escapeHtml(error.message)}</td></tr>`;
+        }
+    }
+
+    function renderOrders() {
+        $("ordersTable").innerHTML = state.orders.length ? state.orders.map(order => `
+            <tr>
+                <td>${escapeHtml(order.id)}</td>
+                <td>${escapeHtml(order.templateName || order.templateId)}</td>
+                <td>${escapeHtml(order.discordUsername || "Nie podano")}</td>
+                <td>${money(order.amount)}</td>
+                <td><span class="tag ${order.paymentStatus === "paid" ? "green" : "yellow"}">${escapeHtml(order.paymentStatus || "pending")}</span></td>
+                <td>
+                    ${order.paymentStatus === "paid" && !order.delivered
+                        ? `<button class="btn small" data-deliver-order="${escapeHtml(order.id)}">Przygotuj dostawę</button>`
+                        : order.delivered ? '<span class="tag green">Dostarczono</span>' : '<span class="muted">Oczekiwanie</span>'}
+                </td>
+            </tr>`).join("") : '<tr><td colspan="6">Brak zamówień.</td></tr>';
+    }
+
+    $("ordersTable").addEventListener("click", async event => {
+        const button = event.target.closest("[data-deliver-order]");
+        if (!button) return;
+
+        const orderId = button.dataset.deliverOrder;
+        const order = state.orders.find(o => o.id === orderId);
+        if (!order || order.paymentStatus !== "paid") {
+            return toast("Dostawa wymaga potwierdzonej płatności.");
+        }
+
+        if (!confirm("Przygotować dostawę dla tego zamówienia? Backend musi zweryfikować status płatności ponownie.")) return;
+
+        try {
+            const result = await api(`/api/discord-panel/orders/${encodeURIComponent(orderId)}/deliver`, {
+                method: "POST",
+                body: JSON.stringify({})
+            });
+            toast(result.message || "Backend przygotował dostawę.");
+            loadOrders();
+        } catch (error) {
+            toast("Nie udało się przygotować dostawy: " + error.message);
+        }
+    });
+
+    $("refreshOrdersBtn").addEventListener("click", loadOrders);
+
+    $("refreshBtn").addEventListener("click", async () => {
+        await checkBackend();
+        await loadGuilds();
+        await loadOrders();
+    });
+
+    $("refreshGuildsBtn").addEventListener("click", loadGuilds);
+
+    $("saveApiBtn").addEventListener("click", () => {
+        const value = $("apiBase").value.trim();
+        if (!value) return toast("Wpisz adres API.");
+
+        try {
+            const url = new URL(value);
+            if (!["http:", "https:"].includes(url.protocol)) throw new Error();
+            if (location.protocol === "https:" && url.protocol === "http:") {
+                return toast("Strona HTTPS nie może bezpiecznie korzystać z API HTTP. Użyj HTTPS.");
+            }
+            state.apiBase = url.origin;
+            $("apiSettingsStatus").textContent = "Adres API ustawiony na tę sesję: " + state.apiBase;
+            toast("Adres API zmieniony na tę sesję.");
+            checkBackend();
+        } catch {
+            toast("Podaj poprawny adres http:// lub https://.");
+        }
+    });
+
+    $("testApiBtn").addEventListener("click", checkBackend);
+
+    async function init() {
+        $("apiBase").value = state.apiBase;
+        renderRoles();
+        renderCategories();
+        renderChannels();
+        renderTemplates();
+        renderTemplateSelect();
+        updateDeployMode();
+        updateReview();
+
+        const online = await checkBackend();
+        if (online) {
+            await Promise.allSettled([loadGuilds(), loadOrders()]);
+            try {
+                const data = await api("/api/discord-panel/templates");
+                state.templates = Array.isArray(data.templates) ? data.templates : [];
+                renderTemplates();
+                renderTemplateSelect();
+            } catch (error) {
+                console.warn("Nie udało się pobrać szablonów:", error.message);
+            }
+        }
+
+        renderDashboard();
+    }
+
+    init();
+})();
+</script>
+</body>
+</html>
