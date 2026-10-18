@@ -821,10 +821,6 @@
             box-shadow: 0 12px 35px rgba(0,0,0,.4);
         }
 
-        #chat-button {
-            left: 22px;
-        }
-
         #stai-button {
             right: 22px;
         }
@@ -834,92 +830,7 @@
             transform: translateY(-3px) scale(1.03);
         }
 
-        #chat-unread {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            min-width: 21px;
-            height: 21px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--bg);
-            border-radius: 999px;
-            background: #ef4444;
-            font-size: 11px;
-            font-weight: 900;
-        }
-
-        #live-chat {
-            position: fixed;
-            left: 22px;
-            bottom: 92px;
-            z-index: 1199;
-            width: min(390px, calc(100vw - 44px));
-            height: 520px;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            background: rgba(7,10,24,.98);
-            border: 1px solid rgba(139,92,246,.35);
-            border-radius: 18px;
-            box-shadow: 0 25px 80px rgba(0,0,0,.55);
-        }
-
-        .chat-header {
-            min-height: 60px;
-            padding: 0 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,.07);
-        }
-
-        .chat-header h3 {
-            margin: 0;
-            font-size: 16px;
-        }
-
-        #chat-close {
-            width: 34px;
-            height: 34px;
-            border: 0;
-            border-radius: 9px;
-            background: rgba(255,255,255,.06);
-            color: #fff;
-        }
-
-        #chat-messages {
-            flex: 1;
-            padding: 14px;
-            overflow-y: auto;
-        }
-
-        .chat-form {
-            padding: 12px;
-            display: flex;
-            gap: 8px;
-            border-top: 1px solid rgba(255,255,255,.07);
-        }
-
-        #chat-input {
-            flex: 1;
-            min-width: 0;
-            height: 42px;
-            padding: 0 12px;
-            border: 1px solid rgba(139,92,246,.2);
-            border-radius: 10px;
-            background: rgba(15,20,42,.8);
-            color: #fff;
-            outline: none;
-        }
-
-        #chat-form button {
-            width: 45px;
-            border: 0;
-            border-radius: 10px;
-            background: var(--purple);
-            color: #fff;
+        @media (max-width: 480px) {
         }
 
         .site-footer {
@@ -1179,19 +1090,8 @@
                 bottom: 14px;
             }
 
-            #chat-button {
-                left: 14px;
-            }
-
             #stai-button {
                 right: 14px;
-            }
-
-            #live-chat {
-                left: 12px;
-                bottom: 78px;
-                width: calc(100vw - 24px);
-                height: min(560px, calc(100vh - 95px));
             }
 
             .cookie-banner {
@@ -1756,65 +1656,9 @@
 
 </main>
 
-<button
-    id="chat-button"
-    type="button"
-    title="ShadowChat"
-    aria-label="Otwórz ShadowChat"
->
-    💬
 
-    <span id="chat-unread">
-        0
-    </span>
-</button>
 
-<div
-    id="live-chat"
-    aria-hidden="true"
->
 
-    <div class="chat-header">
-
-        <h3>
-            💬 ShadowChat
-        </h3>
-
-        <button
-            id="chat-close"
-            type="button"
-            aria-label="Zamknij czat"
-        >
-            ✕
-        </button>
-
-    </div>
-
-    <div id="chat-messages"></div>
-
-    <form
-        id="chat-form"
-        class="chat-form"
-    >
-
-        <input
-            type="text"
-            id="chat-input"
-            maxlength="2000"
-            placeholder="Napisz wiadomość..."
-            autocomplete="off"
-        >
-
-        <button
-            type="submit"
-            aria-label="Wyślij"
-        >
-            ➤
-        </button>
-
-    </form>
-
-</div>
 
 <button
     id="stai-button"
@@ -2550,58 +2394,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 closeReviewMessage();
 
             }
-
-        }
-    );
-
-
-    /* =================================================
-       SHADOWCHAT
-    ================================================= */
-
-    const chatButton =
-        document.getElementById(
-            "chat-button"
-        );
-
-    const liveChat =
-        document.getElementById(
-            "live-chat"
-        );
-
-    const chatClose =
-        document.getElementById(
-            "chat-close"
-        );
-
-
-    chatButton?.addEventListener(
-        "click",
-        event => {
-
-            showReviewMessage(
-                event
-            );
-
-        }
-    );
-
-
-    chatClose?.addEventListener(
-        "click",
-        () => {
-
-            if (!liveChat) {
-                return;
-            }
-
-            liveChat.style.display =
-                "none";
-
-            liveChat.setAttribute(
-                "aria-hidden",
-                "true"
-            );
 
         }
     );
@@ -3744,12 +3536,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
-
+<escape><script src="chat.js"></script></escape>
+<script src="muza.js"></script>
 <script src="wyszukiwanie.js"></script>
 <script src="config.js"></script>
 <script src="music.js"></script>
 <script src="stats-tracker.js"></script>
 <script src="notifications.js"></script>
+
 
 </body>
 </html>
